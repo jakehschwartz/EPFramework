@@ -1,0 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'checkstyle'
+
+sourceCompatibility = 1.7
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
+}

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+                        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+    <module name="SuppressionFilter">
+        <property name="file" value="${basedir}/config/checkstyle/checkstyle-suppression.xml"/>
+    </module>
+    <module name="JavadocPackage"/>
+    <module name="TreeWalker">
+
+        <!-- from the Block Checks section of CheckStyle manual -->
+        <module name="EmptyBlock"/>
+        <module name="LeftCurly">
+            <property name="option" value="nl"/>
+        </module>
+        <module name="NeedBraces"/>
+        <module name="RightCurly">
+            <property name="option" value="alone"/>
+        </module>
+        <module name="AvoidNestedBlocks"/>
+
+        <!-- from the Class Design section of CheckStyle manual -->
+        <module name="VisibilityModifier">
+            <property name="packageAllowed" value="true"/>
+        </module>
+        <module name="FinalClass"/>
+        <module name="InterfaceIsType"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="DesignForExtension"/>
+        <module name="MutableException"/>
+        <module name="ThrowsCount">
+            <property name="max" value="2"/>
+        </module>
+
+        <!-- from the Coding section of CheckStyle manual -->
+        <module name="ArrayTrailingComma"/>
+        <module name="AvoidInlineConditionals"/>
+        <module name="EmptyStatement"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="RedundantThrows"/>
+        <module name="NestedIfDepth"/>
+        <module name="NestedTryDepth"/>
+        <module name="IllegalCatch"/>
+        <module name="IllegalThrows"/>
+        <module name="PackageDeclaration"/>
+        <module name="DeclarationOrder"/>
+        <module name="ParameterAssignment"/>
+        <module name="ExplicitInitialization"/>
+        <module name="DefaultComesLast"/>
+        <module name="FallThrough"/>
+        <module name="MultipleStringLiterals"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="FinalLocalVariable"/>
+
+        <!-- coding error type of checks, might want to let FindBugs do these instead -->
+        <module name="CovariantEquals"/>
+        <!-- <module name="DoubleCheckedLocking"/> -->
+        <module name="EqualsHashCode"/>
+        <module name="IllegalInstantiation"/>
+
+        <module name="InnerAssignment"/>
+        <module name="ModifiedControlVariable"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="SuperClone"/>
+        <module name="SuperFinalize"/>
+        <module name="JUnitTestCase"/>
+        <module name="ReturnCount"/>
+        <module name="IllegalType"/>
+
+        <!-- from the Imports section of CheckStyle manual -->
+        <module name="AvoidStarImport"/>
+        <module name="IllegalImport"/>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+
+        <!-- from the Javadoc Comments section of CheckStyle manual -->
+        <module name="JavadocType">
+            <property name="scope" value="public"/>
+        </module>
+        <module name="JavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="public"/>
+        </module>
+        <module name="JavadocStyle"/>
+
+        <!-- from the Miscellaneous section of CheckStyle manual -->
+        <module name="UpperEll"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="FinalParameters"/>
+
+        <!-- from the Modifiers section of CheckStyle manual -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <!-- from the Size Violations section of CheckStyle manual -->
+        <module name="ExecutableStatementCount"/>
+        <module name="MethodLength"/>
+        <module name="AnonInnerLength"/>
+        <module name="ParameterNumber"/>
+
+        <module name="FileContentsHolder"/>
+    </module>
+
+    <!-- Enfore using spaces instead of hard TABs -->
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
+    <!-- from the Miscellaneous section of CheckStyle manual -->
+    <module name="Translation"/>
+    <module name="FileLength"/>
+
+    <module name="SuppressionCommentFilter"/>
+</module>

@@ -1,0 +1,24 @@
+<!--
+ ~ Copyright (c) 2011
+ ~ Elbrys Networks, Inc. All rights reserved
+ -->
+
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.0//EN" 
+                              "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+<suppressions>
+
+    <!-- test packages don't need package-info.java -->
+    <suppress checks="JavadocPackage" files="(\w*)test[/\\]java[/\\](\w*)"/>
+
+    <!-- it doesn'tmake sense to javadoc each test method -->
+    <suppress checks="JavadocMethodCheck" files="(\w*)Test.java"/>
+    <suppress checks="JavadocTypeCheck" files="(\w*)Test.java"/>
+    <suppress checks="JavadocVariableCheck" files="(\w*)Test.java"/>
+    <suppress checks="ExplicitInitializationCheck" files="(\w*)Test.java"/>
+    <suppress checks="MultipleStringLiterals" files="(\w*)Test.java"/>
+    <suppress checks="IllegalThrows" files="(\w*)Test.java"/>
+    <suppress checks="FinalClassCheck" files="(\w*)Test.java"/>
+    <suppress checks="FinalLocalVariableCheck" files="(\w*)Test.java"/>
+    <suppress checks="FinalParametersCheck" files="(\w*)Test.java"/>
+    <suppress checks="DesignForExtensionCheck" files="(\w*)Test.java"/>
+</suppressions>

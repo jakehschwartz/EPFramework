@@ -1,97 +1,111 @@
+package edu.unh.schwartz.parawrap;
+
+import edu.unh.schwartz.parawrap.config.Configuration;
+import edu.unh.schwartz.parawrap.config.ConfigWizard;
+import edu.unh.schwartz.parawrap.spliter.Spliter;
+import edu.unh.schwartz.parawrap.worker.WorkerPool;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.Scanner;
 
 /**
- * Jacob Schwartz
+ * Application class. Blah blah blah.
  *
- * ParallelWrapper.java
- *
+ * @author Jacob Schwartz
  */
-public class ParallelWrapper
+final class ParallelWrapper
 {
-    // Number of threads to use for the processes
-    private int numThreads;
-
-    // The output writer
-    private PrintWriter outputWriter;
-
-    // The queue
-    private PriorityBlockingQueue<String> chunks;
+    private ParallelWrapper() 
+    {
+        // No-op
+    }
 
     /**
+     * Starts the parallel wrapper based on the <code>Configuration</code>.
      *
-     * @param manifestFileName - name of the file that will give us the program
-     * information
+     * @param config - the instructions for the wrapper
      */
-    public ParallelWrapper(int threads, String fileName) throws Exception
+    private static void start(final Configuration config)
     {
-        numThreads = threads;
+        final String fileName = config.getInputFileName();
+        final int threads = config.getNumberOfThreads();
 
         // Read in the input file and get the chunks
-        Spliter spliter = new Spliter("$\n^");
-        chunks = spliter.split(new File(fileName));
+        // Spliter spliter = new Spliter("$\n^");
+        final Spliter spliter = new Spliter(config.getSplitPattern());
+        PriorityBlockingQueue<String> chunks = null; 
+        try
+        {
+            final File inFile = new File(fileName);
+            chunks = spliter.split(inFile);
+        }
+        catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
 
-        // If there are no chunk
         if (chunks.size() == 0)
         {
             System.err.println("Incorrect chunk pattern or empty input file");
             System.exit(1);
         }
 
+        final WorkerPool wp = new WorkerPool(threads, chunks);
+        wp.start();
+        merge(threads);
+        wp.printStats();
     }
 
     /**
-     * Runs the executable on the number of specified input threads.
-     */
-    public void run() throws Exception
-    {
-        // Start the threads
-        TaskThread[] threads = new TaskThread[numThreads];
-        for (int i = 0; i < numThreads; i++)
-        {
-            threads[i] = new TaskThread(i, chunks);
-            threads[i].start();
-        }
-
-        for (int i = 0; i < numThreads; i++)
-        {
-            threads[i].join();
-        }
-
-        /*
-        long kaks_time = 0;
-        for (int i = 0; i < numThreads; i++)
-        {
-            kaks_time += threads[i].getRunTime();
-        }
-        System.out.println(kaks_time / 1000);
-        */
-    }
-
-    /**
-     * Merges the output together and deletes the temporary files
+     * Merges the output together and deletes the temporary files.
+     *
+     * @param numThreads - the number of threads used by the application
      */ 
-    public void merge() throws Exception
+    private static void merge(final int numThreads) 
     {
+        PrintWriter outputWriter = null;
+        try
+        {
+           outputWriter = new PrintWriter("output.kaks");
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.println("Could not create output file");
+            System.exit(1);
+        }
+
         // Delete the old files
+        final String mergeLoc = "/tmp/kaks";
         for (int i = 0; i < numThreads; i++)
         {
             // Remove temp file
-            File temp = new File("/tmp/kaks" + i + "/temp.axt" );
+            final File temp = new File(mergeLoc + i + "/temp.axt" );
             temp.delete();
 
-            File folder = new File("/tmp/kaks" + i);
+            final File folder = new File(mergeLoc + i);
             for (File file : folder.listFiles())
             {
-                System.out.println("Attempting to read " + file.getName());
-                Scanner s = new Scanner(file);
-                s.nextLine();
-                outputWriter.println(s.nextLine());
-                file.delete();
+                try
+                {
+                    System.out.println("Attempting to read " + file.getName());
+                    final BufferedReader reader = new BufferedReader(new FileReader(file));
+                    reader.readLine();
+                    outputWriter.println(reader.readLine());
+                    file.delete();
+                }
+                catch (FileNotFoundException e1)
+                {
+                    System.out.println();
+                }
+                catch (IOException e2)
+                {
+                    System.out.println();
+                }
             }
             folder.delete();
         }
@@ -99,15 +113,40 @@ public class ParallelWrapper
     }
 
     /**
-     * Main method
+     * Main method. You can put a lot more here. Explain what the different args
+     * do.
      *
      * @param args - Command line arguments
      */
-    public static void main(String[] args) throws Exception
+    public static void main(final String[] args) 
     {
-        ParallelWrapper app = new ParallelWrapper(Integer.valueOf(args[0]),
-            args[1]);
-        app.run();
-        app.merge();
+        if (args.length == 0)
+        {
+            // Allow the user to make a configuration file
+            System.out.println("Opening Configuration Wizard");
+            final Configuration config = ConfigWizard.createConfiguration();
+            start(config);
+        }
+        else if (args.length == 1)
+        {
+            try
+            {
+                final Configuration config = new Configuration(args[0]);
+                start(config);
+            }
+            catch (FileNotFoundException e1)
+            {
+                System.err.println("FUck");
+            }
+            catch (IOException e2)
+            {
+                System.err.println("Shit");
+            }
+        }
+        else
+        {
+            // USAGE STATEMENT
+            System.err.println("USAGE:");
+        }
     }
 }
