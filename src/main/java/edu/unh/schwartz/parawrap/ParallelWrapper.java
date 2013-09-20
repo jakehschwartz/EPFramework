@@ -2,7 +2,7 @@ package edu.unh.schwartz.parawrap;
 
 import edu.unh.schwartz.parawrap.config.Configuration;
 import edu.unh.schwartz.parawrap.config.ConfigWizard;
-import edu.unh.schwartz.parawrap.spliter.Spliter;
+import edu.unh.schwartz.parawrap.io.Manipulator;
 import edu.unh.schwartz.parawrap.worker.WorkerPool;
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,12 +36,11 @@ final class ParallelWrapper
 
         // Read in the input file and get the chunks
         // Spliter spliter = new Spliter("$\n^");
-        final Spliter spliter = new Spliter(config.getSplitPattern());
-        PriorityBlockingQueue<String> chunks = null; 
+        final Manipulator manip = new Manipulator(config.getSplitPattern());
         try
         {
             final File inFile = new File(fileName);
-            chunks = spliter.split(inFile);
+            manip.split(inFile);
         }
         catch (IOException e)
         {
@@ -49,6 +48,7 @@ final class ParallelWrapper
             System.exit(1);
         }
 
+        PriorityBlockingQueue<File> chunks = manip.getChunks(); 
         if (chunks.size() == 0)
         {
             System.err.println("Incorrect chunk pattern or empty input file");
@@ -57,59 +57,8 @@ final class ParallelWrapper
 
         final WorkerPool wp = new WorkerPool(threads, chunks);
         wp.start();
-        merge(threads);
+        manip.merge(config.getOutputFileName(), config.getNumHeaderLines());
         wp.printStats();
-    }
-
-    /**
-     * Merges the output together and deletes the temporary files.
-     *
-     * @param numThreads - the number of threads used by the application
-     */ 
-    private static void merge(final int numThreads) 
-    {
-        PrintWriter outputWriter = null;
-        try
-        {
-           outputWriter = new PrintWriter("output.kaks");
-        }
-        catch (FileNotFoundException e)
-        {
-            System.err.println("Could not create output file");
-            System.exit(1);
-        }
-
-        // Delete the old files
-        final String mergeLoc = "/tmp/kaks";
-        for (int i = 0; i < numThreads; i++)
-        {
-            // Remove temp file
-            final File temp = new File(mergeLoc + i + "/temp.axt" );
-            temp.delete();
-
-            final File folder = new File(mergeLoc + i);
-            for (File file : folder.listFiles())
-            {
-                try
-                {
-                    System.out.println("Attempting to read " + file.getName());
-                    final BufferedReader reader = new BufferedReader(new FileReader(file));
-                    reader.readLine();
-                    outputWriter.println(reader.readLine());
-                    file.delete();
-                }
-                catch (FileNotFoundException e1)
-                {
-                    System.out.println();
-                }
-                catch (IOException e2)
-                {
-                    System.out.println();
-                }
-            }
-            folder.delete();
-        }
-        outputWriter.close();
     }
 
     /**

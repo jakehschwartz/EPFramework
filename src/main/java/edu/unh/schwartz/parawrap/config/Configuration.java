@@ -83,4 +83,9 @@ public final class Configuration
     {
         return splitPattern;
     }
+
+    public int getNumHeaderLine()
+    {
+        return 1;
+    }
 }
