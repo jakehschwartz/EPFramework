@@ -1,5 +1,6 @@
 package edu.unh.schwartz.parawrap.worker;
 
+import java.io.File;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -18,7 +19,7 @@ public final class WorkerPool
      * @param num - the number of workers
      * @param chunks - the work for the workers
      */
-    public WorkerPool(final int num, final PriorityBlockingQueue<String> chunks) 
+    public WorkerPool(final int num, final PriorityBlockingQueue<File> chunks) 
     {
         // Start the threads
         workers = new Worker[num];

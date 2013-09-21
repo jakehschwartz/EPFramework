@@ -15,7 +15,7 @@ public final class Worker extends Thread
     /**
      * The queue of pieces to do work on.
      */
-    private PriorityBlockingQueue<String> queue;
+    private PriorityBlockingQueue<File> queue;
     
     /**
      * The id number of this worker.
@@ -33,7 +33,7 @@ public final class Worker extends Thread
      * @param idNum - the id number of this worker
      * @param queue - the queue for the worker to take chunks from
      */
-    public Worker(final int idNum, final PriorityBlockingQueue<String> queue)
+    public Worker(final int idNum, final PriorityBlockingQueue<File> queue)
     {
         this.queue = queue;
         this.idNum = idNum;
@@ -54,21 +54,13 @@ public final class Worker extends Thread
         int i = 0;
         while (this.queue.size() != 0)
         {
-            final String s = this.queue.poll();
+            final File f = this.queue.poll();
 
             // Make temporary files
-            final String inName = outDir + "/temp.axt";
-            final File in = new File(inName);
             final String outName = outDir + "/result" + i + ".kaks";
             final File out = new File(outName);
             try
             {
-                in.createNewFile();
-                
-                final PrintWriter temp = new PrintWriter(in);
-                temp.println(s);
-                temp.close();
-
                 out.createNewFile();
             }
             catch (IOException e)
@@ -78,7 +70,7 @@ public final class Worker extends Thread
  
             try
             {
-                final ProcessBuilder pb = createProcess(inName, outName);
+                final ProcessBuilder pb = createProcess(f.getName(), outName);
                 pb.redirectErrorStream(true);
 
                 System.out.println("Starting chunk on thread " + this.idNum);
