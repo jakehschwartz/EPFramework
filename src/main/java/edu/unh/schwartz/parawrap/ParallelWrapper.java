@@ -124,7 +124,8 @@ final class ParallelWrapper
         {
             // Allow the user to make a configuration file
             System.out.println("Opening Configuration Wizard");
-            final Configuration config = ConfigWizard.createConfiguration();
+            final Configuration config = 
+                ConfigWizard.getInstance().createConfiguration();
             start(config);
         }
         else if (args.length == 1)

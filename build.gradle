@@ -10,4 +10,5 @@ repositories {
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
+    compile files('./src/main/resources/CJWizards-0.2.jar')
 }
