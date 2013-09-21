@@ -62,22 +62,22 @@ public final class Manipulator
             sb.append(line);
             if (pattern.matcher(line).matches())
             {
-                String content = sb.toString();
+                final String content = sb.toString();
 
                 // Make a directory for that file
-                File dir = new File("/tmp/" + content.hashCode());
+                final File dir = new File("/tmp/" + content.hashCode());
                 dir.mkdir();
                 this.dirs.add(dir);
 
                 // Make the new file
-                File in = new File(dir.getName() + "/in");
+                final File in = new File(dir.getName() + "/in");
                 in.createNewFile();
                 this.chunks.add(in);
 
                 // Write the content to a file
                 try
                 {
-                    PrintWriter inWriter = new PrintWriter(in);
+                    final PrintWriter inWriter = new PrintWriter(in);
                     inWriter.println(content);
                     inWriter.close();
                 }
@@ -94,12 +94,20 @@ public final class Manipulator
         }
     }
     
+    /**
+     * @return the chunks produced by the split
+     */
     public PriorityBlockingQueue<File> getChunks()
     {
         return this.chunks;
     }
 
-    public void merge(final String outFileName, int headerLines)
+    /**
+     * Merges.
+     * @param outFileName - the name of the output file
+     * @param headerLines - the number of lines of header there should be
+     */
+    public void merge(final String outFileName, final int headerLines)
     {
         PrintWriter outputWriter = null;
         try
@@ -117,7 +125,7 @@ public final class Manipulator
         {
             try
             {
-                String inFileName = f.getName() + "/out";
+                final String inFileName = f.getName() + "/out";
                 final FileReader inFile = new FileReader(inFileName);
                 final BufferedReader in = new BufferedReader(inFile);
                 for (int i = 0; i < headerLines; i++)
@@ -139,6 +147,9 @@ public final class Manipulator
         outputWriter.close();
     }
 
+    /**
+     * Cleans up the chunks and temp out files and directories.
+     */
     public void cleanUp()
     {
         for (final File f : this.dirs)

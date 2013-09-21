@@ -1,6 +1,15 @@
 package edu.unh.schwartz.parawrap.config;
 
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import java.util.List;
+import org.ciscavate.cjwizard.PageFactory;
+import org.ciscavate.cjwizard.pagetemplates.TitledPageTemplate;
+import org.ciscavate.cjwizard.WizardContainer;
+import org.ciscavate.cjwizard.WizardListener;
 import org.ciscavate.cjwizard.WizardPage;
+import org.ciscavate.cjwizard.WizardSettings;
 
 /**
  * GUI Wizard to help create configuration file.
@@ -20,36 +29,13 @@ public final class ConfigWizard
         final JDialog window = new JDialog();
         
         final WizardContainer wc =
-            new WizardContainer(new WizardPageFactory(),
-                    new TitledPageTemplate(),
-                    new StackWizardSettings());
+            new WizardContainer(new WizardPageFactory(), 
+                    new TitledPageTemplate());
 
-        wc.addWizardListener(new WizardListener()
-        {
-            @Override
-            public void onCanceled(List<WizardPage> path, WizardSettings ws)
-            {
-                System.err.println("Cencelled " + wc.getSettings());
-                window.dispose();
-            }
+        // TODO: Make a new listener private class
+        wc.addWizardListener(new ConfigWizardListener(window));
 
-            @Override
-            public void onFinished(List<WizardPage> path, WizardSettings ws)
-            {
-                System.err.println("Cencelled " + wc.getSettings());
-                // TODO: More here
-                window.dispose();
-            }
-
-            @Override
-            public void onPageChanged(WizardPage newPage, List<WizardPage> path) 
-            {
-                log.debug("settings: "+wc.getSettings());
-                WizardTest.this.setTitle(newPage.getDescription());
-            }
-        });
-
-        window.setDefaultCLoseOperation(JDialog.DISPOSE_ON_CLOSE);
+        window.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         window.getContentPane().add(wc);
         window.pack();
         window.setVisible(true);
@@ -78,31 +64,94 @@ public final class ConfigWizard
         return new Configuration();
     }
 
-    private class WizardPageFactory extends PageFactory
+    private class WizardPageFactory implements PageFactory
     {
-      private final WizardPage[] pages = 
-      {
-          new WizardPage("One", "First page"),
-          new WizardPage("Two", "Second page"),
-          new WizardPage("Three", "THird page"),
-          new WizardPage("Four", "Fourth page"),
-          new WizardPage("Five", "fifth page"),
-          new WizardPage("Six", "Sixth page"),
-          new WizardPage("Seven", "Seventh page"),
-          new WizardPage("Eight", "Last page")
-          {
-              public void rendering(List<WizardPage> path, WizardSettings ws) 
-              {
-                  super.rendering(path, settings);
-                  setFinishEnabled(true);
-                  setNextEnabled(false);
-              }
-          }
-      };
+        private final WizardPage[] pages = 
+        {
+            new WizardPage("One", "First page")
+            {
+                {
+                    final JCheckBox box = new JCheckBox("testBox1");
+                    box.setName("box1");
+                    add(new JLabel("One!"));
+                    add(box);
+                }
+            },
+            new WizardPage("Two", "Second page")
+            {
+                {
+                    final JCheckBox box = new JCheckBox("testBox2");
+                    box.setName("box2");
+                    add(new JLabel("Two!"));
+                    add(box);
+                }
+            },
+            new WizardPage("Three", "Third page")
+            {
+                {
+                    final JCheckBox box = new JCheckBox("testBox3");
+                    box.setName("box3");
+                    add(new JLabel("Three!"));
+                    add(box);
+                }
+            },
+            new WizardPage("Four", "Last page")
+            {
+                {
+                    final JCheckBox box = new JCheckBox("testBox4");
+                    box.setName("box4");
+                    add(new JLabel("Four!"));
+                    add(box);
+                }
 
-      public WizardPage createPage(List<WizardPage> path, WizardSettings ws)
-      {
-          return pages[path.size()];
-      }
+                public void rendering(final List<WizardPage> path, 
+                        final WizardSettings settings) 
+                {
+                    super.rendering(path, settings);
+                    setFinishEnabled(true);
+                    setNextEnabled(false);
+                }
+            },
+        };
+
+        public WizardPage createPage(final List<WizardPage> path, 
+                final WizardSettings settings)
+        {
+            return pages[path.size()];
+        }
+    }
+
+    private final class ConfigWizardListener implements WizardListener
+    {
+        private JDialog window;
+
+        private ConfigWizardListener(final JDialog window)
+        {
+            this.window = window;
+        }
+        
+        @Override
+        public void onCanceled(final List<WizardPage> path, 
+                final WizardSettings settings)
+        {
+            System.err.println("Cancelled " + settings);
+            this.window.dispose();
+        }
+
+        @Override
+        public void onFinished(final List<WizardPage> path, 
+                final WizardSettings settings)
+        {
+            System.err.println("Finished " + settings);
+            // TODO: More here
+            this.window.dispose();
+        }
+
+        @Override
+        public void onPageChanged(final WizardPage newPage, 
+                final List<WizardPage> path) 
+        {
+            this.window.setTitle(newPage.getDescription());
+        }
     }
 }

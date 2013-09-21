@@ -2,7 +2,6 @@ package edu.unh.schwartz.parawrap.worker;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ArrayList;
 import java.util.List;

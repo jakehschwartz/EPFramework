@@ -187,7 +187,7 @@ public final class Configuration
         execArgs.put(flag, value);
     }
 
-    public int getNumHeaderLine()
+    public int getNumHeaderLines()
     {
         return 1;
     }

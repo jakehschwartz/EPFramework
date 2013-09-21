@@ -1,4 +1,4 @@
 /**
  * blah blah blah.
  */
-package edu.unh.schwartz.parawrap.spliter;
+package edu.unh.schwartz.parawrap.io;
