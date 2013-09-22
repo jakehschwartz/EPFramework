@@ -52,11 +52,21 @@ public final class Configuration
     private Map<String, String> execArgs;
 
     /**
-     * Constructs an empty configuration file.
+     * Constructs a configuration file from a map.
+     * @param map - the map that holds the configuration settings
      */
-    public Configuration()
+    public Configuration(final Map<String, Object> map)
     {
-        System.err.println("TODO");
+
+    }
+
+    /**
+     * Constructs a configuration file from a saved copy.
+     * @param jsonFile - the file holding the saved configuration file
+     */
+    public Configuration(final File jsonFile)
+    {
+
     }
 
     /**

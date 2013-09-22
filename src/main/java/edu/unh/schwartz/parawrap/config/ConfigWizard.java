@@ -21,26 +21,27 @@ public final class ConfigWizard
      */
     private static ConfigWizard instance;
  
+    private Configuration config;
+    
+    private JDialog window;
+
     /**
      * Prevents instantiation.
      */
     private ConfigWizard()
     {
-        final JDialog window = new JDialog();
+        window = new JDialog();
         
         final WizardContainer wc =
             new WizardContainer(new WizardPageFactory(), 
                     new TitledPageTemplate());
 
-        // TODO: Make a new listener private class
-        wc.addWizardListener(new ConfigWizardListener(window));
+        wc.addWizardListener(new ConfigWizardListener());
 
         window.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         window.getContentPane().add(wc);
         window.pack();
-        window.setVisible(true);
     }
-
    
     /**
      * @return the instance of the <code>ConfigWizard</code>
@@ -61,7 +62,19 @@ public final class ConfigWizard
      */
     public Configuration createConfiguration()
     {
-        return new Configuration();
+        this.window.setVisible(true);
+        try
+        {
+            this.wait();
+        }
+        catch (InterruptedException e)
+        {
+            System.err.println("Interrupted");
+        }
+        finally
+        {
+            return this.config;
+        }
     }
 
     private class WizardPageFactory implements PageFactory
@@ -123,35 +136,30 @@ public final class ConfigWizard
 
     private final class ConfigWizardListener implements WizardListener
     {
-        private JDialog window;
-
-        private ConfigWizardListener(final JDialog window)
-        {
-            this.window = window;
-        }
-        
         @Override
         public void onCanceled(final List<WizardPage> path, 
-                final WizardSettings settings)
+            final WizardSettings settings)
         {
             System.err.println("Cancelled " + settings);
-            this.window.dispose();
+            ConfigWizard.this.window.dispose();
+            ConfigWizard.this.notify();
         }
 
         @Override
         public void onFinished(final List<WizardPage> path, 
-                final WizardSettings settings)
+            final WizardSettings settings)
         {
             System.err.println("Finished " + settings);
-            // TODO: More here
-            this.window.dispose();
+            ConfigWizard.this.config = new Configuration(settings);
+            ConfigWizard.this.window.dispose();
+            ConfigWizard.this.notify();
         }
 
         @Override
         public void onPageChanged(final WizardPage newPage, 
-                final List<WizardPage> path) 
+            final List<WizardPage> path) 
         {
-            this.window.setTitle(newPage.getDescription());
+            ConfigWizard.this.window.setTitle(newPage.getDescription());
         }
     }
 }
