@@ -48,7 +48,7 @@ final class ParallelWrapper
             System.exit(1);
         }
 
-        PriorityBlockingQueue<File> chunks = manip.getChunks(); 
+        PriorityBlockingQueue<File> chunks = manip.getFiles(); 
         if (chunks.size() == 0)
         {
             System.err.println("Incorrect chunk pattern or empty input file");

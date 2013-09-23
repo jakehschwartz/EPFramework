@@ -28,6 +28,11 @@ public final class Worker extends Thread
     private long runTime;
 
     /**
+     * The number of chunks run by this worker
+     */
+    private int chunksRun;
+
+    /**
      * Creates a worker.
      *
      * @param idNum - the id number of this worker
@@ -51,13 +56,13 @@ public final class Worker extends Thread
         final File dir = new File(outDir);
         dir.mkdirs();
 
-        int i = 0;
         while (this.queue.size() != 0)
         {
             final File f = this.queue.poll();
 
             // Make temporary files
-            final String outName = outDir + "/result" + i + ".kaks";
+            final String outName = outDir + "/result" + this.chunksRun +
+                ".kaks";
             final File out = new File(outName);
             try
             {
@@ -91,7 +96,7 @@ public final class Worker extends Thread
                 e.printStackTrace();
             }
 
-            i++;
+            this.chunksRun++;
         }
     }
 
@@ -113,5 +118,10 @@ public final class Worker extends Thread
     public long getRunTime()
     {
         return this.runTime;
+    }
+
+    public int getChunksRun()
+    {
+        return this.chunksRun;
     }
 }

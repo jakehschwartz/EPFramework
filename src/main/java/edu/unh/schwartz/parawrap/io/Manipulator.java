@@ -22,7 +22,8 @@ public final class Manipulator
 {
     private Pattern pattern;
     private List<File> dirs;
-    private PriorityBlockingQueue<File> chunks;
+    private PriorityBlockingQueue<File> files;
+    private List<Chunk> chunks;
 
     /**
      * Constructs a spliter with a pattern that seperates every line (^.*$).
@@ -41,7 +42,6 @@ public final class Manipulator
     {
         this.pattern = Pattern.compile(regex);
         this.dirs = new ArrayList<File>();
-        this.chunks = new PriorityBlockingQueue<File>();
     }
 
     /**
@@ -53,6 +53,9 @@ public final class Manipulator
      */
     public void split(final File f) throws IOException
     {
+        this.files = new PriorityBlockingQueue<File>();
+        this.chunks = new ArrayList<Chunk>();
+
         StringBuilder sb = new StringBuilder();
         
         final BufferedReader reader = new BufferedReader(new FileReader(f));
@@ -72,7 +75,10 @@ public final class Manipulator
                 // Make the new file
                 File in = new File(dir.getName() + "/in");
                 in.createNewFile();
-                this.chunks.add(in);
+                this.files.add(in);
+
+                // Save the chunk
+                this.chunks.add(new Chunk(content));
 
                 // Write the content to a file
                 try
@@ -94,7 +100,12 @@ public final class Manipulator
         }
     }
     
-    public PriorityBlockingQueue<File> getChunks()
+    public PriorityBlockingQueue<File> getFiles()
+    {
+        return this.files;
+    }
+
+    public List<Chunks> getChunks()
     {
         return this.chunks;
     }
