@@ -1,6 +1,6 @@
 package edu.unh.schwartz.parawrap.worker;
 
-import java.io.File;
+import edu.unh.schwartz.parawrap.Chunk;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public final class Worker extends Thread
     /**
      * The queue of pieces to do work on.
      */
-    private PriorityBlockingQueue<File> queue;
+    private PriorityBlockingQueue<Chunk> queue;
     
     /**
      * The id number of this worker.
@@ -37,7 +37,7 @@ public final class Worker extends Thread
      * @param idNum - the id number of this worker
      * @param queue - the queue for the worker to take chunks from
      */
-    public Worker(final int idNum, final PriorityBlockingQueue<File> queue)
+    public Worker(final int idNum, final PriorityBlockingQueue<Chunk> queue)
     {
         this.queue = queue;
         this.idNum = idNum;
@@ -50,31 +50,14 @@ public final class Worker extends Thread
     @Override
     public void run()
     {
-        // Make output file for this thread
-        final String outDir = "/tmp/kaks" + this.idNum;
-        final File dir = new File(outDir);
-        dir.mkdirs();
-
         while (this.queue.size() != 0)
         {
-            final File f = this.queue.poll();
+            final Chunk c = this.queue.poll();
+            c.createOutFile();
 
-            // Make temporary files
-            final String outName = outDir + "/result" + this.chunksRun +
-                ".kaks";
-            final File out = new File(outName);
             try
             {
-                out.createNewFile();
-            }
-            catch (IOException e)
-            {
-                System.err.println(e.getMessage());
-            }
- 
-            try
-            {
-                final ProcessBuilder pb = createProcess(f.getName(), outName);
+                final ProcessBuilder pb = createProcess(c);
                 pb.redirectErrorStream(true);
 
                 System.out.println("Starting chunk on thread " + this.idNum);
@@ -82,6 +65,7 @@ public final class Worker extends Thread
                 final Process proc = pb.start();
                 proc.waitFor();
                 final long end = System.currentTimeMillis();
+                c.setRuntime(end - start);
                 runTime += (end - start);
                 System.out.println("Finished chunk on thread " + this.idNum);
             }
@@ -89,18 +73,20 @@ public final class Worker extends Thread
             {
                 e.printStackTrace();
             }
-            catch (IOException e)
+            catch (IOException e2)
             {
-                System.err.println("Exec error");
-                e.printStackTrace();
+                e2.printStackTrace();
             }
 
             this.chunksRun++;
         }
     }
 
-    private ProcessBuilder createProcess(final String in, final String out)
+    private ProcessBuilder createProcess(final Chunk c)
     {
+        final String in = c.getInFileName();
+        final String out = c.getOutFileName();
+
         final List<String> commands = new ArrayList<String>();
         commands.add("./KaKs_Calculator");
         commands.add("-i");

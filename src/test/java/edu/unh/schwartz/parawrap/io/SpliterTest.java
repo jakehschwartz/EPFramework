@@ -1,6 +1,6 @@
 package edu.unh.schwartz.parawrap.io;
 
-import java.io.File;
+import edu.unh.schwartz.parawrap.Chunk;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -18,12 +18,11 @@ public class SpliterTest
         manip = new Manipulator(regex);
     }
     
-    public PriorityBlockingQueue<File> execute(String fileName) 
+    public PriorityBlockingQueue<Chunk> execute(String fileName) 
         throws IOException
     {
-        File f = new File(fileName); 
-        manip.split(f);
-        return manip.getFiles();
+        manip.split(fileName);
+        return manip.getChunks();
     }
 
     public static void main(String[] args)
@@ -39,7 +38,7 @@ public class SpliterTest
         SpliterTest t = new SpliterTest(regexPattern);
         try
         {
-            PriorityBlockingQueue<File> splits = t.execute(fileName);
+            PriorityBlockingQueue<Chunk> splits = t.execute(fileName);
             System.out.println("Found " + splits.size() + " pieces");
         }
         catch (IOException e)

@@ -4,10 +4,8 @@ import edu.unh.schwartz.parawrap.config.Configuration;
 import edu.unh.schwartz.parawrap.config.ConfigWizard;
 import edu.unh.schwartz.parawrap.io.Manipulator;
 import edu.unh.schwartz.parawrap.worker.WorkerPool;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -31,14 +29,14 @@ final class ParallelWrapper
     {
         final String fileName = config.getInputFileName();
         final int threads = config.getNumberOfThreads();
+        Chunk.setHeaderLines(config.getNumHeaderLines());
 
         // Read in the input file and get the chunks
         // Spliter spliter = new Spliter("$\n^");
         final Manipulator manip = new Manipulator(config.getSplitPattern());
         try
         {
-            final File inFile = new File(fileName);
-            manip.split(inFile);
+            manip.split(fileName);
         }
         catch (IOException e)
         {
@@ -46,17 +44,16 @@ final class ParallelWrapper
             System.exit(1);
         }
 
-        final PriorityBlockingQueue<File> files = manip.getFiles(); 
-        final List<Chunk> chunks = manip.getChunks();
+        final PriorityBlockingQueue<Chunk> chunks = manip.getChunks();
         if (chunks.size() == 0)
         {
             System.err.println("Incorrect chunk pattern or empty input file");
             System.exit(1);
         }
 
-        final WorkerPool wp = new WorkerPool(threads, files, chunks);
+        final WorkerPool wp = new WorkerPool(threads, chunks);
         wp.start();
-        manip.merge("out", config.getNumHeaderLines());
+        manip.merge("out");
         try
         {
             wp.printStats();
@@ -92,7 +89,7 @@ final class ParallelWrapper
             }
             catch (FileNotFoundException e1)
             {
-                System.err.println("FUck");
+                System.err.println("I LOVE AUDREY!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
             catch (IOException e2)
             {

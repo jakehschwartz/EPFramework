@@ -1,10 +1,10 @@
 package edu.unh.schwartz.parawrap.worker;
 
 import edu.unh.schwartz.parawrap.Chunk;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,26 +17,27 @@ public final class WorkerPool
      */
     private Worker[] workers;
 
+    /**
+     * The chunks for the workers to work on.
+     */
     private List<Chunk> chunks;
 
     /**
      * Constructs the workers.
      *
      * @param num - the number of workers
-     * @param files - the files for the workers to read
      * @param chunks - the work for the workers
      */
-    public WorkerPool(final int num, final PriorityBlockingQueue<File> files,
-            final List<Chunk> chunks) 
+    public WorkerPool(final int num, final PriorityBlockingQueue<Chunk> chunks)
     {
         // Initialize the threads
         workers = new Worker[num];
         for (int i = 0; i < num; i++)
         {
-            workers[i] = new Worker(i, files);
+            workers[i] = new Worker(i, chunks);
         }
 
-        this.chunks = chunks;
+        this.chunks = new ArrayList<Chunk>(chunks);
     }
 
     /**
