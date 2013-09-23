@@ -109,6 +109,10 @@ public final class Manipulator
         try
         {
            outputWriter = new PrintWriter(outFileName);
+           for (final Chunk c : this.chunks)
+           {
+               outputWriter.println(c.getResult());
+           }
         }
         catch (FileNotFoundException e)
         {
@@ -116,13 +120,10 @@ public final class Manipulator
                 outFileName);
             return;
         }
-
-        for (final Chunk c : this.chunks)
+        finally
         {
-            outputWriter.println(c.getResult());
+            outputWriter.close();
         }
-
-        outputWriter.close();
     }
 
     /**

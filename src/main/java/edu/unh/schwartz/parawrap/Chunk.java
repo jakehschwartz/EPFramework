@@ -1,10 +1,13 @@
 package edu.unh.schwartz.parawrap;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Blah.
+ * Piece of work to do be done by the <code>Worker</code>s. Also contains
+ * statstical information that can be used to get the ideal configuration.
  */
 public final class Chunk
 {
@@ -78,6 +81,11 @@ public final class Chunk
     public void clean()
     {
         // Delete the files in the directories
+        for (final File f : this.directory.listFiles())
+        {
+            f.delete();
+        }
+        this.directory.delete();
 
         this.runtime = 0;
     }
@@ -87,11 +95,39 @@ public final class Chunk
      */
     public String getResult()
     {
-        // Open out file
-        //
-        // Read it and skip header lines
+        final StringBuilder sb = new StringBuilder();
         
-        return "";
+        try 
+        {
+            // Open out file
+            final BufferedReader br = 
+                new BufferedReader(new FileReader(getOutFileName()));
+
+            // Skip the header lines
+            for (int i = 0; i < HEADER_LINES; i++)
+            {
+                br.readLine();
+            }
+
+            // Get the actual lines
+            String line = br.readLine();
+            while (line != null) 
+            {
+                sb.append(line);
+                sb.append('\n');
+                line = br.readLine();
+            }
+
+            // Close the file
+            br.close();
+            
+        }
+        catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
+        
+        return sb.toString();
     }
 
     /**

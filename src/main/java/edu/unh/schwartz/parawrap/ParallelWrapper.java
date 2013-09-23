@@ -4,7 +4,6 @@ import edu.unh.schwartz.parawrap.config.Configuration;
 import edu.unh.schwartz.parawrap.config.ConfigWizard;
 import edu.unh.schwartz.parawrap.io.Manipulator;
 import edu.unh.schwartz.parawrap.worker.WorkerPool;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -41,27 +40,20 @@ final class ParallelWrapper
         catch (IOException e)
         {
             System.err.println(e.getMessage());
-            System.exit(1);
+            return;
         }
 
         final PriorityBlockingQueue<Chunk> chunks = manip.getChunks();
         if (chunks.size() == 0)
         {
             System.err.println("Incorrect chunk pattern or empty input file");
-            System.exit(1);
+            return;
         }
 
         final WorkerPool wp = new WorkerPool(threads, chunks);
         wp.start();
         manip.merge("out");
-        try
-        {
-            wp.printStats();
-        }
-        catch (IOException e)
-        {
-            System.err.println(e.getMessage());
-        }
+        wp.printStats();
     }
 
     /**
@@ -87,13 +79,9 @@ final class ParallelWrapper
                 final Configuration config = new Configuration(args[0]);
                 start(config);
             }
-            catch (FileNotFoundException e1)
-            {
-                System.err.println("I LOVE AUDREY!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            }
             catch (IOException e2)
             {
-                System.err.println("Shit");
+                System.err.println("I LOVE AUDREY!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
         }
         else
