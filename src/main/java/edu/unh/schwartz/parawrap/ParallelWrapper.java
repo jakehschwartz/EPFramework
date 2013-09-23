@@ -4,12 +4,9 @@ import edu.unh.schwartz.parawrap.config.Configuration;
 import edu.unh.schwartz.parawrap.config.ConfigWizard;
 import edu.unh.schwartz.parawrap.io.Manipulator;
 import edu.unh.schwartz.parawrap.worker.WorkerPool;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -57,7 +54,7 @@ final class ParallelWrapper
 
         final WorkerPool wp = new WorkerPool(threads, chunks);
         wp.start();
-        manip.merge(config.getOutputFileName(), config.getNumHeaderLines());
+        manip.merge("out", config.getNumHeaderLines());
         wp.printStats();
     }
 

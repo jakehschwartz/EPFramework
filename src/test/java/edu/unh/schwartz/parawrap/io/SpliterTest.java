@@ -1,4 +1,4 @@
-package edu.unh.schwartz.parawrap.spliter;
+package edu.unh.schwartz.parawrap.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,18 +11,19 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class SpliterTest
 {
-    private Spliter spliter;
+    private Manipulator manip;
 
     public SpliterTest(String regex)
     {
-        spliter = new Spliter(regex);
+        manip = new Manipulator(regex);
     }
     
-    public PriorityBlockingQueue<String> execute(String fileName) 
+    public PriorityBlockingQueue<File> execute(String fileName) 
         throws IOException
     {
         File f = new File(fileName); 
-        return spliter.split(f);
+        manip.split(f);
+        return manip.getChunks();
     }
 
     public static void main(String[] args)
@@ -38,7 +39,7 @@ public class SpliterTest
         SpliterTest t = new SpliterTest(regexPattern);
         try
         {
-            PriorityBlockingQueue<String> splits = t.execute(fileName);
+            PriorityBlockingQueue<File> splits = t.execute(fileName);
             System.out.println("Found " + splits.size() + " pieces");
         }
         catch (IOException e)
