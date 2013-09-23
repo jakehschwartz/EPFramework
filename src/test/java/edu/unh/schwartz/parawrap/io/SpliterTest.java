@@ -23,7 +23,7 @@ public class SpliterTest
     {
         File f = new File(fileName); 
         manip.split(f);
-        return manip.getChunks();
+        return manip.getFiles();
     }
 
     public static void main(String[] args)

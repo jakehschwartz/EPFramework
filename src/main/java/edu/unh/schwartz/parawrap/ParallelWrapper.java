@@ -7,6 +7,7 @@ import edu.unh.schwartz.parawrap.worker.WorkerPool;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -45,17 +46,25 @@ final class ParallelWrapper
             System.exit(1);
         }
 
-        PriorityBlockingQueue<File> chunks = manip.getFiles(); 
+        final PriorityBlockingQueue<File> files = manip.getFiles(); 
+        final List<Chunk> chunks = manip.getChunks();
         if (chunks.size() == 0)
         {
             System.err.println("Incorrect chunk pattern or empty input file");
             System.exit(1);
         }
 
-        final WorkerPool wp = new WorkerPool(threads, chunks);
+        final WorkerPool wp = new WorkerPool(threads, files, chunks);
         wp.start();
         manip.merge("out", config.getNumHeaderLines());
-        wp.printStats();
+        try
+        {
+            wp.printStats();
+        }
+        catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**

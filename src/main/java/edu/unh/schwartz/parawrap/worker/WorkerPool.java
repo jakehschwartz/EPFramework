@@ -1,8 +1,11 @@
 package edu.unh.schwartz.parawrap.worker;
 
+import edu.unh.schwartz.parawrap.Chunk;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.List;
 
 /**
  * Runs the workers.
@@ -20,15 +23,17 @@ public final class WorkerPool
      * Constructs the workers.
      *
      * @param num - the number of workers
+     * @param files - the files for the workers to read
      * @param chunks - the work for the workers
      */
-    public WorkerPool(final int num, final PriorityBlockingQueue<File> chunks) 
+    public WorkerPool(final int num, final PriorityBlockingQueue<File> files,
+            final List<Chunk> chunks) 
     {
         // Initialize the threads
         workers = new Worker[num];
         for (int i = 0; i < num; i++)
         {
-            workers[i] = new Worker(i, chunks);
+            workers[i] = new Worker(i, files);
         }
 
         this.chunks = chunks;
@@ -60,21 +65,22 @@ public final class WorkerPool
 
     /**
      * Print the statistics for the workers.
+     * @throws IOException - for now
      */
-    public void printStats()
+    public void printStats() throws IOException
     {
         // Open up the file to save to
         // TODO: print to correct directory
-        PrintWriter statsOut = new PrintWriter("stats.csv");
+        final PrintWriter statsOut = new PrintWriter("stats.csv");
 
         // Print the stats
         statsOut.println("Thread #,Runtime,Chunks Run,Avg Time Per Chunk");
         final String comma = ",";
         for (int i = 0; i < workers.length; i++)
         {
-            long runtime = workers[i].getRunTime();
-            int chunks = workers[i].getChunksRun();
-            StringBuilder sb = new StringBuilder();
+            final long runtime = workers[i].getRunTime();
+            final int chunks = workers[i].getChunksRun();
+            final StringBuilder sb = new StringBuilder();
             sb.append(i).append(comma).append(runtime).append(comma);
             sb.append(chunks).append(comma).append(runtime / chunks);
 
@@ -86,8 +92,8 @@ public final class WorkerPool
         statsOut.println("Chunk #,Runtime,Chunks Run,Avg Time Per Chunk");
         for (int i = 0; i < this.chunks.size(); i++)
         {
-            Chunk c = this.chunks.get(i);
-            StringBuilder sb = new StringBuilder();
+            final Chunk c = this.chunks.get(i);
+            final StringBuilder sb = new StringBuilder();
             sb.append(c.hashCode()).append(comma).append(c.length());
             sb.append(comma).append(c.getRuntime());
             statsOut.println(sb.toString());

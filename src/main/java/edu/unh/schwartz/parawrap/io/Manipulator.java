@@ -1,5 +1,6 @@
 package edu.unh.schwartz.parawrap.io;
 
+import edu.unh.schwartz.parawrap.Chunk;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -105,7 +106,7 @@ public final class Manipulator
         return this.files;
     }
 
-    public List<Chunks> getChunks()
+    public List<Chunk> getChunks()
     {
         return this.chunks;
     }

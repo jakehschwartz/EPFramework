@@ -27,7 +27,7 @@ public final class Worker extends Thread
     private long runTime;
 
     /**
-     * The number of chunks run by this worker
+     * The number of chunks run by this worker.
      */
     private int chunksRun;
 
