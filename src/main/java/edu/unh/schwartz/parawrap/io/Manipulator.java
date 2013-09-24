@@ -7,20 +7,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Jacob Schwartz
- * Independent Study - Split submodule
+ * Does all of the IO functions for the process. Can split an input file based
+ * on a pattern and merge it back together in the same order.
  *
- * Used to split up files based on a regular expression that will define the
- * last line in the chunk.
+ * @author Jacob Schwartz
  */
 public final class Manipulator
 {
     private Pattern pattern;
-    private PriorityBlockingQueue<Chunk> chunks;
+    private List<Chunk> chunks;
 
     /**
      * Constructs a spliter with a pattern that seperates every line (^.*$).
@@ -48,7 +49,7 @@ public final class Manipulator
      */
     public void split(final String fileName) throws IOException 
     {
-        this.chunks = new PriorityBlockingQueue<Chunk>();
+        this.chunks = new ArrayList<Chunk>();
 
         StringBuilder sb = new StringBuilder();
         
@@ -85,35 +86,39 @@ public final class Manipulator
         }
     }
     
+    /**
+     * @return the chunks as a thread-safe queue
+     */
     public PriorityBlockingQueue<Chunk> getChunks()
     {
-        return this.chunks;
+        return new PriorityBlockingQueue<Chunk>(this.chunks);
     }
 
     /**
-     * Merges.
-     * @param outFileName - the name of the output file
+     * Merges the chunks back together. Prints the results of the work in the
+     * order of the original chunks.
+     * @param fileName - the name of the output file
      */
-    public void merge(final String outFileName)
+    public void merge(final String fileName)
     {
-        PrintWriter outputWriter = null;
+        PrintWriter writer = null;
         try
         {
-           outputWriter = new PrintWriter(outFileName);
+           writer = new PrintWriter(fileName);
            for (final Chunk c : this.chunks)
            {
-               outputWriter.println(c.getResult());
+               writer.println(c.getResult());
            }
         }
         catch (FileNotFoundException e)
         {
             System.err.println("Could not create output file called " + 
-                outFileName);
+                fileName);
             return;
         }
         finally
         {
-            outputWriter.close();
+            writer.close();
         }
     }
 
@@ -126,5 +131,42 @@ public final class Manipulator
         {
             c.clean();
         }
+    }
+
+    /**
+     * Prints the statistics of the <code>Worker</code>s and the
+     * <code>Chunk</code>s to a CSV file 'stats.csv' in the same output
+     * directory as the program.
+     * @param workerStats - the statstics of the Workers
+     */
+    public void printStats(final String workerStats)
+    {
+        // Open up the file to save to
+        // TODO: print to correct directory
+        try
+        {
+            final String comma = ",";
+            final PrintWriter statsOut = new PrintWriter("stats.csv");
+            statsOut.println(workerStats);
+
+            statsOut.println("Chunk #,Runtime,Chunks Run,Avg Time Per Chunk");
+            for (int i = 0; i < this.chunks.size(); i++)
+            {
+                final Chunk c = this.chunks.get(i);
+                final StringBuilder sb = new StringBuilder();
+                sb.append(c.hashCode()).append(comma).append(c.length());
+                sb.append(comma).append(c.getRuntime());
+                statsOut.println(sb.toString());
+            }
+
+            statsOut.close();
+        }
+        catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+
+
     }
 }

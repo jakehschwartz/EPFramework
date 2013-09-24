@@ -1,11 +1,7 @@
 package edu.unh.schwartz.parawrap.worker;
 
 import edu.unh.schwartz.parawrap.Chunk;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Runs the workers.
@@ -16,11 +12,6 @@ public final class WorkerPool
      * The workers to be utilizated.
      */
     private Worker[] workers;
-
-    /**
-     * The chunks for the workers to work on.
-     */
-    private List<Chunk> chunks;
 
     /**
      * Constructs the workers.
@@ -36,8 +27,6 @@ public final class WorkerPool
         {
             workers[i] = new Worker(i, chunks);
         }
-
-        this.chunks = new ArrayList<Chunk>(chunks);
     }
 
     /**
@@ -65,47 +54,23 @@ public final class WorkerPool
     }
 
     /**
-     * Print the statistics for the workers.
+     * @return the statistics for the <code>Worker</code> in a csv table
      */
-    public void printStats()
+    public String getStats()
     {
-        // Open up the file to save to
-        // TODO: print to correct directory
-        try
+        // Print the stats
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Thread #,Runtime,Chunks Run,Avg Time Per Chunk");
+        final String comma = ",";
+        for (int i = 0; i < workers.length; i++)
         {
-            final PrintWriter statsOut = new PrintWriter("stats.csv");
-
-            // Print the stats
-            statsOut.println("Thread #,Runtime,Chunks Run,Avg Time Per Chunk");
-            final String comma = ",";
-            for (int i = 0; i < workers.length; i++)
-            {
-                final long runtime = workers[i].getRunTime();
-                final int chunks = workers[i].getChunksRun();
-                final StringBuilder sb = new StringBuilder();
-                sb.append(i).append(comma).append(runtime).append(comma);
-                sb.append(chunks).append(comma).append(runtime / chunks);
-
-                statsOut.println(sb.toString());
-            }
-            statsOut.println();
-
-            // Chunk info
-            statsOut.println("Chunk #,Runtime,Chunks Run,Avg Time Per Chunk");
-            for (int i = 0; i < this.chunks.size(); i++)
-            {
-                final Chunk c = this.chunks.get(i);
-                final StringBuilder sb = new StringBuilder();
-                sb.append(c.hashCode()).append(comma).append(c.length());
-                sb.append(comma).append(c.getRuntime());
-                statsOut.println(sb.toString());
-            }
-
-            statsOut.close();
+            final long runtime = workers[i].getRunTime();
+            final int chunks = workers[i].getChunksRun();
+            sb.append(i).append(comma).append(runtime).append(comma);
+            sb.append(chunks).append(comma).append(runtime / chunks);
+            sb.append('\n');
         }
-        catch (IOException e)
-        {
-            System.err.println(e.getMessage());
-        }
+        sb.append('\n');
+        return sb.toString();
     }
 }

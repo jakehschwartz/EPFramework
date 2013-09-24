@@ -56,7 +56,7 @@ final class ParallelWrapper
         final WorkerPool wp = new WorkerPool(threads, chunks);
         wp.start();
         manip.merge("out");
-        wp.printStats();
+        manip.printStats(wp.getStats());
     }
 
     /**

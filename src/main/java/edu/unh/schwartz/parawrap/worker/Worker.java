@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Worker. Blah blah blah
+ * Runs the process on the queued up input. Each worker has an id and keeps
+ * various statistical information to use later to determine if the
+ * configuration could be better.
  */
 public final class Worker extends Thread
 {
@@ -42,6 +44,7 @@ public final class Worker extends Thread
         this.queue = queue;
         this.idNum = idNum;
         this.runTime = 0;
+        this.chunksRun = 0;
     }
 
     /**
@@ -50,16 +53,20 @@ public final class Worker extends Thread
     @Override
     public void run()
     {
+        // Until we run out of chunks
         while (this.queue.size() != 0)
         {
+            // Grab a chunk and get it ready for output
             final Chunk c = this.queue.poll();
             c.createOutFile();
 
             try
             {
+                // Create the process
                 final ProcessBuilder pb = createProcess(c);
                 pb.redirectErrorStream(true);
 
+                // Start the work and capture the time it takes to run
                 System.out.println("Starting chunk on thread " + this.idNum);
                 final long start = System.currentTimeMillis();
                 final Process proc = pb.start();
@@ -81,12 +88,18 @@ public final class Worker extends Thread
             this.chunksRun++;
         }
     }
-
+    
+    /**
+     * Create the process.
+     * @param c - the chunk of work being done
+     */
     private ProcessBuilder createProcess(final Chunk c)
     {
+        // Get the location of the in and out files
         final String in = c.getInFileName();
         final String out = c.getOutFileName();
 
+        // Create the executable
         final List<String> commands = new ArrayList<String>();
         commands.add("./KaKs_Calculator");
         commands.add("-i");
@@ -105,6 +118,9 @@ public final class Worker extends Thread
         return this.runTime;
     }
 
+    /**
+     * @return the number of chunks run by this thread
+     */
     public int getChunksRun()
     {
         return this.chunksRun;
