@@ -44,10 +44,9 @@ public final class Manipulator
      * Splits the file and creates chunks.
      *
      * @param fileName - the name of the file
-     * @throws IOException if the input file cannot be found or there is a
-     * problem reading the file
+     * @throws IOException - when there is any kind of problem with the input
      */
-    public void split(final String fileName) throws IOException
+    public void split(final String fileName) throws IOException 
     {
         this.chunks = new PriorityBlockingQueue<Chunk>();
 
@@ -73,17 +72,9 @@ public final class Manipulator
                 in.createNewFile();
 
                 // Write the content to a file
-                try
-                {
-                    final PrintWriter inWriter = new PrintWriter(in);
-                    inWriter.println(content);
-                    inWriter.close();
-                }
-                catch (FileNotFoundException e)
-                {
-                    System.err.println("Could not create file");
-                    return;
-                }            
+                final PrintWriter inWriter = new PrintWriter(in);
+                inWriter.println(content);
+                inWriter.close();
 
                 this.chunks.add(new Chunk(content, dir));
 

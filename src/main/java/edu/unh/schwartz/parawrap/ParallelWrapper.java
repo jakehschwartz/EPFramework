@@ -8,7 +8,11 @@ import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * Application class. Blah blah blah.
+ * Application class. Takes an optional command line parameter for the run
+ * configuration. If none, is given, goes through the wizard to create one,
+ * which will then allow the user to save it for later runs. Calls the split
+ * operation, starts the workers, calls the move operation and then prints
+ * statistics about the run to 'stats.csv'.
  *
  * @author Jacob Schwartz
  */
@@ -31,7 +35,6 @@ final class ParallelWrapper
         Chunk.setHeaderLines(config.getNumHeaderLines());
 
         // Read in the input file and get the chunks
-        // Spliter spliter = new Spliter("$\n^");
         final Manipulator manip = new Manipulator(config.getSplitPattern());
         try
         {
@@ -39,7 +42,7 @@ final class ParallelWrapper
         }
         catch (IOException e)
         {
-            System.err.println(e.getMessage());
+            System.err.print(e.getMessage());
             return;
         }
 
@@ -64,6 +67,7 @@ final class ParallelWrapper
      */
     public static void main(final String[] args) 
     {
+        // If there are no cmd line args, create a configuration file
         if (args.length == 0)
         {
             // Allow the user to make a configuration file
@@ -72,6 +76,7 @@ final class ParallelWrapper
                 ConfigWizard.getInstance().createConfiguration();
             start(config);
         }
+        // First command line arg is a configuration file
         else if (args.length == 1)
         {
             try
@@ -79,15 +84,17 @@ final class ParallelWrapper
                 final Configuration config = new Configuration(args[0]);
                 start(config);
             }
-            catch (IOException e2)
+            catch (IOException e)
             {
-                System.err.println("I LOVE AUDREY!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.err.println("Problem reading configuation file: " + 
+                        e.getMessage());
             }
         }
         else
         {
-            // USAGE STATEMENT
-            System.err.println("USAGE:");
+            System.err.print("Usage:\n\tTakes only one option args:\n\t\t");
+            System.err.print("- The configuration file's location\n\n");
+            System.err.println("No arguments will bring up the wizard");
         }
     }
 }
