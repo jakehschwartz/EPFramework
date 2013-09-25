@@ -1,8 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'checkstyle'
+apply plugin:'application'
 
 sourceCompatibility = 1.7
 version = '0.1'
+mainClassName = "edu.unh.schwartz.parawrap.config.ConfigWizard"
 
 repositories {
     mavenCentral()
@@ -10,6 +12,7 @@ repositories {
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
+    compile 'commons-logging:commons-logging:1.1.1'
     compile files('./src/main/resources/CJWizards-0.2.jar')
 }
 

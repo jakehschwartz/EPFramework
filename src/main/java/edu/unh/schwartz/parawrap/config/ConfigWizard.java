@@ -1,11 +1,18 @@
 package edu.unh.schwartz.parawrap.config;
 
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import java.util.List;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerListModel;
 import org.ciscavate.cjwizard.PageFactory;
-import org.ciscavate.cjwizard.pagetemplates.TitledPageTemplate;
+import org.ciscavate.cjwizard.pagetemplates.DefaultPageTemplate;
 import org.ciscavate.cjwizard.WizardContainer;
 import org.ciscavate.cjwizard.WizardListener;
 import org.ciscavate.cjwizard.WizardPage;
@@ -20,9 +27,15 @@ public final class ConfigWizard
      * The instance.
      */
     private static ConfigWizard instance;
- 
+
+    /**
+     * The last configuration created.
+     */ 
     private Configuration config;
-    
+
+    /**
+     * The window for the wizard.
+     */
     private JDialog window;
 
     /**
@@ -31,18 +44,19 @@ public final class ConfigWizard
     private ConfigWizard()
     {
         window = new JDialog();
-        
-        final WizardContainer wc =
-            new WizardContainer(new WizardPageFactory(), 
-                    new TitledPageTemplate());
+
+        final WizardContainer wc = 
+            new WizardContainer(new ConfigPageFactory(),
+                    new DefaultPageTemplate());
 
         wc.addWizardListener(new ConfigWizardListener());
 
         window.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         window.getContentPane().add(wc);
-        window.pack();
+        window.setSize(375, 250);
+        window.setLocationRelativeTo(null);
     }
-   
+
     /**
      * @return the instance of the <code>ConfigWizard</code>
      */
@@ -77,46 +91,135 @@ public final class ConfigWizard
         }
     }
 
-    private class WizardPageFactory implements PageFactory
+    /**
+     * Handles the callbacks from the wizard.
+     */
+    private final class ConfigWizardListener implements WizardListener
     {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+            public void onCanceled(final List<WizardPage> path, 
+                    final WizardSettings settings)
+            {
+                System.err.println("Cancelled " + settings);
+                ConfigWizard.this.window.dispose();
+                ConfigWizard.this.notify();
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+            public void onFinished(final List<WizardPage> path, 
+                    final WizardSettings settings)
+            {
+                System.err.println("Finished " + settings);
+                ConfigWizard.this.config = new Configuration(settings);
+                ConfigWizard.this.window.dispose();
+                ConfigWizard.this.notify();
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onPageChanged(final WizardPage newPage, 
+                final List<WizardPage> path) 
+        {
+            ConfigWizard.this.window.setTitle(newPage.getDescription());
+        }
+    }
+
+    private final class ConfigPageFactory implements PageFactory
+    {
+        /**
+         * The pages of the wizard.
+         */
         private final WizardPage[] pages = 
         {
-            new WizardPage("One", "First page")
+            new WizardPage("IO", "IO Settings")
             {
                 {
-                    final JCheckBox box = new JCheckBox("testBox1");
-                    box.setName("box1");
-                    add(new JLabel("One!"));
-                    add(box);
+                    // Settings for the input file
+                    final JFileChooser inChooser = new JFileChooser();
+                    inChooser.setName("inFile");
+                    add((new JLabel("Select the input file: ")));
+                    add(inChooser);
+
+                    // Setting for the split pattern
+                    final JTextField splitField = new JTextField();
+                    splitField.setName("split");
+                    splitField.setPreferredSize(new Dimension(50, 20));
+                    add(new JLabel("Pattern used to split input: "));
+                    add(splitField);
+                    add(new JLabel("(Leave blank to use every new line)"));
+
+                    // Settings for the output location
+                    final JFileChooser outChooser = new JFileChooser();
+                    outChooser.setName("outFile");
+                    add((new JLabel("Select the output directory: ")));
+                    add(outChooser);
                 }
             },
-            new WizardPage("Two", "Second page")
+            new WizardPage("Exec", "Executable Settings")
             {
                 {
-                    final JCheckBox box = new JCheckBox("testBox2");
-                    box.setName("box2");
-                    add(new JLabel("Two!"));
-                    add(box);
-                }
-            },
-            new WizardPage("Three", "Third page")
-            {
-                {
+                    // Settings for the location of the executable
+                    // and for the flags
                     final JCheckBox box = new JCheckBox("testBox3");
                     box.setName("box3");
-                    add(new JLabel("Three!"));
+                    add(new JLabel("Two!"));
                     add(box);
+
+                    // Name for input and output flags
+                    // Setting for the split pattern
+                    final JTextField inFlagField = new JTextField();
+                    inFlagField.setName("inFlag");
+                    inFlagField.setPreferredSize(new Dimension(50, 20));
+                    add(new JLabel("Flag for executable to define input file"));
+                    add(inFlagField);
+                    add(new JLabel("(Leave blank to use stdin)"));
+                
+                    // Setting for the split pattern
+                    final JTextField outFlagField = new JTextField();
+                    outFlagField.setName("outFlag");
+                    outFlagField.setPreferredSize(new Dimension(50, 20));
+                    add(new JLabel("Flag for executable to define output dir"));
+                    add(outFlagField);
+                    add(new JLabel("(Leave blank to use stdout)"));
                 }
             },
-            new WizardPage("Four", "Last page")
+            new WizardPage("Threads", "Other Settings")
             {
                 {
-                    final JCheckBox box = new JCheckBox("testBox4");
-                    box.setName("box4");
-                    add(new JLabel("Four!"));
-                    add(box);
-                }
+                    // Settings for the number of threads
+                    int cores = Runtime.getRuntime().availableProcessors();
+                    List<String> options = new ArrayList<String>();
+                    int i = 1;
+                    while (i <= cores)
+                    {
+                        options.add(Integer.toString(i));
+                        i *= 2;
+                    }
 
+                    final JSpinner spinner = 
+                        new JSpinner(new SpinnerListModel(options));
+                    spinner.setName("processes");
+                    add(new JLabel("Select the number of processes: "));
+                    add(spinner);
+
+                    final JCheckBox box = new JCheckBox();
+                    box.setName("stats");
+                    add(new JLabel("Create stats file?"));
+                    add(box);
+                }   
+
+
+                /**
+                 * {@inheritDoc}
+                 */
                 public void rendering(final List<WizardPage> path, 
                         final WizardSettings settings) 
                 {
@@ -127,6 +230,9 @@ public final class ConfigWizard
             },
         };
 
+        /**
+         * {@inheritDoc}
+         */
         public WizardPage createPage(final List<WizardPage> path, 
                 final WizardSettings settings)
         {
@@ -134,32 +240,27 @@ public final class ConfigWizard
         }
     }
 
-    private final class ConfigWizardListener implements WizardListener
+    /**
+     * Border for all components
+     */
+    private static final EmptyBorder BORDER = new EmptyBorder(0, 0, 40, 0);
+
+    private class Seperator extends JLabel
     {
-        @Override
-        public void onCanceled(final List<WizardPage> path, 
-            final WizardSettings settings)
+        private Seperator()
         {
-            System.err.println("Cancelled " + settings);
-            ConfigWizard.this.window.dispose();
-            ConfigWizard.this.notify();
+            super(" ");
+            setBorder(BORDER);
         }
+    }
 
-        @Override
-        public void onFinished(final List<WizardPage> path, 
-            final WizardSettings settings)
-        {
-            System.err.println("Finished " + settings);
-            ConfigWizard.this.config = new Configuration(settings);
-            ConfigWizard.this.window.dispose();
-            ConfigWizard.this.notify();
-        }
-
-        @Override
-        public void onPageChanged(final WizardPage newPage, 
-            final List<WizardPage> path) 
-        {
-            ConfigWizard.this.window.setTitle(newPage.getDescription());
-        }
+    /**
+     * Test main method. Isn't hanging around.
+     * @param args - not 
+     */
+    public static void main(final String[] args)
+    {
+        final Configuration c = ConfigWizard.getInstance().createConfiguration();
+        System.out.println(c);
     }
 }
