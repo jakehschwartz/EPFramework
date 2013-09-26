@@ -3,10 +3,9 @@ package edu.unh.schwartz.parawrap.config;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.border.EmptyBorder;
+// import javax.swing.border.EmptyBorder;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -77,18 +76,19 @@ public final class ConfigWizard
     public Configuration createConfiguration()
     {
         this.window.setVisible(true);
-        try
+        synchronized(this)
         {
-            this.wait();
+            try
+            {
+                this.wait();
+            }
+            catch (InterruptedException e)
+            {
+                System.err.println("Oh noes!");
+            }
         }
-        catch (InterruptedException e)
-        {
-            System.err.println("Interrupted");
-        }
-        finally
-        {
-            return this.config;
-        }
+
+        return this.config;
     }
 
     /**
@@ -100,26 +100,32 @@ public final class ConfigWizard
          * {@inheritDoc}
          */
         @Override
-            public void onCanceled(final List<WizardPage> path, 
-                    final WizardSettings settings)
+        public void onCanceled(final List<WizardPage> path, 
+                final WizardSettings settings)
+        {
+            System.err.println("Cancelled " + settings);
+            ConfigWizard.this.window.dispose();
+            synchronized(ConfigWizard.this)
             {
-                System.err.println("Cancelled " + settings);
-                ConfigWizard.this.window.dispose();
                 ConfigWizard.this.notify();
             }
+        }
 
         /**
          * {@inheritDoc}
          */
         @Override
-            public void onFinished(final List<WizardPage> path, 
-                    final WizardSettings settings)
+        public void onFinished(final List<WizardPage> path, 
+                final WizardSettings settings)
+        {
+            System.err.println("Finished " + settings);
+            ConfigWizard.this.config = new Configuration(settings);
+            ConfigWizard.this.window.dispose();
+            synchronized(ConfigWizard.this)
             {
-                System.err.println("Finished " + settings);
-                ConfigWizard.this.config = new Configuration(settings);
-                ConfigWizard.this.window.dispose();
                 ConfigWizard.this.notify();
             }
+        }
 
         /**
          * {@inheritDoc}
@@ -143,10 +149,10 @@ public final class ConfigWizard
             {
                 {
                     // Settings for the input file
-                    final JFileChooser inChooser = new JFileChooser();
-                    inChooser.setName("inFile");
-                    add((new JLabel("Select the input file: ")));
-                    add(inChooser);
+                    // final JFileChooser inChooser = new JFileChooser();
+                    // inChooser.setName("inFile");
+                    // add((new JLabel("Select the input file: ")));
+                    // add(inChooser);
 
                     // Setting for the split pattern
                     final JTextField splitField = new JTextField();
@@ -157,10 +163,10 @@ public final class ConfigWizard
                     add(new JLabel("(Leave blank to use every new line)"));
 
                     // Settings for the output location
-                    final JFileChooser outChooser = new JFileChooser();
-                    outChooser.setName("outFile");
-                    add((new JLabel("Select the output directory: ")));
-                    add(outChooser);
+                    // final JFileChooser outChooser = new JFileChooser();
+                    // outChooser.setName("outFile");
+                    // add((new JLabel("Select the output directory: ")));
+                    // add(outChooser);
                 }
             },
             new WizardPage("Exec", "Executable Settings")
@@ -168,10 +174,10 @@ public final class ConfigWizard
                 {
                     // Settings for the location of the executable
                     // and for the flags
-                    final JCheckBox box = new JCheckBox("testBox3");
-                    box.setName("box3");
-                    add(new JLabel("Two!"));
-                    add(box);
+                    // final JCheckBox box = new JCheckBox("testBox3");
+                    // box.setName("box3");
+                    // add(new JLabel("Two!"));
+                    // add(box);
 
                     // Name for input and output flags
                     // Setting for the split pattern
@@ -183,22 +189,22 @@ public final class ConfigWizard
                     add(new JLabel("(Leave blank to use stdin)"));
                 
                     // Setting for the split pattern
-                    final JTextField outFlagField = new JTextField();
-                    outFlagField.setName("outFlag");
-                    outFlagField.setPreferredSize(new Dimension(50, 20));
-                    add(new JLabel("Flag for executable to define output dir"));
-                    add(outFlagField);
-                    add(new JLabel("(Leave blank to use stdout)"));
+                    // final JTextField outFlagField = new JTextField();
+                    // outFlagField.setName("outFlag");
+                    // outFlagField.setPreferredSize(new Dimension(50, 20));
+                    // add(new JLabel("Flag for executable to define output dir"));
+                    // add(outFlagField);
+                    // add(new JLabel("(Leave blank to use stdout)"));
                 }
             },
             new WizardPage("Threads", "Other Settings")
             {
                 {
                     // Settings for the number of threads
-                    int cores = Runtime.getRuntime().availableProcessors();
-                    List<String> options = new ArrayList<String>();
+                    final int max = Runtime.getRuntime().availableProcessors();
+                    final List<String> options = new ArrayList<String>();
                     int i = 1;
-                    while (i <= cores)
+                    while (i <= max)
                     {
                         options.add(Integer.toString(i));
                         i *= 2;
@@ -214,8 +220,14 @@ public final class ConfigWizard
                     box.setName("stats");
                     add(new JLabel("Create stats file?"));
                     add(box);
-                }   
-
+                
+                    final JTextField headerField = new JTextField();
+                    headerField.setName("headerLines");
+                    headerField.setText("0");
+                    headerField.setPreferredSize(new Dimension(50, 20));
+                    add(new JLabel("Number of header lines in output files: "));
+                    add(headerField);
+                }
 
                 /**
                  * {@inheritDoc}
@@ -241,18 +253,18 @@ public final class ConfigWizard
     }
 
     /**
-     * Border for all components
+     * Border for all components.
      */
-    private static final EmptyBorder BORDER = new EmptyBorder(0, 0, 40, 0);
+    // private static final EmptyBorder BORDER = new EmptyBorder(0, 0, 40, 0);
 
-    private class Seperator extends JLabel
-    {
-        private Seperator()
-        {
-            super(" ");
-            setBorder(BORDER);
-        }
-    }
+    // private class Seperator extends JLabel
+    // {
+        // private Seperator()
+        // {
+            // super(" ");
+            // setBorder(BORDER);
+        // }
+    // }
 
     /**
      * Test main method. Isn't hanging around.
