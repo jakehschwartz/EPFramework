@@ -149,10 +149,11 @@ public final class ConfigWizard
             {
                 {
                     // Settings for the input file
-                    // final JFileChooser inChooser = new JFileChooser();
-                    // inChooser.setName("inFile");
-                    // add((new JLabel("Select the input file: ")));
-                    // add(inChooser);
+                    final JFileChooserButton inChooser = 
+                        new JFileChooserButton(false);
+                    inChooser.setName("inFile");
+                    add((new JLabel("Select the input file: ")));
+                    add(inChooser);
 
                     // Setting for the split pattern
                     final JTextField splitField = new JTextField();
@@ -163,10 +164,11 @@ public final class ConfigWizard
                     add(new JLabel("(Leave blank to use every new line)"));
 
                     // Settings for the output location
-                    // final JFileChooser outChooser = new JFileChooser();
-                    // outChooser.setName("outFile");
-                    // add((new JLabel("Select the output directory: ")));
-                    // add(outChooser);
+                    final JFileChooserButton outChooser = 
+                        new JFileChooserButton(true);
+                    outChooser.setName("outFile");
+                    add((new JLabel("Select the output directory: ")));
+                    add(outChooser);
                 }
             },
             new WizardPage("Exec", "Executable Settings")
