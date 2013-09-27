@@ -143,106 +143,9 @@ public final class ConfigWizard
         /**
          * The pages of the wizard.
          */
-        private final WizardPage[] pages = 
-        {
-            new WizardPage("IO", "IO Settings")
-            {
-                {
-                    // Settings for the input file
-                    final JFileChooserButton inChooser = 
-                        new JFileChooserButton(false);
-                    inChooser.setName("inFile");
-                    add((new JLabel("Select the input file: ")));
-                    add(inChooser);
+        private final WizardPage[] pages = {new IOPage(), new ExecPage(), 
+            new OtherPage(),}; 
 
-                    // Setting for the split pattern
-                    final JTextField splitField = new JTextField();
-                    splitField.setName("split");
-                    splitField.setPreferredSize(new Dimension(50, 20));
-                    add(new JLabel("Pattern used to split input: "));
-                    add(splitField);
-                    add(new JLabel("(Leave blank to use every new line)"));
-
-                    // Settings for the output location
-                    final JFileChooserButton outChooser = 
-                        new JFileChooserButton(true);
-                    outChooser.setName("outFile");
-                    add((new JLabel("Select the output directory: ")));
-                    add(outChooser);
-                }
-            },
-            new WizardPage("Exec", "Executable Settings")
-            {
-                {
-                    // Settings for the location of the executable
-                    // and for the flags
-                    // final JCheckBox box = new JCheckBox("testBox3");
-                    // box.setName("box3");
-                    // add(new JLabel("Two!"));
-                    // add(box);
-
-                    // Name for input and output flags
-                    // Setting for the split pattern
-                    final JTextField inFlagField = new JTextField();
-                    inFlagField.setName("inFlag");
-                    inFlagField.setPreferredSize(new Dimension(50, 20));
-                    add(new JLabel("Flag for executable to define input file"));
-                    add(inFlagField);
-                    add(new JLabel("(Leave blank to use stdin)"));
-                
-                    // Setting for the split pattern
-                    // final JTextField outFlagField = new JTextField();
-                    // outFlagField.setName("outFlag");
-                    // outFlagField.setPreferredSize(new Dimension(50, 20));
-                    // add(new JLabel("Flag for executable to define output dir"));
-                    // add(outFlagField);
-                    // add(new JLabel("(Leave blank to use stdout)"));
-                }
-            },
-            new WizardPage("Threads", "Other Settings")
-            {
-                {
-                    // Settings for the number of threads
-                    final int max = Runtime.getRuntime().availableProcessors();
-                    final List<String> options = new ArrayList<String>();
-                    int i = 1;
-                    while (i <= max)
-                    {
-                        options.add(Integer.toString(i));
-                        i *= 2;
-                    }
-
-                    final JSpinner spinner = 
-                        new JSpinner(new SpinnerListModel(options));
-                    spinner.setName("processes");
-                    add(new JLabel("Select the number of processes: "));
-                    add(spinner);
-
-                    final JCheckBox box = new JCheckBox();
-                    box.setName("stats");
-                    add(new JLabel("Create stats file?"));
-                    add(box);
-                
-                    final JTextField headerField = new JTextField();
-                    headerField.setName("headerLines");
-                    headerField.setText("0");
-                    headerField.setPreferredSize(new Dimension(50, 20));
-                    add(new JLabel("Number of header lines in output files: "));
-                    add(headerField);
-                }
-
-                /**
-                 * {@inheritDoc}
-                 */
-                public void rendering(final List<WizardPage> path, 
-                        final WizardSettings settings) 
-                {
-                    super.rendering(path, settings);
-                    setFinishEnabled(true);
-                    setNextEnabled(false);
-                }
-            },
-        };
 
         /**
          * {@inheritDoc}
@@ -267,6 +170,111 @@ public final class ConfigWizard
             // setBorder(BORDER);
         // }
     // }
+
+    private final class IOPage extends WizardPage
+    {
+        private IOPage()
+        {
+            super("IO", "IO Settings");
+
+            // Settings for the input file
+            final JFileChooserButton inChooser = new JFileChooserButton(false);
+            inChooser.setName("inFile");
+            add((new JLabel("Select the input file: ")));
+            add(inChooser);
+
+            // Setting for the split pattern
+            final JTextField splitField = new JTextField();
+            splitField.setName("split");
+            splitField.setPreferredSize(new Dimension(50, 20));
+            add(new JLabel("Pattern used to split input: "));
+            add(splitField);
+            add(new JLabel("(Leave blank to use every new line)"));
+
+            // Settings for the output location
+            final JFileChooserButton outChooser = new JFileChooserButton(true);
+            outChooser.setName("outFile");
+            add((new JLabel("Select the output directory: ")));
+            add(outChooser);
+        }
+    }
+
+    private final class ExecPage extends WizardPage
+    {
+        private ExecPage()
+        {
+            super("Exec", "Executable Settings");
+            // Settings for the location of the executable
+            // and for the flags
+            // final JCheckBox box = new JCheckBox("testBox3");
+            // box.setName("box3");
+            // add(new JLabel("Two!"));
+            // add(box);
+
+            // Name for input and output flags
+            // Setting for the split pattern
+            final JTextField inFlagField = new JTextField();
+            inFlagField.setName("inFlag");
+            inFlagField.setPreferredSize(new Dimension(50, 20));
+            add(new JLabel("Flag for executable to define input file"));
+            add(inFlagField);
+            add(new JLabel("(Leave blank to use stdin)"));
+
+            // Setting for the split pattern
+            // final JTextField outFlagField = new JTextField();
+            // outFlagField.setName("outFlag");
+            // outFlagField.setPreferredSize(new Dimension(50, 20));
+            // add(new JLabel("Flag for executable to define output dir"));
+            // add(outFlagField);
+            // add(new JLabel("(Leave blank to use stdout)"));
+        }
+    }
+
+    private final class OtherPage extends WizardPage
+    {
+        private OtherPage()
+        {
+            super("Threads", "Other Settings");
+            // Settings for the number of threads
+            final int max = Runtime.getRuntime().availableProcessors();
+            final List<String> options = new ArrayList<String>();
+            int i = 1;
+            while (i <= max)
+            {
+                options.add(Integer.toString(i));
+                i *= 2;
+            }
+
+            final JSpinner spinner = 
+                new JSpinner(new SpinnerListModel(options));
+            spinner.setName("processes");
+            add(new JLabel("Select the number of processes: "));
+            add(spinner);
+
+            final JCheckBox box = new JCheckBox();
+            box.setName("stats");
+            add(new JLabel("Create stats file?"));
+            add(box);
+
+            final JTextField headerField = new JTextField();
+            headerField.setName("headerLines");
+            headerField.setText("0");
+            headerField.setPreferredSize(new Dimension(50, 20));
+            add(new JLabel("Number of header lines in output files: "));
+            add(headerField);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void rendering(final List<WizardPage> path, 
+                final WizardSettings settings) 
+        {
+            super.rendering(path, settings);
+            setFinishEnabled(true);
+            setNextEnabled(false);
+        }
+    }
 
     /**
      * Test main method. Isn't hanging around.

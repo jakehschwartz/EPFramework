@@ -6,13 +6,32 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
+/**
+ * Clab.
+ */
 final class JFileChooserButton extends JButton
 {
+    /**
+     * The dialog for the file choosers.
+     */
     private JDialog dialog;
+    
+    /**
+     * The file chooser that appears when the button clicked.
+     */
     private JFileChooser fc;
+    
+    /**
+     * The file selected by the user.
+     */
     private File file;
 
-    public JFileChooserButton(boolean directoriesOnly)
+    /**
+     * Constructs a new button.
+     * @param directoriesOnly - allow the user to select directories only iff
+     * true. otherwise, user can only select files
+     */
+    public JFileChooserButton(final boolean directoriesOnly)
     {
         super("...");
         this.dialog = new JDialog();
@@ -28,10 +47,15 @@ final class JFileChooserButton extends JButton
         }
     }
 
-    public void actionPerformed(ActionEvent e)
+    /**
+     * {@inheritDoc}
+     */
+    public void actionPerformed(final ActionEvent e)
     {
-       int returnVal = this.fc.showOpenDialog(dialog);
+        // Open the dialog
+       final int returnVal = this.fc.showOpenDialog(dialog);
 
+       // Save the file if one was selected
        switch (returnVal)
        {
            case JFileChooser.APPROVE_OPTION:
