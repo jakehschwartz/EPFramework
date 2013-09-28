@@ -1,0 +1,120 @@
+\documentclass[12pt]{IEEEtran} % .... using IEEE Transaction style
+\usepackage{graphics}
+
+% the following is to get inch margins on a letter-size paper
+\setlength{\topmargin}{0pt}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{9.0in}
+\setlength{\footskip}{0.5in}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.5in}
+
+\begin{document}
+\title{A Java Wrapper For Embarresingly Parallel Programs}
+\author{Jacob Schwartz}
+\maketitle
+
+\begin{abstract}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+id est laborum.
+\end{abstract}
+
+
+\section{Introduction}
+
+This is just a test. This is just a test (a line break follows)\\
+this is just a test.
+
+
+\subsection*{Background}
+
+Figure \ref{fig:figure} shows .... Has to be compiled {\bf twice} to get the 
+figure reference right. AODV \cite{aodv} is an ad hoc roting protocol.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+id est laborum.
+
+\begin{figure}[bht]
+\begin{center}
+{\resizebox{2in}{!}{\includegraphics{figures/drawing}}}
+%        {x-dim}{y-dim}
+% ! means proportional scaling
+\end{center}
+\caption{Caption of the figure.}
+\label{fig:figure}
+\end{figure}
+
+\begin{itemize}
+\item One
+\item Two
+\item There
+\end{itemize}
+
+\begin{enumerate}
+\item One
+\item Two
+\item There
+\end{enumerate}
+
+\begin{description}
+\item[Item 1:] Ut enim ad minim veniam, quis nostrud exercitation ullamco
+laboris nisi ut aliquip ex ea commodo consequat.
+\item[Item 2:]  Duis aute irure dolor in reprehenderit in voluptate
+velit esse cillum dolore eu fugiat nulla pariatur.
+\item[Item 3:]  Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.
+\end{description}
+
+\begin{table}[htdp]
+\caption{default}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+jljljljl&jkkjk\\
+\hline
+\end{tabular}
+\end{center}
+\label{default}
+\end{table}%
+
+
+\section{Experiment}
+
+The results of experiments are 
+
+$$\frac{3}{2}$$ 
+
+shown in Figure~\ref{fig:graph}.
+
+\begin{figure}[bht]
+\begin{center}
+%{\resizebox{3.4in}{!}{\includegraphics{experiment/plot}}}
+%        {x-dim}{y-dim}
+% ! means proportional scaling
+\end{center}
+\caption{Caption of the graph.}
+\label{fig:graph}
+\end{figure}
+
+
+\begin{thebibliography}{1}
+
+\bibitem{aodv}
+C. Perkins,  E. Belding-Royer, and  S. Das, ``\emph{Ad hoc On-Demand
+Distance Vector (AODV) Routing},'' IETF RFC 3561, July 2003.
+
+\end{thebibliography}
+
+\end{document}
