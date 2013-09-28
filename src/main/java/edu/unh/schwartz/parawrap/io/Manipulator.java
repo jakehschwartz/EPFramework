@@ -15,12 +15,17 @@ import java.util.regex.Pattern;
 /**
  * Does all of the IO functions for the process. Can split an input file based
  * on a pattern and merge it back together in the same order.
- *
- * @author Jacob Schwartz
  */
 public final class Manipulator
 {
+    /**
+     * The pattern used to split the input file.
+     */
     private Pattern pattern;
+    
+    /**
+     * The chunks for the current input file.
+     */
     private List<Chunk> chunks;
 
     /**
@@ -165,8 +170,5 @@ public final class Manipulator
         {
             System.err.println(e.getMessage());
         }
-
-
-
     }
 }

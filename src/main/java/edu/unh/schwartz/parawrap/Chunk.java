@@ -12,12 +12,12 @@ import java.io.IOException;
 public final class Chunk
 {
     /**
-     * The number of header lines used int he output file.
+     * The number of header lines used in the output file.
      */
     private static int HEADER_LINES;
 
     /**
-     * The runtime of the chunk in miilis.
+     * The runtime of the chunk in millis.
      */
     private long runtime;
     
@@ -91,7 +91,7 @@ public final class Chunk
     }
 
     /**
-     * @return the result of the run on the chunk
+     * @return the result of the run on the chunk aka the content of the outfile
      */
     public String getResult()
     {
@@ -131,7 +131,7 @@ public final class Chunk
     }
 
     /**
-     * Creates the outfile file for use later.
+     * Creates the output file for use my the worker.
      */
     public void createOutFile()
     {
@@ -171,5 +171,4 @@ public final class Chunk
     {
         HEADER_LINES = headerLines;
     }
-
 }

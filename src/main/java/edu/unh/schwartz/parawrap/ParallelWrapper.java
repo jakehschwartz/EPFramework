@@ -9,7 +9,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Application class. Takes an optional command line parameter for the run
- * configuration. If none, is given, goes through the wizard to create one,
+ * configuration. If none is given, goes through the wizard to create one,
  * which will then allow the user to save it for later runs. Calls the split
  * operation, starts the workers, calls the move operation and then prints
  * statistics about the run to 'stats.csv'.
@@ -60,8 +60,7 @@ final class ParallelWrapper
     }
 
     /**
-     * Main method. You can put a lot more here. Explain what the different args
-     * do.
+     * Main method. Can be run with 0 or 1 cmd line args.
      *
      * @param args - Command line arguments
      */

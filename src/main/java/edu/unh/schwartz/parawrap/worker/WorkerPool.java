@@ -4,7 +4,7 @@ import edu.unh.schwartz.parawrap.Chunk;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * Runs the workers.
+ * Creates and starts the <code>Worker</code>s.
  */
 public final class WorkerPool
 {
