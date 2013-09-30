@@ -9,7 +9,7 @@ import java.io.IOException;
  * Piece of work to do be done by the <code>Worker</code>s. Also contains
  * statstical information that can be used to get the ideal configuration.
  */
-public final class Chunk
+public final class Chunk implements Comparable<Chunk>
 {
     /**
      * The number of header lines used in the output file.
@@ -161,6 +161,15 @@ public final class Chunk
     public String getOutFileName()
     {
         return this.directory.getAbsolutePath() + "out";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override 
+    public int compareTo(final Chunk c) 
+    {
+        return 0;
     }
 
     /**

@@ -74,11 +74,11 @@ public final class Manipulator
                 dir.mkdir();
 
                 // Make the new file
-                final File in = new File(dir.getName() + "/in");
-                in.createNewFile();
+                // final File in = new File(dir.getName() + "/in");
+                // in.createNewFile();
 
                 // Write the content to a file
-                final PrintWriter inWriter = new PrintWriter(in);
+                final PrintWriter inWriter = new PrintWriter(dir.getAbsolutePath() + "/in");
                 inWriter.println(content);
                 inWriter.close();
 
