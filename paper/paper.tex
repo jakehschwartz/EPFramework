@@ -14,36 +14,37 @@
 
 \doublespacing
 \begin{document}
-\title{A Java Wrapper For Embarresingly Parallel Programs}
+\title{A Java Wrapper For Embarresingly Parallel Problems}
 \author{Jacob Schwartz}
 \maketitle
 
 \begin{abstract}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-id est laborum.
+An embarresingly parallel, also called pleasing parallel, problem is one that 
+can easily be broken up into BLANK that do not need to know about one another.
+Several problems in the biological sciences are embarrsingly parallel but they
+are difficult to rewrite to use multithreading, because they are either poorly
+written or too complex. We have written a wrapper, implemented in Java, that
+will execute the serial program in several threads. RESULTS SENTENCE. More
+statistics, savable configurations and BLANK will be implemented next, in
+addition to BLANK.
 \end{abstract}
 
 
 \section{Introduction}
 
-This is just a test. This is just a test (a line break follows)\\
-this is just a test.
+HISTORY OF PARALLELISM
 
-\begin{itemize}
-\item History of parallelism and java?
-\item Discuss embarresingly parallel (2 paragraphs)
-\item What we are going to do (1 page, one paragraph about problem)
-\item Summary of results
-\end{itemize}
+DISCUSS EMBARRESINGKLY PARALLEL (GET 3 LINKS BEFORE HAND)
+
+TALK ABOUT BIOLOGICAL SCIENCES AND KAKS?
+
+WHAT ARE WE GOING TO DO
+
+SUMMARY OF RESULTS
 
 \section{Background}
 
-BACKGROUND ON WORK WITH DAVE. INTRO TO KAKS
+BACKGROUND ON WORK WITH DAVE. INTRO TO KAKS.
 
 Instead of attempting to rewrite the preexisting program, blah. Trying to
 parallelize the serial KaKs Calculator program would have presented several
@@ -77,11 +78,26 @@ determine whether their use of the wrapper is efficient.
 
 Break down the components. Have a UML diagram here first
 
-splitter
+The KaKs Calculator is not the only program to used the wrapper; there are
+various potential programs that the wrapper could support. SENTANCE. The wrapper
+needs to support various kinds of input files and be able to chunk up the work
+accordingly. The KaKs Calculator's input consists of a header and then two
+protein sequence lines followed by a blank line. The wrapper will use that blank
+line to know when one chunk of work has ended and another has begun. The user
+can input their own regular expression to determine what lines of input make up
+what chunks. This will occur in the ChunkManager class. 
 
-merger
+The other purpose of the ChunkManager class is to combine the resulting chunks 
+back together when the worker threads have finished. MORE
 
-wizard
+As more features are added to the wrapper and as more programs start to use the
+wrapper, there are more choices for the end-user to make in regards to how they
+want their program to execute. The number of threads to use, various flags for
+the executable and blank are just a few choice they can make. A start-up wizard
+is displayed at runtime to systimatically allow the end-user to choose the
+settings for the run. The ConfigWizard class brings the user through this
+process and creates an instance of Configuration when it is completed to save
+the user's settings.
 
 Lastly, the worker threads will keep records during the execution of a set of 
 work. The threads records its uptime and the number of pieces of work it
@@ -89,7 +105,9 @@ executes on. Also, the runtime for each piece of work is recorded. These will be
 used by the end user to determine if their run is ideal or if they may need to
 change some settings to make it work faster next time. The statistics can also
 give the developers of the wrapper an idea on what can be implemented in order
-make it as fast as possible for a user.
+make it as fast as possible for a user. The statistics for each thread can be
+found in the Worker subclass and the individual Chunk classes will store their
+own statstics about runtime and size.
 
 \section{Results}
 
@@ -97,10 +115,25 @@ Tables charts, etc
 
 \section{Conclusion}
 
-Future work \\
-if we had a do over\\
+Conclusions gathered from results.
 
-current plans for improvement
+There are several next steps in the pipeline. In addition to using the
+statistics to try to boost speed, adding savable configurations is at the top of
+the list. This will allow users to use the same configuration without having to
+go through the wizard if they need to redo a run. More extensive unit testing
+will be implemented. The ability to chunk multiple pieces of work may be
+implemented in order to avoid potential start up costs in the executable. 
+Finally, other  pleasing parallel problems will be executed by the wrapper so 
+that more potential features will be discovered. MORE
+
+Using Java was a good choice for implementation ease and future implementation
+extension by others, but it may not produce the fastest results. Other languages
+like Hadoop or blank may have been better due to their parallel nature. DO SOME
+RESEARCH. Another approach that could have been taken is one similar to the
+bitches in Washington: going to the cloud. WHY THEY WOULD BE BETTER. HOW IT
+COULD BE IMPLEMENTED.
+
+
 
 \begin{thebibliography}{1}
 
