@@ -1,6 +1,7 @@
 \documentclass[12pt]{article} 
 \usepackage{graphics}
 \usepackage{setspace}
+\usepackage{cite}
 
 % the following is to get inch margins on a letter-size paper
 \setlength{\topmargin}{0pt}
@@ -46,23 +47,27 @@ SUMMARY OF RESULTS
 
 BACKGROUND ON WORK WITH DAVE. INTRO TO KAKS.
 
-Instead of attempting to rewrite the preexisting program, blah. Trying to
-parallelize the serial KaKs Calculator program would have presented several
-problems: introducing bugs, breaking the KaKs algorithm, and the learning curve
-of C++ threading. With such a short time before results were needed, a different
-approach was necessary. A simple Java program was written to break up the input
-and spawn threads that would run BLANKS's KaKs Calculator. When the input was
-calculated, the contents of the output files was concatenated together to
-produce a final input. MORE?
+Instead of attempting to rewrite the preexisting program, we decided it would be
+better to look at other options. Trying to parallelize the serial KaKs 
+Calculator program could present several problems: introducing bugs, breaking 
+the KaKs algorithm, and the learning curve of C++ threading. We decided a 
+different approach was neccessary, mostly due to the short time table to produce
+results. A simple Java program was written to break up the input and spawn 
+threads that would run BLANKS's KaKs Calculator\cite{blah}. When the input was 
+calculated, the contents of the output files was concatenated together 
+to produce a final input. 
 
 The KaKs Calculator is not the only embarresingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
 embarresingly parallel programs in the biological sciences. TALK ABOUT OTHER
+
+BLAST, two other things are
+
 PROGRAMS HERE. With this multitude of applications that would benefit from
 parallelism, it was obvious that the wrapper program has potential outside of
 this project.
 
-TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
+% TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
 
 The original wrapper was also written very quickly due to the impending
 deadline. In this version of the wrapper, several components are being added.
@@ -78,17 +83,26 @@ determine whether their use of the wrapper is efficient.
 
 Break down the components. Have a UML diagram here first
 
-The KaKs Calculator is not the only program to used the wrapper; there are
-various potential programs that the wrapper could support. SENTANCE. The wrapper
-needs to support various kinds of input files and be able to chunk up the work
-accordingly. The KaKs Calculator's input consists of a header and then two
-protein sequence lines followed by a blank line. The wrapper will use that blank
-line to know when one chunk of work has ended and another has begun. The user
-can input their own regular expression to determine what lines of input make up
-what chunks. This will occur in the ChunkManager class. 
+The KaKs Calculator is not the only program to use the wrapper; there are
+various potential programs that the wrapper could support. The only requirements
+for the this program are that it process the input in an embarresingly parallel
+manner and that the input comes from a file and the processed results are also
+writen to a file. The wrapper needs to support various kinds of input files and 
+be able to chunk up the work accordingly. The KaKs Calculator's input consists 
+of a header and then two protein sequence lines followed by a blank line. The 
+wrapper will use that blank line to know when one chunk of work has ended and 
+another has begun. The user can input their own regular expression to determine 
+what lines of input make up what chunks. This will occur in the ChunkManager 
+class. 
 
 The other purpose of the ChunkManager class is to combine the resulting chunks 
-back together when the worker threads have finished. MORE
+back together when the worker threads have finished. Once the work has been
+down, all of the seperate results are spread across several files. The
+ChunkManager's second job is to retrieve those results and construct a real
+output file. The real output file must look the same as the output file would
+look if the program were run serially; the output must come in the same order as
+the inputs in the input file and headers must be added to the top, if
+applicable.
 
 As more features are added to the wrapper and as more programs start to use the
 wrapper, there are more choices for the end-user to make in regards to how they
