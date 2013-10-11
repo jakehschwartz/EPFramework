@@ -32,9 +32,26 @@ addition to better testing and refactored.
 
 \section{Introduction}
 
-DISCUSS EMBARRESINGKLY PARALLEL (GET 3 LINKS BEFORE HAND)
+The embarresingly parallel class of problems is defined as a problem when the
+computation graph is disconnected. The computation graph consists of nodes that
+represent the functions or processes and the data being passed from one process
+to another is displayed in the graph as edges. If the graph is disconnected, 
+none of the processes need to communicate to complete the computations. In a 
+practical situtation, there will be some internode communication to set up the 
+problem and then again to accumulate the results back together. Also known as
+pleasingly parallel problems, they can also easy be performed on a cluster of 
+servers or in any kind of distributed network, due to its lack of dependencies. 
+The term  embarresingly parallel was coined by Geoffrey Fox in his book, 
+\underline{Parallel Programming Works!} \cite{book}
 
-TALK ABOUT BIOLOGICAL SCIENCES AND KAKS?
+Programs in the field of Biology and Genetics often analyze long strings of
+characters, whether they are DNA, RNA or protein sequences. In addition to the
+large file sizes, there is a lot of processing that goes into comparing several
+characters. This time adds up when there are thousands of strings to process.
+However, these sequences often to not relate to each other and can be processed
+independently. Using the embarresingly parallel approach, the processing time
+for all of the sequences can be cut down exponentially with very minimal effort
+by the programmer.
 
 In this paper, I am going to propose a program that will call the serial
 programs on several Java threads. This program will act like the serial
@@ -45,17 +62,27 @@ work units by a regular expression. SUMMARY OF RESULTS to end the paragraph.
 
 \section{Background}
 
-BACKGROUND ON WORK WITH DAVE. INTRO TO KAKS.
+Originally, I was assisting with research into different forms of the species 
+\emph{Cicer arietinum}, the chikckpea. The two main forms, Kabuli and Desi, are
+very different in size and color but we mostly wanted to see why the Desi is
+more disease resistance and have more effective root nodule symbiosis and why
+the Kabuli has a large but soft shell. These two types are both cultivated and
+have been under human selection for several thousand years. We wanted to use a
+Ka/Ks equation to quantify the evelution and selection of these chickpeas. We
+found a Ka/Ks program writen by Zhang et al. from the Beijing Institute of 
+Genomics \cite{kaks} but had three varients that we wanted to be analyzed, each 
+with thousands of sequences to process. The Ka/Ks Calculator program takes
+somewhere from five to thirty seconds to process one pair of sequences. 
 
 Instead of attempting to rewrite the preexisting program, we decided it would be
-better to look at other options. Trying to parallelize the serial KaKs 
-Calculator program could present several problems: introducing bugs, breaking 
-the KaKs algorithm, and the learning curve of C++ threading. We decided a 
-different approach was neccessary, mostly due to the short time table to produce
-results. A simple Java program was written to break up the input and spawn 
-threads that would run BLANKS's KaKs Calculator\cite{blah}. When the input was 
-calculated, the contents of the output files was concatenated together 
-to produce a final input. 
+better to look at other options to process the sequences faster. Trying to 
+parallelize the serial Ka/Ks program could present several problems: introducing
+bugs, breaking the algorithm, dealing with the learning curve of C++ threading. 
+We decided a  different approach was neccessary, mostly due to the short time we
+had to produce results. A simple Java program was written to break up the input 
+and spawn  threads that would run the Ka/Ks Calculator process. When the input 
+was calculated, the contents of the output files was concatenated together to 
+produce a final input. 
 
 The KaKs Calculator is not the only embarresingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
@@ -150,7 +177,15 @@ solution like MPI or a cloud solution like Amazon instances. (More will go here
 when I added in more previous work from others)
 
 \begin{thebibliography}{1}
-
+\bibitem{book}
+Fox G., Williams R., and Messina G., ``\emph{Parallel Programming Works!},'', 
+Morgan Kaufmann, May 1994
+\bibitem{kaks}
+Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., ``\emph{KaKs Calculator: 
+calculating Ka and Ks through model selection and model averaging.},'',
+Genomics Proteomics Bioinformatics, November 2006.
+\bibitem{BLAST}
+http://blast.ncbi.nlm.nih.gov/Blast.cgii
 \end{thebibliography}
 
 \end{document}
