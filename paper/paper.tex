@@ -21,27 +21,27 @@
 
 \begin{abstract}
 An embarresingly parallel, also called pleasing parallel, problem is one that 
-can easily be broken up into BLANK that do not need to know about one another.
+can easily be broken up into work that does not need to know about one another.
 Several problems in the biological sciences are embarrsingly parallel but they
 are difficult to rewrite to use multithreading, because they are either poorly
 written or too complex. We have written a wrapper, implemented in Java, that
 will execute the serial program in several threads. RESULTS SENTENCE. More
-statistics, savable configurations and BLANK will be implemented next, in
-addition to BLANK.
+statistics, savable configurations and more options will be implemented next, in
+addition to better testing and refactored.
 \end{abstract}
 
-
 \section{Introduction}
-
-HISTORY OF PARALLELISM
 
 DISCUSS EMBARRESINGKLY PARALLEL (GET 3 LINKS BEFORE HAND)
 
 TALK ABOUT BIOLOGICAL SCIENCES AND KAKS?
 
-WHAT ARE WE GOING TO DO
-
-SUMMARY OF RESULTS
+In this paper, I am going to propose a program that will call the serial
+programs on several Java threads. This program will act like the serial
+application, reading the input the same and creating the output in the same
+format. My wrapper program wraps any embarresingly parallel command line program
+that reads from a file, writes to a file and the input can be broken up into
+work units by a regular expression. SUMMARY OF RESULTS to end the paragraph.
 
 \section{Background}
 
@@ -59,13 +59,14 @@ to produce a final input.
 
 The KaKs Calculator is not the only embarresingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
-embarresingly parallel programs in the biological sciences. TALK ABOUT OTHER
-
-BLAST, two other things are
-
-PROGRAMS HERE. With this multitude of applications that would benefit from
-parallelism, it was obvious that the wrapper program has potential outside of
-this project.
+embarresingly parallel programs in the biological sciences. The Basic Local
+Alignment Search Tool (BLAST) \cite{BLAST} is a common program used to find
+similarities between sequences and then compares them to databases to calculate
+the statistical significance. Another program we have been looking at is called
+Trinity. Trinity claims to be an efficient way to do de novo reconstruction of
+transcriptomes from mRNA sequence data. With this variety of applications that 
+would benefit from parallelism, it was obvious that the wrapper program has 
+potential outside of this project.
 
 % TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
 
@@ -81,7 +82,7 @@ determine whether their use of the wrapper is efficient.
 
 \section{Proposed Solution}
 
-Break down the components. Have a UML diagram here first
+A UML Diagram will go here
 
 The KaKs Calculator is not the only program to use the wrapper; there are
 various potential programs that the wrapper could support. The only requirements
@@ -137,23 +138,18 @@ the list. This will allow users to use the same configuration without having to
 go through the wizard if they need to redo a run. More extensive unit testing
 will be implemented. The ability to chunk multiple pieces of work may be
 implemented in order to avoid potential start up costs in the executable. 
-Finally, other  pleasing parallel problems will be executed by the wrapper so 
-that more potential features will be discovered. MORE
+Finally, other pleasing parallel problems will be executed by the wrapper so 
+that more potential features will be discovered. 
 
 Using Java was a good choice for implementation ease and future implementation
-extension by others, but it may not produce the fastest results. Other languages
-like Hadoop or blank may have been better due to their parallel nature. DO SOME
-RESEARCH. Another approach that could have been taken is one similar to the
-bitches in Washington: going to the cloud. WHY THEY WOULD BE BETTER. HOW IT
-COULD BE IMPLEMENTED.
-
-
+extension by others, but it may not produce the fastest results. Languages
+like Hadoop, Clojure or other multithread oriented language may have been better
+due to their parallel nature. Another approach that could have been taken is one
+similar to the people in Washington: going to the cloud. Using a networked 
+solution like MPI or a cloud solution like Amazon instances. (More will go here
+when I added in more previous work from others)
 
 \begin{thebibliography}{1}
-
-\bibitem{aodv}
-C. Perkins,  E. Belding-Royer, and  S. Das, ``\emph{Ad hoc On-Demand
-Distance Vector (AODV) Routing},'' IETF RFC 3561, July 2003.
 
 \end{thebibliography}
 
