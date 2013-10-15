@@ -3,3 +3,4 @@ build/
 *.aux
 *.pdf
 *.log
+*.dvi

@@ -181,13 +181,13 @@ public final class ConfigWizard
 
             // Settings for the input file
             final JFileChooserButton inChooser = new JFileChooserButton(false);
-            inChooser.setName(Configuration.IN_FILE_KEY);
+            inChooser.setName("inFile");
             add((new JLabel("Select the input file: ")));
             add(inChooser);
 
             // Setting for the split pattern
             final JTextField splitField = new JTextField();
-            splitField.setName(Configuration.SPLIT_PATTERN_KEY);
+            splitField.setName("split");
             splitField.setPreferredSize(new Dimension(50, 20));
             add(new JLabel("Pattern used to split input: "));
             add(splitField);
@@ -195,7 +195,7 @@ public final class ConfigWizard
 
             // Settings for the output location
             final JFileChooserButton outChooser = new JFileChooserButton(true);
-            outChooser.setName(Configuration.OUT_FILE_KEY);
+            outChooser.setName("outFile");
             add((new JLabel("Select the output directory: ")));
             add(outChooser);
         }
@@ -216,7 +216,7 @@ public final class ConfigWizard
             // Name for input and output flags
             // Setting for the split pattern
             final JTextField inFlagField = new JTextField();
-            inFlagField.setName(Configuration.IN_FLAG_KEY);
+            inFlagField.setName("inFlag");
             inFlagField.setPreferredSize(new Dimension(50, 20));
             add(new JLabel("Flag for executable to define input file"));
             add(inFlagField);
@@ -224,7 +224,7 @@ public final class ConfigWizard
 
             // Setting for the split pattern
             final JTextField outFlagField = new JTextField();
-            outFlagField.setName(Configuration.OUT_FILE_KEY);
+            outFlagField.setName("outFlag");
             outFlagField.setPreferredSize(new Dimension(50, 20));
             add(new JLabel("Flag for executable to define output dir"));
             add(outFlagField);
@@ -249,17 +249,17 @@ public final class ConfigWizard
 
             final JSpinner spinner = 
                 new JSpinner(new SpinnerListModel(options));
-            spinner.setName(Configuration.NUM_PROCESSES_KEY);
+            spinner.setName("processes");
             add(new JLabel("Select the number of processes: "));
             add(spinner);
 
             final JCheckBox box = new JCheckBox();
-            box.setName(Configuration.STATS_KEY);
+            box.setName("stats");
             add(new JLabel("Create stats file?"));
             add(box);
 
             final JTextField headerField = new JTextField();
-            headerField.setName(Configuration.NUM_HEADER_KEY);
+            headerField.setName("headerLines");
             headerField.setText("0");
             headerField.setPreferredSize(new Dimension(50, 20));
             add(new JLabel("Number of header lines in output files: "));
@@ -285,5 +285,6 @@ public final class ConfigWizard
     public static void main(final String[] args)
     {
         final Configuration c = ConfigWizard.getInstance().createConfiguration();
+        System.out.println(c);
     }
 }

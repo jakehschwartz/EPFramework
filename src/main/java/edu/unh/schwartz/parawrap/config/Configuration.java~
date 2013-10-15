@@ -17,48 +17,16 @@ import java.util.Iterator;
 public final class Configuration
 {
     /**
-     * Key for in file setting.
+     * Keys for the wizard result map.
      */
     public static final String IN_FILE_KEY = "inFile";
-
-    /**
-     * Key for split pattern setting.
-     */
     public static final String SPLIT_PATTERN_KEY = "split";
-
-    /**
-     * Key for out file setting.
-     */
     public static final String OUT_FILE_KEY = "outFile";
-
-    /**
-     * Key for executable location setting.
-     */
     public static final String EXEC_LOC_KEY = "execLoc";
-
-    /**
-     * Key for in flag setting.
-     */
     public static final String IN_FLAG_KEY = "inFlag";
-
-    /**
-     * Key for out flag setting.
-     */
     public static final String OUT_FLAG_KEY = "outFlag";
-    
-    /**
-     * Key for threading setting.
-     */
     public static final String NUM_PROCESSES_KEY = "numProcesses";
-
-    /**
-     * Key for stats setting.
-     */
     public static final String STATS_KEY = "stats";
-
-    /**
-     * Key for output file header setting.
-     */
     public static final String NUM_HEADER_KEY = "numHeaderLines";
 
     /**
