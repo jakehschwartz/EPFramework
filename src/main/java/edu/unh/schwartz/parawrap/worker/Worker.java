@@ -14,6 +14,21 @@ import java.util.List;
 public final class Worker extends Thread
 {
     /**
+     * The path to the executable.
+     */
+    private static String EXEC;
+
+    /**
+     * The in flag for the executable.
+     */
+    private static String IN_FLAG;
+
+    /**
+     * The out flag for the executable.
+     */
+    private static String OUT_FLAG;
+
+       /**
      * The queue of pieces to do work on.
      */
     private PriorityBlockingQueue<Chunk> queue;
@@ -45,6 +60,36 @@ public final class Worker extends Thread
         this.idNum = idNum;
         this.runTime = 0;
         this.chunksRun = 0;
+    }
+
+    /**
+     * Set the path to the executable.
+     *
+     * @param exec - the path to the executable
+     */
+    public static void setExecutable(final String exec)
+    {
+        EXEC = exec;
+    }
+    
+    /**
+     * Set the flag to signify where the input goes for the executable.
+     *
+     * @param inFlag - the in flag used to signify the input file 
+     */
+    public static void setInFlag(final String inFlag)
+    {
+        IN_FLAG = inFlag;
+    }
+
+    /**
+     * Set the flag to signify where the output goes for the executable.
+     *
+     * @param outFlag - the flag used to signify the output file 
+     */
+    public static void setOutFlag(final String outFlag)
+    {
+        OUT_FLAG = outFlag;
     }
 
     /**
@@ -101,10 +146,26 @@ public final class Worker extends Thread
 
         // Create the executable
         final List<String> commands = new ArrayList<String>();
-        commands.add("./KaKs_Calculator");
-        commands.add("-i");
+        commands.add(EXEC);
+
+        if (IN_FLAG != null)
+        {
+            commands.add(IN_FLAG);
+        }
+        else
+        {
+            commands.add("<");
+        }
         commands.add(in);
-        commands.add("-o");
+
+        if (OUT_FLAG != null)
+        {
+            commands.add(OUT_FLAG);
+        }
+        else
+        {
+            commands.add(">");
+        }
         commands.add(out);
  
         return new ProcessBuilder(commands);

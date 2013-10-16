@@ -30,15 +30,15 @@ final class ParallelWrapper
      */
     private static void start(final Configuration config)
     {
-        final String fileName = config.getInputFileName();
-        final int threads = config.getNumberOfThreads();
         Chunk.setHeaderLines(config.getNumHeaderLines());
 
         // Read in the input file and get the chunks
-        final Manipulator manip = new Manipulator(config.getSplitPattern());
+        final Manipulator manip = new Manipulator(config.getSplitPattern(), 
+            config.getNumHeaderLines());
+
         try
         {
-            manip.split(fileName);
+            manip.split(config.getInputFileName());
         }
         catch (IOException e)
         {
@@ -53,9 +53,9 @@ final class ParallelWrapper
             return;
         }
 
-        final WorkerPool wp = new WorkerPool(threads, chunks);
+        final WorkerPool wp = new WorkerPool(config, chunks);
         wp.start();
-        manip.merge("out");
+        manip.merge(config.getOutputDirectoryName());
         manip.printStats(wp.getStats());
     }
 

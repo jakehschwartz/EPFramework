@@ -19,6 +19,11 @@ import java.util.regex.Pattern;
 public final class Manipulator
 {
     /**
+     * The default pattern for a manipulator.
+     */
+    private static final String DEFAULT_PATTERN = "^.*$";
+
+    /**
      * The pattern used to split the input file.
      */
     private Pattern pattern;
@@ -29,21 +34,40 @@ public final class Manipulator
     private List<Chunk> chunks;
 
     /**
-     * Constructs a spliter with a pattern that seperates every line (^.*$).
+     * The number of header lines to put in the final output file.
+     */
+    private int headerLines;
+
+    /**
+     * Constructs a manipulator with the default pattern and 0 header lines.
      */
     public Manipulator()
     {
-        this("^.*$");
+        this(DEFAULT_PATTERN, 0);
     }
 
     /**
-     * Constructs a spliter with a custom pattern.
+     * Constructs a manipulator with the default pattern and some number of 
+     * header lines.
+     *
+     * @param headerLines - the number of header lines to take from output files
+     */
+    public Manipulator(final int headerLines)
+    {
+        this(DEFAULT_PATTERN, headerLines);
+    }
+
+    /**
+     * Constructs a manipulator with a custom pattern and some number of header
+     * lines.
      *
      * @param regex - Regular expression to split on
+     * @param headerLines - the number of header lines to take from output files
      */
-    public Manipulator(final String regex)
+    public Manipulator(final String regex, final int headerLines)
     {
         this.pattern = Pattern.compile(regex);
+        this.headerLines = headerLines;
     }
 
     /**

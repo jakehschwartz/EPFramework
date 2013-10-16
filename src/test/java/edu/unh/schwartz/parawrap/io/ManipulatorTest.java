@@ -12,7 +12,7 @@ public class ManipulatorTest
     @Test
     public void splitTest()
     {
-        Manipulator manip = new Manipulator("^$");
+        Manipulator manip = new Manipulator("^$", 0);
         try
         {
             manip.split("src/test/java/edu/unh/schwartz/parawrap/io/in.txt");

@@ -197,22 +197,12 @@ public final class Configuration
         return this.numberOfThreads;
     }
 
-    public void setNumberOfThreads(final int numberOfThreads)
-    {
-        this.numberOfThreads = numberOfThreads;
-    }
-
     /**
      * @return the path to the input file
      */
     public String getInputFileName()
     {
         return this.inputFileName;
-    }
-
-    public void setInputFileName(final String inputFileName)
-    {
-        this.inputFileName = inputFileName;
     }
 
     /**
@@ -223,19 +213,9 @@ public final class Configuration
         return splitPattern;
     }
 
-    public void setSplitPattern(final String splitPattern)
-    {
-        this.splitPattern = splitPattern;
-    }
-
     public String getOutputDirectoryName()
     {
         return this.outDirName;
-    }
-
-    public void setOutputDirectoryName(final String outDirName)
-    {
-        this.outDirName = outDirName;
     }
 
     public String getExecutable()
@@ -243,29 +223,14 @@ public final class Configuration
         return this.execPath;
     }
 
-    public void setExecutable(final String execPath)
-    {
-        this.execPath = execPath;
-    }
-
-    public String getInputFileFlag()
+    public String getInFlag()
     {
         return this.inFlag;
     }
 
-    public void setInputFileFlag(final String inFlag)
-    {
-        this.inFlag = inFlag;
-    }
-
-    public String getOutputFileFlag()
+    public String getOutFlag()
     {
         return this.outFlag;
-    }
-
-    public void setOutputFileFlag(final String inFlag)
-    {
-        this.outFlag = outFlag;
     }
 
     /**

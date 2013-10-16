@@ -1,6 +1,7 @@
 package edu.unh.schwartz.parawrap.worker;
 
 import edu.unh.schwartz.parawrap.Chunk;
+import edu.unh.schwartz.parawrap.config.Configuration;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -16,14 +17,20 @@ public final class WorkerPool
     /**
      * Constructs the workers.
      *
-     * @param num - the number of workers
+     * @param config - information for the run
      * @param chunks - the work for the workers
      */
-    public WorkerPool(final int num, final PriorityBlockingQueue<Chunk> chunks)
+    public WorkerPool(final Configuration config, 
+        final PriorityBlockingQueue<Chunk> chunks)
     {
+        // Set the executable information in the worker
+        Worker.setExecutable(config.getExecutable());
+        Worker.setInFlag(config.getInFlag());
+        Worker.setOutFlag(config.getOutFlag());
+
         // Initialize the threads
-        workers = new Worker[num];
-        for (int i = 0; i < num; i++)
+        workers = new Worker[config.getNumberOfThreads()];
+        for (int i = 0; i < workers.length; i++)
         {
             workers[i] = new Worker(i, chunks);
         }
