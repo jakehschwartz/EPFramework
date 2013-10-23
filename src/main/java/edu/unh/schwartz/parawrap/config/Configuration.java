@@ -1,10 +1,10 @@
 package edu.unh.schwartz.parawrap.config;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import java.io.File;
-import java.io.IOException;
+// import com.fasterxml.jackson.core.JsonFactory;
+// import com.fasterxml.jackson.core.JsonParser;
+// import com.fasterxml.jackson.core.JsonToken;
+// import java.io.File;
+// import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
@@ -119,6 +119,7 @@ public final class Configuration
          {
              final String key = it.next();
              final Object val = map.get(key);
+             System.out.println(key  + " => " + val);
              switch(key)
              {
                  case IN_FILE_KEY:
@@ -143,17 +144,17 @@ public final class Configuration
                      this.numberOfThreads = Integer.valueOf((String) val);
                      break;
                  case STATS_KEY:
-                     this.makeStats = Boolean.valueOf((String) val);
+                     this.makeStats = (boolean) val;
                      break;
                  case NUM_HEADER_KEY:
                      this.numberOfHeaderLines = Integer.valueOf((String) val);
                      break;
                  default:
                      assert(false);
-
              }
-             System.out.println(key  + " => " + map.get(key));
          }
+
+         // Assertions here
     }
 
     /**
@@ -172,22 +173,22 @@ public final class Configuration
      * @param fileName - the path to the file on disk
      * @throws IOException - if there is any problem reading the file
      */
-    public Configuration(final String fileName) throws IOException
-    {
-        final JsonFactory jf = new JsonFactory();
-        final JsonParser jp = jf.createJsonParser(new File(fileName));
+    // public Configuration(final String fileName) throws IOException
+    // {
+        // final JsonFactory jf = new JsonFactory();
+        // final JsonParser jp = jf.createJsonParser(new File(fileName));
 
-        while (jp.nextToken() != JsonToken.END_OBJECT)
-        {
-            final String fieldname = jp.getCurrentName();
-            if ("name".equals(fieldname)) 
-            {
-                jp.nextToken();
-                System.out.println(jp.getText()); 
-            }
-        }
-        jp.close();
-    }
+        // while (jp.nextToken() != JsonToken.END_OBJECT)
+        // {
+            // final String fieldname = jp.getCurrentName();
+            // if ("name".equals(fieldname)) 
+            // {
+                // jp.nextToken();
+                // System.out.println(jp.getText()); 
+            // }
+        // }
+        // jp.close();
+    // }
 
     /**
      * @return the number of threads the program will use
@@ -210,7 +211,7 @@ public final class Configuration
      */
     public String getSplitPattern()
     {
-        return splitPattern;
+        return this.splitPattern;
     }
 
     public String getOutputDirectoryName()
@@ -260,6 +261,6 @@ public final class Configuration
 
     public int getNumHeaderLines()
     {
-        return 1;
+        return this.numberOfHeaderLines;
     }
 }

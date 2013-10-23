@@ -7,9 +7,7 @@ import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerListModel;
 import org.ciscavate.cjwizard.PageFactory;
 import org.ciscavate.cjwizard.pagetemplates.DefaultPageTemplate;
 import org.ciscavate.cjwizard.WizardContainer;
@@ -88,6 +86,8 @@ public final class ConfigWizard
             }
         }
 
+        System.err.println("IT WORKED");
+
         return this.config;
     }
 
@@ -104,7 +104,7 @@ public final class ConfigWizard
                 final WizardSettings settings)
         {
             //TODO: Add a log message here
-            System.err.println("Cancelled " + settings);
+            System.err.println("Cancelled-> " + settings);
             ConfigWizard.this.window.dispose();
             synchronized(ConfigWizard.this)
             {
@@ -120,7 +120,6 @@ public final class ConfigWizard
                 final WizardSettings settings)
         {
             //TODO: Add a log message here
-            System.err.println("Finished " + settings);
             ConfigWizard.this.config = new Configuration(settings);
             ConfigWizard.this.window.dispose();
             synchronized(ConfigWizard.this)
@@ -148,14 +147,20 @@ public final class ConfigWizard
         private final WizardPage[] pages = {new IOPage(), new ExecPage(), 
             new OtherPage(),}; 
 
-
         /**
          * {@inheritDoc}
          */
         public WizardPage createPage(final List<WizardPage> path, 
                 final WizardSettings settings)
         {
-            return pages[path.size()];
+            if (path.size() == pages.length)
+            {
+                return new ReviewPage(settings);
+            }
+            else
+            {
+                return pages[path.size()];
+            }
         }
     }
 
@@ -206,12 +211,13 @@ public final class ConfigWizard
         private ExecPage()
         {
             super("Exec", "Executable Settings");
-            // Settings for the location of the executable
-            // and for the flags
-            // final JCheckBox box = new JCheckBox("testBox3");
-            // box.setName("box3");
-            // add(new JLabel("Two!"));
-            // add(box);
+
+            // Settings for the output location
+            final JFileChooserButton execChooser = 
+                new JFileChooserButton(false);
+            execChooser.setName(Configuration.EXEC_LOC_KEY);
+            add((new JLabel("Select the executable: ")));
+            add(execChooser);
 
             // Name for input and output flags
             // Setting for the split pattern
@@ -224,7 +230,7 @@ public final class ConfigWizard
 
             // Setting for the split pattern
             final JTextField outFlagField = new JTextField();
-            outFlagField.setName(Configuration.OUT_FILE_KEY);
+            outFlagField.setName(Configuration.OUT_FLAG_KEY);
             outFlagField.setPreferredSize(new Dimension(50, 20));
             add(new JLabel("Flag for executable to define output dir"));
             add(outFlagField);
@@ -237,6 +243,7 @@ public final class ConfigWizard
         private OtherPage()
         {
             super("Threads", "Other Settings");
+            
             // Settings for the number of threads
             final int max = Runtime.getRuntime().availableProcessors();
             final List<String> options = new ArrayList<String>();
@@ -247,8 +254,7 @@ public final class ConfigWizard
                 i *= 2;
             }
 
-            final JSpinner spinner = 
-                new JSpinner(new SpinnerListModel(options));
+            final WizardSpinner spinner = new WizardSpinner(options);
             spinner.setName(Configuration.NUM_PROCESSES_KEY);
             add(new JLabel("Select the number of processes: "));
             add(spinner);
@@ -264,6 +270,16 @@ public final class ConfigWizard
             headerField.setPreferredSize(new Dimension(50, 20));
             add(new JLabel("Number of header lines in output files: "));
             add(headerField);
+        }
+    }
+
+    private final class ReviewPage extends WizardPage
+    {
+        private ReviewPage(final WizardSettings settings)
+        {
+            super("Confirmation", "Confirmation Page");
+
+            add(new JLabel("This will eventually work"));
         }
 
         /**
@@ -285,5 +301,6 @@ public final class ConfigWizard
     public static void main(final String[] args)
     {
         final Configuration c = ConfigWizard.getInstance().createConfiguration();
+        System.out.println(c);
     }
 }

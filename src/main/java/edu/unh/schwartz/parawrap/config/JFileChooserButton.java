@@ -1,6 +1,8 @@
 package edu.unh.schwartz.parawrap.config;
 
+import org.ciscavate.cjwizard.CustomWizardComponent;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -9,7 +11,7 @@ import javax.swing.JFileChooser;
 /**
  * Clab.
  */
-final class JFileChooserButton extends JButton
+final class JFileChooserButton extends JButton implements CustomWizardComponent
 {
     /**
      * The dialog for the file choosers.
@@ -22,9 +24,9 @@ final class JFileChooserButton extends JButton
     private JFileChooser fc;
     
     /**
-     * The file selected by the user.
+     * The path of the file selected by the user.
      */
-    private File file;
+    private String path;
 
     /**
      * Constructs a new button.
@@ -45,25 +47,42 @@ final class JFileChooserButton extends JButton
         {
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         }
+    
+        this.addActionListener(new ActionListener()
+        {
+            /**
+             * {@inheritDoc}
+             */
+            public void actionPerformed(final ActionEvent e)
+            {
+                final int returnVal = fc.showOpenDialog(dialog);
+                switch (returnVal)
+                {
+                    case JFileChooser.APPROVE_OPTION:
+                        final File f = fc.getSelectedFile();
+                        setValue(f.getPath());
+                        setText(f.getName());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */               
+    public Object getValue()
+    {
+        return this.path;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void actionPerformed(final ActionEvent e)
+    public void setValue(final Object o)
     {
-        // Open the dialog
-       final int returnVal = this.fc.showOpenDialog(dialog);
-
-       // Save the file if one was selected
-       switch (returnVal)
-       {
-           case JFileChooser.APPROVE_OPTION:
-               this.file = fc.getSelectedFile();
-               super.setText(file.getName());
-               break;
-            default:
-               break;
-       }
+        this.path = (String) o;
     }
 }
