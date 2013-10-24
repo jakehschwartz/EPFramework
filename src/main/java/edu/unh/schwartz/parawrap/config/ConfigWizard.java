@@ -86,8 +86,6 @@ public final class ConfigWizard
             }
         }
 
-        System.err.println("IT WORKED");
-
         return this.config;
     }
 

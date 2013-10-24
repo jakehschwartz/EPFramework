@@ -62,6 +62,7 @@ final class JFileChooserButton extends JButton implements CustomWizardComponent
                         final File f = fc.getSelectedFile();
                         setValue(f.getPath());
                         setText(f.getName());
+                        JFileChooserButton.this.dialog.dispose();
                         break;
                     default:
                         break;
