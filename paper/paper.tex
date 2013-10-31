@@ -15,64 +15,66 @@
 
 \doublespacing
 \begin{document}
-\title{A Java Wrapper For Embarresingly Parallel Problems}
+\title{A Java Wrapper For Embarrassingly Parallel Problems}
 \author{Jacob Schwartz}
 \maketitle
 
 \begin{abstract}
-An embarresingly parallel, also called pleasing parallel, problem is one that 
-can easily be broken up into work that does not need to know about one another.
-Several problems in the biological sciences are embarrsingly parallel but they
-are difficult to rewrite to use multithreading, because they are either poorly
-written or too complex. We have written a wrapper, implemented in Java, that
-will execute the serial program in several threads. RESULTS SENTENCE. More
+An embarrassingly parallel problem, also called pleasingly parallel, is one that 
+can easily be broken up into identital components that do not need to interact 
+to find the solution. Several problems in the biological sciences are 
+embarrsingly parallel but they are difficult to rewrite to use multithreading, 
+because they are either poorly written or too complex. We have written a 
+wrapper, implemented in Java, that will execute the serial program in several 
+threads. RESULTS SENTENCE. More
 statistics, savable configurations and more options will be implemented next, in
 addition to better testing and refactored.
 \end{abstract}
 
 \section{Introduction}
 
-The embarresingly parallel class of problems is defined as a problem when the
-computation graph is disconnected. The computation graph consists of nodes that
-represent the functions or processes and the data being passed from one process
-to another is displayed in the graph as edges. If the graph is disconnected, 
-none of the processes need to communicate to complete the computations. In a 
-practical situtation, there will be some internode communication to set up the 
-problem and then again to accumulate the results back together. Also known as
-pleasingly parallel problems, they can also easy be performed on a cluster of 
-servers or in any kind of distributed network, due to its lack of dependencies. 
-The term  embarresingly parallel was coined by Geoffrey Fox in his book, 
-\underline{Parallel Programming Works!} \cite{book}
+A computation graph consists of nodes that represent the functions or processes 
+and the data being passed from one process to another is displayed in the graph 
+as edges. If the graph is disconnected, none of the processes need to 
+communicate to complete the computations. Such a computation is called
+"embarrassingly parallel." In a practical situation, there will be some 
+internode communication to set up the problem and then again to accumulate the 
+results back together. Also known as pleasingly parallel problems, they can 
+easily be performed on a cluster of servers or in any kind of distributed 
+network, due to its lack of dependencies. The term  embarrassingly parallel was 
+coined by FINISH THIS 
 
 Programs in the field of Biology and Genetics often analyze long strings of
 characters, whether they are DNA, RNA or protein sequences. In addition to the
-large file sizes, there is a lot of processing that goes into comparing several
-characters. This time adds up when there are thousands of strings to process.
-However, these sequences often to not relate to each other and can be processed
-independently. Using the embarresingly parallel approach, the processing time
-for all of the sequences can be cut down exponentially with very minimal effort
-by the programmer.
+large file sizes, there is a lot of processing that goes into comparing and
+manipulating strings. This time adds up when there are thousands of strings to 
+process. However, these sequences often do not relate to each other and can be 
+processed independently. Using an embarrassingly parallel approach, the 
+processing time for all of the sequences can often be cut down exponentially 
+with very minimal effort by the programmer.
 
-In this paper, I am going to propose a program that will call the serial
-programs on several Java threads. This program will act like the serial
-application, reading the input the same and creating the output in the same
-format. My wrapper program wraps any embarresingly parallel command line program
-that reads from a file, writes to a file and the input can be broken up into
-work units by a regular expression. SUMMARY OF RESULTS to end the paragraph.
+The framework provides a "wrapper' for the original program that mimics the
+behavior of the original program. It calls the serial programs on multiple Java 
+threads. Each thread acts like the serial application, reading a subset of the 
+input the same and creating the output in the same format. This paper describes
+a framework a framework that makes it easy to parallelize an embarrassingly
+parallel program that reads from a file, writes to a file and whose input can be
+broken up into work units by a regular expression. 
+SUMMARY OF RESULTS to end the paragraph.
 
 \section{Background}
 
-Originally, I was assisting with research into different forms of the species 
-\emph{Cicer arietinum}, the chikckpea. The two main forms, Kabuli and Desi, are
-very different in size and color but we mostly wanted to see why the Desi is
-more disease resistance and have more effective root nodule symbiosis and why
-the Kabuli has a large but soft shell. These two types are both cultivated and
-have been under human selection for several thousand years. We wanted to use a
-Ka/Ks equation to quantify the evelution and selection of these chickpeas. We
-found a Ka/Ks program writen by Zhang et al. from the Beijing Institute of 
-Genomics \cite{kaks} but had three varients that we wanted to be analyzed, each 
-with thousands of sequences to process. The Ka/Ks Calculator program takes
-somewhere from five to thirty seconds to process one pair of sequences. 
+The motivation for this effort was with research into different forms of the 
+species \emph{Cicer arietinum}, the chikckpea. The two main forms, Kabuli and 
+Desi, are very different in size and color but we mostly wanted to see why the 
+Desi is more disease resistance and have more effective root nodule symbiosis 
+and why the Kabuli has a large but soft shell. These two types are both 
+cultivated and have been under human selection for several thousand years. We 
+wanted to use a Ka/Ks equation to quantify the evolution and selection of these 
+chickpeas. We found a Ka/Ks program writen by Zhang et al. \cite{kaks} but had 
+three variants that we wanted to be analyzed, each with thousands of sequences. 
+The Ka/Ks Calculator program takes somewhere from five to thirty seconds to 
+process one pair of sequences. 
 
 Instead of attempting to rewrite the preexisting program, we decided it would be
 better to look at other options to process the sequences faster. Trying to 
@@ -82,74 +84,73 @@ We decided a  different approach was neccessary, mostly due to the short time we
 had to produce results. A simple Java program was written to break up the input 
 and spawn  threads that would run the Ka/Ks Calculator process. When the input 
 was calculated, the contents of the output files was concatenated together to 
-produce a final input. 
+produce a final output that mnatches the format and order that would have been
+produces by Ka/Ks Calculator.
 
-The KaKs Calculator is not the only embarresingly parallel program that has the
+The Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
-embarresingly parallel programs in the biological sciences. The Basic Local
+embarrassingly parallel programs in the biological sciences. The Basic Local
 Alignment Search Tool (BLAST) \cite{BLAST} is a common program used to find
 similarities between sequences and then compares them to databases to calculate
 the statistical significance. Another program we have been looking at is called
 Trinity. Trinity claims to be an efficient way to do de novo reconstruction of
 transcriptomes from mRNA sequence data. With this variety of applications that 
-would benefit from parallelism, it was obvious that the wrapper program has 
-potential outside of this project.
+would benefit from parallelism, it was obvious it would be desirable to develop
+a framework for creating wrapper programs.
 
 % TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
 
-The original wrapper was also written very quickly due to the impending
-deadline. In this version of the wrapper, several components are being added.
-First off, there is a wizard style menu that will allow the end-user to select
-not only the program that wish to use, but also to manage other settings for the
-run. A new IO class splits the input and merges the output more 
-efficiently. Lastly, in order to look at how well the wrapper performs, 
-the threads keep their own statstics. These statstics will not only be used to 
-find potential enhancements but also will help end-users of the wrapper
-determine whether their use of the wrapper is efficient.
+In this version of the wrapper, several components are being added. First, there
+is a wizard style menu that will allow the end-user to select not only the 
+program that wish to use, but also to manage other settings for the run. A new 
+IO class splits the input and merges the output more efficiently. Lastly, in 
+order to look at how well the wrapper performs, the threads keep their own 
+statistics, which will be used to evaluate the effectiveness of the framework 
+and to find potential enhancements and help end-users determine whether their 
+use of the framework is efficient.
 
 \section{Proposed Solution}
 
 A UML Diagram will go here
 
-The KaKs Calculator is not the only program to use the wrapper; there are
-various potential programs that the wrapper could support. The only requirements
-for the this program are that it process the input in an embarresingly parallel
-manner and that the input comes from a file and the processed results are also
-writen to a file. The wrapper needs to support various kinds of input files and 
-be able to chunk up the work accordingly. The KaKs Calculator's input consists 
-of a header and then two protein sequence lines followed by a blank line. The 
-wrapper will use that blank line to know when one chunk of work has ended and 
-another has begun. The user can input their own regular expression to determine 
-what lines of input make up what chunks. This will occur in the ChunkManager 
-class. 
+The KaKs Calculator is not the only program to use the framework; there are
+various potential programs that the framework could support. The only 
+requirements for the this program are that it process the input in an 
+embarrassingly parallel manner and that the input comes from a file and the 
+processed results are also writen to a file. The framework needs to support 
+various kinds of input files and be able to chunk up the work accordingly. The 
+Ka/Ks Calculator's input consists of a header and then two protein sequence 
+lines followed by a blank line. The framework uses that blank line to know when 
+one chunk of work has ended and another has begun. The user can input a regular 
+expression to define what lines of input make up what chunks. This occurs in 
+the ChunkManager class. 
 
 The other purpose of the ChunkManager class is to combine the resulting chunks 
 back together when the worker threads have finished. Once the work has been
-down, all of the seperate results are spread across several files. The
+done, all of the separate results are spread across several files. The
 ChunkManager's second job is to retrieve those results and construct a real
 output file. The real output file must look the same as the output file would
 look if the program were run serially; the output must come in the same order as
-the inputs in the input file and headers must be added to the top, if
-applicable.
+the inputs in the input file and headers may need to be deleted from the
+separate files and added to the combined file.
 
-As more features are added to the wrapper and as more programs start to use the
-wrapper, there are more choices for the end-user to make in regards to how they
-want their program to execute. The number of threads to use, various flags for
-the executable and blank are just a few choice they can make. A start-up wizard
-is displayed at runtime to systimatically allow the end-user to choose the
-settings for the run. The ConfigWizard class brings the user through this
-process and creates an instance of Configuration when it is completed to save
-the user's settings.
+As more features are added to the framework and as more programs start to use 
+the framework, there are more choices for the end-user to make with regards to 
+how they want their program to execute. The number of threads to use, various 
+flags for the executable and the statstics output are just a few choice the 
+user can make. A start-up wizard is displayed at runtime to systematically allow
+the end-user to choose the settings for the run. The ConfigWizard class brings 
+the user through this process and creates an instance of Configuration when it 
+is completed to save the user's settings.
 
-Lastly, the worker threads will keep records during the execution of a set of 
-work. The threads records its uptime and the number of pieces of work it
-executes on. Also, the runtime for each piece of work is recorded. These will be
-used by the end user to determine if their run is ideal or if they may need to
-change some settings to make it work faster next time. The statistics can also
-give the developers of the wrapper an idea on what can be implemented in order
-make it as fast as possible for a user. The statistics for each thread can be
-found in the Worker subclass and the individual Chunk classes will store their
-own statstics about runtime and size.
+Lastly, the worker threads will keep records during execution. The threads 
+records their uptime and the number of pieces of work they execute. The runtime 
+for each piece of work is also recorded. This information will be used by us to
+evaluate the effectiveness of our approach, but can also provide useful
+information the can help a user tine a particular application on a particular
+type of input data. The statistics for each thread can be found in the Worker 
+subclass and the individual Chunk classes will store their own statstics about 
+runtime and size.
 
 \section{Results}
 
@@ -177,9 +178,6 @@ solution like MPI or a cloud solution like Amazon instances. (More will go here
 when I added in more previous work from others)
 
 \begin{thebibliography}{1}
-\bibitem{book}
-Fox G., Williams R., and Messina G., ``\emph{Parallel Programming Works!},'', 
-Morgan Kaufmann, May 1994
 \bibitem{kaks}
 Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., ``\emph{KaKs Calculator: 
 calculating Ka and Ks through model selection and model averaging.},'',
