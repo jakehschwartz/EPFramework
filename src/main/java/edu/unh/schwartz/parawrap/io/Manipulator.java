@@ -137,11 +137,13 @@ public final class Manipulator
         PrintWriter writer = null;
         try
         {
-           writer = new PrintWriter(fileName);
-           for (final Chunk c : this.chunks)
-           {
-               writer.print(c.getResult());
-           }
+            writer = new PrintWriter(fileName);
+            writer.print(this.chunks.get(0).getHeader());
+
+            for (final Chunk c : this.chunks)
+            {
+                writer.print(c.getResult());
+            }
         }
         catch (FileNotFoundException e)
         {

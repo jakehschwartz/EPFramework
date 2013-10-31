@@ -91,6 +91,38 @@ public final class Chunk implements Comparable<Chunk>
     }
 
     /**
+     * @return the header from the results of the processed chunk
+     */
+    public String getHeader()
+    {
+        final StringBuilder sb = new StringBuilder();
+        
+        try 
+        {
+            // Open out file
+            final BufferedReader br = 
+                new BufferedReader(new FileReader(getOutFileName()));
+
+            // Read the header lines
+            for (int i = 0; i < HEADER_LINES; i++)
+            {
+                sb.append(br.readLine()).append("\n");
+            }
+
+            // Close the file
+            br.close();
+            
+        }
+        catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
+        
+        return sb.toString();
+ 
+    }
+
+    /**
      * @return the result of the run on the chunk aka the content of the outfile
      */
     public String getResult()
