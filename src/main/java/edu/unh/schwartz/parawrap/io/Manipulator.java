@@ -110,6 +110,10 @@ public final class Manipulator
 
                 sb = new StringBuilder();
             }
+            else
+            {
+                sb.append("\n");
+            }
 
             line = reader.readLine();
         }
@@ -136,18 +140,20 @@ public final class Manipulator
            writer = new PrintWriter(fileName);
            for (final Chunk c : this.chunks)
            {
-               writer.println(c.getResult());
+               writer.print(c.getResult());
            }
         }
         catch (FileNotFoundException e)
         {
-            System.err.println("Could not create output file called " + 
-                fileName);
+            System.err.println(e.getMessage()); 
             return;
         }
         finally
         {
-            writer.close();
+            if (writer != null)
+            {
+                writer.close();
+            }
         }
     }
 
@@ -167,24 +173,23 @@ public final class Manipulator
      * <code>Chunk</code>s to a CSV file 'stats.csv' in the same output
      * directory as the program.
      * @param workerStats - the statstics of the Workers
+     * @param outDir - the directory to output the file to
      */
-    public void printStats(final String workerStats)
+    public void printStats(final String workerStats, final String outDir)
     {
-        // Open up the file to save to
-        // TODO: print to correct directory
         try
         {
             final String comma = ",";
-            final PrintWriter statsOut = new PrintWriter("stats.csv");
+            final PrintWriter statsOut = new PrintWriter(outDir + "/stats.csv");
             statsOut.println(workerStats);
 
-            statsOut.println("Chunk #,Runtime,Chunks Run,Avg Time Per Chunk");
+            statsOut.println("Chunk #,Length,Runtime(ms)");
             for (int i = 0; i < this.chunks.size(); i++)
             {
                 final Chunk c = this.chunks.get(i);
                 final StringBuilder sb = new StringBuilder();
                 sb.append(c.hashCode()).append(comma).append(c.length());
-                sb.append(comma).append(c.getRuntime());
+                sb.append(comma).append(c.getRuntime()).append('\n');
                 statsOut.println(sb.toString());
             }
 

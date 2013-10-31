@@ -37,7 +37,7 @@ final class JFileChooserButton extends JButton implements CustomWizardComponent
     {
         super("...");
         this.dialog = new JDialog();
-        this.fc = new JFileChooser();
+        this.fc = new JFileChooser(".");
 
         if (directoriesOnly)
         {

@@ -3,4 +3,6 @@ build/
 *.aux
 *.pdf
 *.log
+.DS_Store
 *.dvi
+*.csv

@@ -55,8 +55,12 @@ final class ParallelWrapper
 
         final WorkerPool wp = new WorkerPool(config, chunks);
         wp.start();
-        manip.merge(config.getOutputDirectoryName());
-        manip.printStats(wp.getStats());
+        manip.merge(config.getOutputDirectory() + "/done.txt");
+        if (config.makeStats())
+        {
+            manip.printStats(wp.getStats(), config.getOutputDirectory());
+        }
+        manip.cleanUp();
     }
 
     /**
@@ -73,7 +77,7 @@ final class ParallelWrapper
             System.out.println("Opening Configuration Wizard");
             final Configuration config = 
                 ConfigWizard.getInstance().createConfiguration();
-            // start(config);
+            start(config);
         }
         // First command line arg is a configuration file
         // else if (args.length == 1)

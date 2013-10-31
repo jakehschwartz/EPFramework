@@ -82,7 +82,6 @@
         </module>
         <module name="JavadocMethod">
             <property name="scope" value="public"/>
-            <property name="allowMissingPropertyJavadoc" value="true"/>
         </module>
         <module name="JavadocVariable">
             <property name="scope" value="public"/>

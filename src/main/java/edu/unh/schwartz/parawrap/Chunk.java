@@ -152,7 +152,7 @@ public final class Chunk implements Comparable<Chunk>
      */
     public String getInFileName()
     {
-        return this.directory.getAbsolutePath() + "in";
+        return this.directory.getAbsolutePath() + "/in";
     }
 
     /**
@@ -160,7 +160,16 @@ public final class Chunk implements Comparable<Chunk>
      */
     public String getOutFileName()
     {
-        return this.directory.getAbsolutePath() + "out";
+        return this.directory.getAbsolutePath() + "/out";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override 
+    public int hashCode() 
+    {
+        return this.content.hashCode();
     }
 
     /**

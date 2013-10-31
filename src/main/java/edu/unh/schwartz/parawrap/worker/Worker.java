@@ -69,6 +69,7 @@ public final class Worker extends Thread
      */
     public static void setExecutable(final String exec)
     {
+        System.err.println(exec);
         EXEC = exec;
     }
     
@@ -119,7 +120,8 @@ public final class Worker extends Thread
                 final long end = System.currentTimeMillis();
                 c.setRuntime(end - start);
                 runTime += (end - start);
-                System.out.println("Finished chunk on thread " + this.idNum);
+                System.out.println("Finished chunk " + c.hashCode() + 
+                        " on thread " + this.idNum + " in " + (end - start));
             }
             catch (InterruptedException e)
             {
@@ -167,6 +169,12 @@ public final class Worker extends Thread
             commands.add(">");
         }
         commands.add(out);
+
+        for (String s : commands)
+        {
+            System.out.print(s + " ");
+        }
+        System.out.println();
  
         return new ProcessBuilder(commands);
     }

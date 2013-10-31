@@ -214,21 +214,33 @@ public final class Configuration
         return this.splitPattern;
     }
 
-    public String getOutputDirectoryName()
+    /**
+     * @return the directory for the final output
+     */
+    public String getOutputDirectory()
     {
         return this.outDirName;
     }
 
+    /**
+     * @return the path to the executable
+     */
     public String getExecutable()
     {
         return this.execPath;
     }
 
+    /**
+     * @return the flag used to mark the input file for the executable
+     */
     public String getInFlag()
     {
         return this.inFlag;
     }
 
+    /**
+     * @return the flag used to mark the output file for the executable
+     */
     public String getOutFlag()
     {
         return this.outFlag;
@@ -259,8 +271,20 @@ public final class Configuration
         execArgs.put(flag, value);
     }
 
+    /**
+     * @return the number of header lines to copy to the final output
+     */
     public int getNumHeaderLines()
     {
         return this.numberOfHeaderLines;
+    }
+
+    /**
+     * @return true iff the user wants a statistics file created after the
+     * workers have all finished
+     */
+    public boolean makeStats()
+    {
+        return this.makeStats;
     }
 }

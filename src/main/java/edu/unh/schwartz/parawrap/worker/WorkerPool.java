@@ -67,7 +67,7 @@ public final class WorkerPool
     {
         // Print the stats
         final StringBuilder sb = new StringBuilder();
-        sb.append("Thread #,Runtime,Chunks Run,Avg Time Per Chunk");
+        sb.append("Thread #,Runtime(ms),Chunks Run,Avg Time Per Chunk(ms)\n");
         final String comma = ",";
         for (int i = 0; i < workers.length; i++)
         {
