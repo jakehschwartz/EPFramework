@@ -25,10 +25,10 @@ can easily be broken up into identital components that do not need to interact
 to find the solution. Several problems in the biological sciences are 
 embarrsingly parallel but they are difficult to rewrite to use multithreading, 
 because they are either poorly written or too complex. We have written a 
-wrapper, implemented in Java, that will execute the serial program in several 
-threads. RESULTS SENTENCE. More
-statistics, savable configurations and more options will be implemented next, in
-addition to better testing and refactored.
+framework, implemented in Java, that will execute the serial program in several 
+threads. These threads working together help cut down the total runtime
+exponentially. More statistics, savable configurations and more options will be 
+implemented next, in addition to better testing and refactored.
 \end{abstract}
 
 \section{Introduction}
@@ -59,8 +59,8 @@ threads. Each thread acts like the serial application, reading a subset of the
 input the same and creating the output in the same format. This paper describes
 a framework a framework that makes it easy to parallelize an embarrassingly
 parallel program that reads from a file, writes to a file and whose input can be
-broken up into work units by a regular expression. 
-SUMMARY OF RESULTS to end the paragraph.
+broken up into work units by a regular expression. SUMMARY OF RESULTS to end the
+paragraph.
 
 \section{Background}
 
@@ -87,6 +87,7 @@ was calculated, the contents of the output files was concatenated together to
 produce a final output that mnatches the format and order that would have been
 produces by Ka/Ks Calculator.
 
+REDO THIS PART
 The Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
 embarrassingly parallel programs in the biological sciences. The Basic Local
@@ -100,11 +101,11 @@ a framework for creating wrapper programs.
 
 % TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
 
-In this version of the wrapper, several components are being added. First, there
-is a wizard style menu that will allow the end-user to select not only the 
+In this version of the framework, several components are being added. First, 
+there is a wizard style menu that will allow the end-user to select not only the 
 program that wish to use, but also to manage other settings for the run. A new 
 IO class splits the input and merges the output more efficiently. Lastly, in 
-order to look at how well the wrapper performs, the threads keep their own 
+order to look at how well the framework performs, the threads keep their own 
 statistics, which will be used to evaluate the effectiveness of the framework 
 and to find potential enhancements and help end-users determine whether their 
 use of the framework is efficient.
@@ -154,11 +155,24 @@ runtime and size.
 
 \section{Results}
 
-Tables charts, etc
+Table and chart
+
+The Ka/Ks Calculator was run through the framework with ten different samples,
+each containing sixteen units of work. Each sample was run by the framework at 
+five different level of numbers of worker threads, starting at 1 and 
+increasing by powers of two until the 100\% CPU usage (16 processors). As the 
+numbers of threads increased, the time it took descreased exponentially. 
 
 \section{Conclusion}
 
-Conclusions gathered from results.
+In a few cases, there was an increase in time when attempting to max out the CPU 
+usage. This occured because the framework had to wait until for the CPU to be 
+finished with its previous work before it was allowed to start work on what the 
+framework wanted it to do. In the cases when the framework executed faster while
+the CPU was maxed out, it was only faster a minute at the most. With such a
+small time gain with the CPU at 50\% versus the CPU at 100\%, running the
+framework at 50\% CPU is more efficient when the number of threads is on the
+same order as the number of units of work.
 
 There are several next steps in the pipeline. In addition to using the
 statistics to try to boost speed, adding savable configurations is at the top of
