@@ -41,8 +41,9 @@ communicate to complete the computations. Such a computation is called
 internode communication to set up the problem and then again to accumulate the 
 results back together. Also known as pleasingly parallel problems, they can 
 easily be performed on a cluster of servers or in any kind of distributed 
-network, due to its lack of dependencies. The term  embarrassingly parallel was 
-coined by FINISH THIS 
+network, due to its lack of dependencies. The term embarrassingly parallel was 
+coined by Cleve Moler in his 1986 paper "Matrix Computation on Distributed
+Memory Multiprocessors." \cite{history}
 
 Programs in the field of Biology and Genetics often analyze long strings of
 characters, whether they are DNA, RNA or protein sequences. In addition to the
@@ -59,8 +60,10 @@ threads. Each thread acts like the serial application, reading a subset of the
 input the same and creating the output in the same format. This paper describes
 a framework a framework that makes it easy to parallelize an embarrassingly
 parallel program that reads from a file, writes to a file and whose input can be
-broken up into work units by a regular expression. SUMMARY OF RESULTS to end the
-paragraph.
+broken up into work units by a regular expression. The framework gives an
+exponential decrease in runtime as more processor help in the computation. This
+decrease levels off between 50 and 100\% CPU usage due to the other tasks on the
+machine that take up memory.
 
 \section{Background}
 
@@ -90,14 +93,11 @@ produces by Ka/Ks Calculator.
 REDO THIS PART
 The Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
-embarrassingly parallel programs in the biological sciences. The Basic Local
-Alignment Search Tool (BLAST) \cite{BLAST} is a common program used to find
-similarities between sequences and then compares them to databases to calculate
-the statistical significance. Another program we have been looking at is called
-Trinity. Trinity claims to be an efficient way to do de novo reconstruction of
-transcriptomes from mRNA sequence data. With this variety of applications that 
-would benefit from parallelism, it was obvious it would be desirable to develop
-a framework for creating wrapper programs.
+embarrassingly parallel programs in the biological sciences. 
+TALK ABOUT CLUSTERING
+With several applications that 
+would benefit from parallelism in this field, it was obvious it would be 
+desirable to develop a framework for creating wrapper programs.
 
 % TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
 
@@ -155,16 +155,23 @@ runtime and size.
 
 \section{Results}
 
-Table and chart
+To observe how the framework changes the runtime of sequential programs when
+using varying numbers of threads, I designed a simple experiment. The Ka/Ks 
+Calculator was run through the framework with ten different samples, each 
+containing sixteen units of work. Each sample was run by the framework at five 
+different level of numbers of worker threads, starting at 1 and increasing by 
+powers of two until the 100\% CPU usage (16 processors). These tests were run
+with minimal other activity on the server.
 
-The Ka/Ks Calculator was run through the framework with ten different samples,
-each containing sixteen units of work. Each sample was run by the framework at 
-five different level of numbers of worker threads, starting at 1 and 
-increasing by powers of two until the 100\% CPU usage (16 processors). As the 
-numbers of threads increased, the time it took descreased exponentially. 
+\begin{figure}
+{{!}{\includegraphics{experiment/out.png}}}
+\caption{Runtimes for the Ka/Ks Calculator though the framework}
+\label{fig:graph}
+\end{figure}
 
 \section{Conclusion}
 
+As the numbers of threads increased, the time it took descreased exponentially. 
 In a few cases, there was an increase in time when attempting to max out the CPU 
 usage. This occured because the framework had to wait until for the CPU to be 
 finished with its previous work before it was allowed to start work on what the 
@@ -186,18 +193,23 @@ that more potential features will be discovered.
 Using Java was a good choice for implementation ease and future implementation
 extension by others, but it may not produce the fastest results. Languages
 like Hadoop, Clojure or other multithread oriented language may have been better
-due to their parallel nature. Another approach that could have been taken is one
-similar to the people in Washington: going to the cloud. Using a networked 
-solution like MPI or a cloud solution like Amazon instances. (More will go here
-when I added in more previous work from others)
+due to their parallel nature. In addition to a single machine working to process
+the data quickly, we can also look to the cloud for help by using a networked 
+solution like MPI or a cloud solution like Amazon instances. This would
+potentially allow for an even greater time decrease because the number of
+machines that could help is most likely larger than the number of processors on
+one machine.
 
 \begin{thebibliography}{1}
+\bibitem{history}
+Moler, Cleve. "Matrix Computation on Distributed Memory Multiprocessors."
+Hypercube Multiprocessors, 1986: Proceedings of the First Conference on
+Hypercube Multiprocessors, Knoxville, Tennessee, August 24-27, 1985. By Michael
+T. Heath. Philadelphia: SIAM, 1986. N. pag. Print.
 \bibitem{kaks}
 Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., ``\emph{KaKs Calculator: 
 calculating Ka and Ks through model selection and model averaging.},'',
 Genomics Proteomics Bioinformatics, November 2006.
-\bibitem{BLAST}
-http://blast.ncbi.nlm.nih.gov/Blast.cgii
 \end{thebibliography}
 
 \end{document}
