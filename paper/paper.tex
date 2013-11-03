@@ -54,7 +54,7 @@ processed independently. Using an embarrassingly parallel approach, the
 processing time for all of the sequences can often be cut down exponentially 
 with very minimal effort by the programmer.
 
-The framework provides a "wrapper' for the original program that mimics the
+The framework provides a "wrapper" for the original program that mimics the
 behavior of the original program. It calls the serial programs on multiple Java 
 threads. Each thread acts like the serial application, reading a subset of the 
 input the same and creating the output in the same format. This paper describes
@@ -90,7 +90,6 @@ was calculated, the contents of the output files was concatenated together to
 produce a final output that mnatches the format and order that would have been
 produces by Ka/Ks Calculator.
 
-REDO THIS PART
 The Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
 embarrassingly parallel programs in the biological sciences. 
@@ -111,9 +110,11 @@ and to find potential enhancements and help end-users determine whether their
 use of the framework is efficient.
 
 \section{Proposed Solution}
-
-A UML Diagram will go here
-
+\begin{figure}
+{\resizebox{5.2in}{!}{\includegraphics{figures/uml.png}}}
+\caption{UML for the embarrassingly parallel framework}
+\label{fig:uml}
+\end{figure}
 The KaKs Calculator is not the only program to use the framework; there are
 various potential programs that the framework could support. The only 
 requirements for the this program are that it process the input in an 
@@ -164,7 +165,7 @@ powers of two until the 100\% CPU usage (16 processors). These tests were run
 with minimal other activity on the server.
 
 \begin{figure}
-{{!}{\includegraphics{experiment/out.png}}}
+{\resizebox{5.2in}{!}{\includegraphics{experiment/out.png}}}
 \caption{Runtimes for the Ka/Ks Calculator though the framework}
 \label{fig:graph}
 \end{figure}
