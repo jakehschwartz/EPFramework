@@ -1,4 +1,4 @@
-package edu.unh.schwartz.parawrap.config;
+package edu.unh.schwartz.epframework.config;
 
 import org.ciscavate.cjwizard.CustomWizardComponent;
 import java.awt.event.ActionEvent;

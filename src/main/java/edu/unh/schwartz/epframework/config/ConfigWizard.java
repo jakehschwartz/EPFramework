@@ -1,4 +1,4 @@
-package edu.unh.schwartz.parawrap.config;
+package edu.unh.schwartz.epframework.config;
 
 import java.awt.Dimension;
 import java.util.ArrayList;

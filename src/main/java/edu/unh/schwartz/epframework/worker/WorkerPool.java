@@ -1,7 +1,7 @@
-package edu.unh.schwartz.parawrap.worker;
+package edu.unh.schwartz.epframework.worker;
 
-import edu.unh.schwartz.parawrap.Chunk;
-import edu.unh.schwartz.parawrap.config.Configuration;
+import edu.unh.schwartz.epframework.Chunk;
+import edu.unh.schwartz.epframework.config.Configuration;
 import java.util.concurrent.PriorityBlockingQueue;
 import org.apache.commons.logging.Log; 
 import org.apache.commons.logging.LogFactory;

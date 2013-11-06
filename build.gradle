@@ -4,7 +4,7 @@ apply plugin:'application'
 
 sourceCompatibility = 1.7
 version = '0.1'
-mainClassName = "edu.unh.schwartz.parawrap.ParallelWrapper"
+mainClassName = "edu.unh.schwartz.parawrap.EPFramework"
 
 repositories {
     mavenCentral()

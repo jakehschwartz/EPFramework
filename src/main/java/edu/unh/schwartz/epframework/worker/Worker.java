@@ -1,6 +1,6 @@
-package edu.unh.schwartz.parawrap.worker;
+package edu.unh.schwartz.epframework.worker;
 
-import edu.unh.schwartz.parawrap.Chunk;
+import edu.unh.schwartz.epframework.Chunk;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ArrayList;

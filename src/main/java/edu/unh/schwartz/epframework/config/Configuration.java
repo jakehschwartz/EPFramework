@@ -1,4 +1,4 @@
-package edu.unh.schwartz.parawrap.config;
+package edu.unh.schwartz.epframework.config;
 
 // import com.fasterxml.jackson.core.JsonFactory;
 // import com.fasterxml.jackson.core.JsonParser;

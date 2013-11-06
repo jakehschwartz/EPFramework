@@ -1,9 +1,9 @@
-package edu.unh.schwartz.parawrap;
+package edu.unh.schwartz.epframework;
 
-import edu.unh.schwartz.parawrap.config.Configuration;
-import edu.unh.schwartz.parawrap.config.ConfigWizard;
-import edu.unh.schwartz.parawrap.io.Manipulator;
-import edu.unh.schwartz.parawrap.worker.WorkerPool;
+import edu.unh.schwartz.epframework.config.Configuration;
+import edu.unh.schwartz.epframework.config.ConfigWizard;
+import edu.unh.schwartz.epframework.io.Manipulator;
+import edu.unh.schwartz.epframework.worker.WorkerPool;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 import org.apache.commons.logging.Log;
@@ -18,14 +18,18 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Jacob Schwartz
  */
-final class ParallelWrapper
+final class EPFramework
 {
+<<<<<<< HEAD:src/main/java/edu/unh/schwartz/parawrap/ParallelWrapper.java
     /**
      * The Log.
      */
     private static Log LOG = LogFactory.getLog(ParallelWrapper.class);
 
     private ParallelWrapper() 
+=======
+    private EPFramework() 
+>>>>>>> d0b9a24644e979bcd84a296ab9f48a3ad1dfed4b:src/main/java/edu/unh/schwartz/epframework/EPFramework.java
     {
         // No-op
     }
