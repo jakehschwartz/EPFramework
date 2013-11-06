@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Piece of work to do be done by the <code>Worker</code>s. Also contains
@@ -14,7 +16,12 @@ public final class Chunk implements Comparable<Chunk>
     /**
      * The number of header lines used in the output file.
      */
-    private static int HEADER_LINES;
+    private static int headerLines;
+
+    /**
+     * the log.
+     */
+    private static final Log LOG = LogFactory.getLog(Chunk.class);
 
     /**
      * The runtime of the chunk in millis.
@@ -97,25 +104,18 @@ public final class Chunk implements Comparable<Chunk>
     {
         final StringBuilder sb = new StringBuilder();
         
-        try 
+        try(final BufferedReader br = 
+                new BufferedReader(new FileReader(getOutFileName())))
         {
-            // Open out file
-            final BufferedReader br = 
-                new BufferedReader(new FileReader(getOutFileName()));
-
             // Read the header lines
-            for (int i = 0; i < HEADER_LINES; i++)
+            for (int i = 0; i < headerLines; i++)
             {
                 sb.append(br.readLine()).append("\n");
             }
-
-            // Close the file
-            br.close();
-            
         }
         catch (IOException e)
         {
-            System.err.println(e.getMessage());
+            LOG.error("getHeader: " + e.getMessage());
         }
         
         return sb.toString();
@@ -129,14 +129,11 @@ public final class Chunk implements Comparable<Chunk>
     {
         final StringBuilder sb = new StringBuilder();
         
-        try 
+        try(final BufferedReader br = 
+                new BufferedReader(new FileReader(getOutFileName())))
         {
-            // Open out file
-            final BufferedReader br = 
-                new BufferedReader(new FileReader(getOutFileName()));
-
             // Skip the header lines
-            for (int i = 0; i < HEADER_LINES; i++)
+            for (int i = 0; i < headerLines; i++)
             {
                 br.readLine();
             }
@@ -149,14 +146,10 @@ public final class Chunk implements Comparable<Chunk>
                 sb.append('\n');
                 line = br.readLine();
             }
-
-            // Close the file
-            br.close();
-            
         }
         catch (IOException e)
         {
-            System.err.println(e.getMessage());
+            LOG.error("getResult: " + e.getMessage());
         }
         
         return sb.toString();
@@ -175,7 +168,7 @@ public final class Chunk implements Comparable<Chunk>
         }
         catch (IOException e)
         {
-            System.err.println(e.getMessage());
+            LOG.error("createOutFile: " + e.getMessage());
         }
     }
 
@@ -215,10 +208,10 @@ public final class Chunk implements Comparable<Chunk>
 
     /**
      * Set the number of header lines in an output file.
-     * @param headerLines - the number of header lines in an output file
+     * @param hl - the number of header lines in an output file
      */
-    public static void setHeaderLines(final int headerLines)
+    public static void setHeaderLines(final int hl)
     {
-        HEADER_LINES = headerLines;
+        headerLines = hl;
     }
 }

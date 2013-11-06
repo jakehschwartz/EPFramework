@@ -6,6 +6,8 @@ import edu.unh.schwartz.parawrap.io.Manipulator;
 import edu.unh.schwartz.parawrap.worker.WorkerPool;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Application class. Takes an optional command line parameter for the run
@@ -18,6 +20,11 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 final class ParallelWrapper
 {
+    /**
+     * The Log.
+     */
+    private static Log LOG = LogFactory.getLog(ParallelWrapper.class);
+
     private ParallelWrapper() 
     {
         // No-op
@@ -42,14 +49,14 @@ final class ParallelWrapper
         }
         catch (IOException e)
         {
-            System.err.print(e.getMessage());
+            LOG.fatal("split: " + e.getMessage());
             return;
         }
 
         final PriorityBlockingQueue<Chunk> chunks = manip.getChunks();
         if (chunks.size() == 0)
         {
-            System.err.println("Incorrect chunk pattern or empty input file");
+            LOG.fatal("Incorrect chunk pattern or empty input file");
             return;
         }
 
@@ -74,10 +81,13 @@ final class ParallelWrapper
         if (args.length == 0)
         {
             // Allow the user to make a configuration file
-            System.out.println("Opening Configuration Wizard");
+            LOG.debug("Opening Configuration Wizard");
             final Configuration config = 
                 ConfigWizard.getInstance().createConfiguration();
-            start(config);
+            if (config != null)
+            {
+                start(config);
+            }
         }
         // First command line arg is a configuration file
         // else if (args.length == 1)

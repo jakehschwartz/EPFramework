@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Does all of the IO functions for the process. Can split an input file based
@@ -19,6 +21,11 @@ import java.util.regex.Pattern;
 public final class Manipulator
 {
     /**
+     * The Log.
+     */
+    private static final Log LOG = LogFactory.getLog(Manipulator.class);
+
+   /**
      * The default pattern for a manipulator.
      */
     private static final String DEFAULT_PATTERN = "^.*$";
@@ -134,10 +141,8 @@ public final class Manipulator
      */
     public void merge(final String fileName)
     {
-        PrintWriter writer = null;
-        try
+        try(final PrintWriter writer = new PrintWriter(fileName))
         {
-            writer = new PrintWriter(fileName);
             writer.print(this.chunks.get(0).getHeader());
 
             for (final Chunk c : this.chunks)
@@ -147,15 +152,7 @@ public final class Manipulator
         }
         catch (FileNotFoundException e)
         {
-            System.err.println(e.getMessage()); 
-            return;
-        }
-        finally
-        {
-            if (writer != null)
-            {
-                writer.close();
-            }
+            LOG.fatal("merge: " + e.getMessage());
         }
     }
 
@@ -179,13 +176,15 @@ public final class Manipulator
      */
     public void printStats(final String workerStats, final String outDir)
     {
-        try
+        try(final PrintWriter statsOut = new PrintWriter(outDir + "/stats.csv"))
         {
             final String comma = ",";
-            final PrintWriter statsOut = new PrintWriter(outDir + "/stats.csv");
+            final String header = "Chunk #,Length,Runtime(ms)";
             statsOut.println(workerStats);
+            LOG.debug(workerStats);
 
-            statsOut.println("Chunk #,Length,Runtime(ms)");
+            statsOut.println(header);
+            LOG.debug(header);
             for (int i = 0; i < this.chunks.size(); i++)
             {
                 final Chunk c = this.chunks.get(i);
@@ -193,13 +192,12 @@ public final class Manipulator
                 sb.append(c.hashCode()).append(comma).append(c.length());
                 sb.append(comma).append(c.getRuntime()).append('\n');
                 statsOut.println(sb.toString());
+                LOG.debug(sb.toString());
             }
-
-            statsOut.close();
         }
         catch (IOException e)
         {
-            System.err.println(e.getMessage());
+            LOG.error("printStats: " + e.getMessage());
         }
     }
 }

@@ -8,6 +8,8 @@ package edu.unh.schwartz.parawrap.config;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The settings for the current run of the application. 
@@ -60,6 +62,11 @@ public final class Configuration
      * Key for output file header setting.
      */
     public static final String NUM_HEADER_KEY = "numHeaderLines";
+
+    /**
+     * The Log.
+     */
+    private static final Log LOG = LogFactory.getLog(Configuration.class);
 
     /**
      * The number of threads used.
@@ -119,7 +126,7 @@ public final class Configuration
          {
              final String key = it.next();
              final Object val = map.get(key);
-             System.out.println(key  + " => " + val);
+             LOG.debug(key  + " => " + val);
              switch(key)
              {
                  case IN_FILE_KEY:

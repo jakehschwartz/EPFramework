@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log; 
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Runs the process on the queued up input. Each worker has an id and keeps
@@ -16,19 +18,24 @@ public final class Worker extends Thread
     /**
      * The path to the executable.
      */
-    private static String EXEC;
+    private static String exec;
 
     /**
      * The in flag for the executable.
      */
-    private static String IN_FLAG;
+    private static String inFlag;
 
     /**
      * The out flag for the executable.
      */
-    private static String OUT_FLAG;
+    private static String outFlag;
 
-       /**
+    /**
+     * The Log.
+     */
+    private static final Log LOG = LogFactory.getLog(Worker.class);
+
+    /**
      * The queue of pieces to do work on.
      */
     private PriorityBlockingQueue<Chunk> queue;
@@ -65,32 +72,32 @@ public final class Worker extends Thread
     /**
      * Set the path to the executable.
      *
-     * @param exec - the path to the executable
+     * @param e - the path to the executable
      */
-    public static void setExecutable(final String exec)
+    public static void setExecutable(final String e)
     {
-        System.err.println(exec);
-        EXEC = exec;
+        LOG.debug("setExecutable: " + e);
+        exec = e;
     }
     
     /**
      * Set the flag to signify where the input goes for the executable.
      *
-     * @param inFlag - the in flag used to signify the input file 
+     * @param in - the in flag used to signify the input file 
      */
-    public static void setInFlag(final String inFlag)
+    public static void setInFlag(final String in)
     {
-        IN_FLAG = inFlag;
+        inFlag = in;
     }
 
     /**
      * Set the flag to signify where the output goes for the executable.
      *
-     * @param outFlag - the flag used to signify the output file 
+     * @param out - the flag used to signify the output file 
      */
-    public static void setOutFlag(final String outFlag)
+    public static void setOutFlag(final String out)
     {
-        OUT_FLAG = outFlag;
+        outFlag = out;
     }
 
     /**
@@ -113,23 +120,19 @@ public final class Worker extends Thread
                 pb.redirectErrorStream(true);
 
                 // Start the work and capture the time it takes to run
-                System.out.println("Starting chunk on thread " + this.idNum);
+                LOG.info("Starting chunk on thread " + this.idNum);
                 final long start = System.currentTimeMillis();
                 final Process proc = pb.start();
                 proc.waitFor();
                 final long end = System.currentTimeMillis();
                 c.setRuntime(end - start);
                 runTime += (end - start);
-                System.out.println("Finished chunk " + c.hashCode() + 
-                        " on thread " + this.idNum + " in " + (end - start));
+                LOG.info("Finished chunk " + c.hashCode() + " on thread " + 
+                        this.idNum + " in " + (end - start));
             }
-            catch (InterruptedException e)
+            catch (InterruptedException|IOException e)
             {
-                e.printStackTrace();
-            }
-            catch (IOException e2)
-            {
-                e2.printStackTrace();
+                LOG.error("run: " + e.getMessage());
             }
 
             this.chunksRun++;
@@ -148,11 +151,11 @@ public final class Worker extends Thread
 
         // Create the executable
         final List<String> commands = new ArrayList<String>();
-        commands.add(EXEC);
+        commands.add(exec);
 
-        if (IN_FLAG != null)
+        if (inFlag != null)
         {
-            commands.add(IN_FLAG);
+            commands.add(inFlag);
         }
         else
         {
@@ -160,9 +163,9 @@ public final class Worker extends Thread
         }
         commands.add(in);
 
-        if (OUT_FLAG != null)
+        if (outFlag != null)
         {
-            commands.add(OUT_FLAG);
+            commands.add(outFlag);
         }
         else
         {
@@ -170,12 +173,6 @@ public final class Worker extends Thread
         }
         commands.add(out);
 
-        for (String s : commands)
-        {
-            System.out.print(s + " ");
-        }
-        System.out.println();
- 
         return new ProcessBuilder(commands);
     }
 

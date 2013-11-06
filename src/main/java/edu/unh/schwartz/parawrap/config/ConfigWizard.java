@@ -8,6 +8,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ciscavate.cjwizard.PageFactory;
 import org.ciscavate.cjwizard.pagetemplates.DefaultPageTemplate;
 import org.ciscavate.cjwizard.WizardContainer;
@@ -24,6 +26,11 @@ public final class ConfigWizard
      * The instance.
      */
     private static ConfigWizard instance;
+
+    /**
+     * The Log.
+     */
+    private static final Log LOG = LogFactory.getLog(ConfigWizard.class);
 
     /**
      * The last configuration created.
@@ -82,7 +89,7 @@ public final class ConfigWizard
             }
             catch (InterruptedException e)
             {
-                System.err.println("Oh noes!");
+                LOG.fatal("createConfiguration: " + e.getMessage());
             }
         }
 
@@ -101,8 +108,7 @@ public final class ConfigWizard
         public void onCanceled(final List<WizardPage> path, 
                 final WizardSettings settings)
         {
-            //TODO: Add a log message here
-            System.err.println("Cancelled-> " + settings);
+            LOG.debug("Cancelled wizard");
             ConfigWizard.this.window.dispose();
             synchronized(ConfigWizard.this)
             {
@@ -117,7 +123,7 @@ public final class ConfigWizard
         public void onFinished(final List<WizardPage> path, 
                 final WizardSettings settings)
         {
-            //TODO: Add a log message here
+            LOG.debug("Finished wizard");
             ConfigWizard.this.config = new Configuration(settings);
             ConfigWizard.this.window.dispose();
             synchronized(ConfigWizard.this)
@@ -290,15 +296,5 @@ public final class ConfigWizard
             setFinishEnabled(true);
             setNextEnabled(false);
         }
-    }
-
-    /**
-     * Test main method. Isn't hanging around.
-     * @param args - not 
-     */
-    public static void main(final String[] args)
-    {
-        final Configuration c = ConfigWizard.getInstance().createConfiguration();
-        System.out.println(c);
     }
 }

@@ -3,12 +3,19 @@ package edu.unh.schwartz.parawrap.worker;
 import edu.unh.schwartz.parawrap.Chunk;
 import edu.unh.schwartz.parawrap.config.Configuration;
 import java.util.concurrent.PriorityBlockingQueue;
+import org.apache.commons.logging.Log; 
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Creates and starts the <code>Worker</code>s.
  */
 public final class WorkerPool
 {
+    /**
+     * The Log.
+     */
+    private static final Log LOG = LogFactory.getLog(WorkerPool.class);
+
     /**
      * The workers to be utilizated.
      */
@@ -55,7 +62,7 @@ public final class WorkerPool
         }
         catch (InterruptedException e)
         {
-            System.err.println("Thread interrupted");
+            LOG.fatal("Worker interrupted: " + e.getMessage());
             System.exit(1);
         }
     }
