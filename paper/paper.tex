@@ -92,11 +92,14 @@ produces by Ka/Ks Calculator.
 
 The Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
-embarrassingly parallel programs in the biological sciences. 
-TALK ABOUT CLUSTERING
-With several applications that 
-would benefit from parallelism in this field, it was obvious it would be 
-desirable to develop a framework for creating wrapper programs.
+embarrassingly parallel programs in the biological sciences. To deal with large
+amounts of data, the best method is often to group them into clusters. 
+Hierarchical clustering algorthms take the data and then organize into
+hierarchical structure, usually a dendrogram, based on a priority matric. There 
+are hierarchical clustering algorithms that can be implemented in parallel using
+an embarrassingly parallel approach.  With several applications that would 
+benefit from parallelism in this field, it was obvious it would be desirable to 
+develop a framework for creating wrapper programs. \cite{cluster}
 
 % TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
 
@@ -203,14 +206,17 @@ one machine.
 
 \begin{thebibliography}{1}
 \bibitem{history}
-Moler, Cleve. "Matrix Computation on Distributed Memory Multiprocessors."
-Hypercube Multiprocessors, 1986: Proceedings of the First Conference on
+Moler, Cleve. ``\emph{Matrix Computation on Distributed Memory Multiprocessors."
+}, Hypercube Multiprocessors, 1986: Proceedings of the First Conference on
 Hypercube Multiprocessors, Knoxville, Tennessee, August 24-27, 1985. By Michael
 T. Heath. Philadelphia: SIAM, 1986. N. pag. Print.
 \bibitem{kaks}
-Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., ``\emph{KaKs Calculator: 
-calculating Ka and Ks through model selection and model averaging.},'',
+Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., \emph{KaKs Calculator: 
+calculating Ka and Ks through model selection and model averaging},
 Genomics Proteomics Bioinformatics, November 2006.
+\bibitem{cluster}
+Rua, Xu, Wunsch, Donald II, \emph{Survey of Clustering Algorithms},
+IEEE Transactions on Neural Networks VOL. 16, NO. 3, MAY 2005
 \end{thebibliography}
 
 \end{document}
