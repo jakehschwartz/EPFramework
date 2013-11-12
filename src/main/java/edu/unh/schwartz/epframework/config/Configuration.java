@@ -1,10 +1,12 @@
 package edu.unh.schwartz.epframework.config;
 
-// import com.fasterxml.jackson.core.JsonFactory;
-// import com.fasterxml.jackson.core.JsonParser;
-// import com.fasterxml.jackson.core.JsonToken;
-// import java.io.File;
-// import java.io.IOException;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
@@ -22,6 +24,11 @@ public final class Configuration
      * Key for in file setting.
      */
     public static final String IN_FILE_KEY = "inFile";
+
+    /**
+     * Key for in file directory setting.
+     */
+    public static final String IN_FILE_DIR_KEY = "inFileDir";
 
     /**
      * Key for split pattern setting.
@@ -77,7 +84,12 @@ public final class Configuration
      * The name of the input file.
      */
     private String inputFileName;
-    
+     
+    /**
+     * The name of the input directory file.
+     */
+    private String inputFileDirName;
+
     /**
      * The regex pattern to split the input file on.
      */
@@ -132,6 +144,9 @@ public final class Configuration
                  case IN_FILE_KEY:
                     this.inputFileName = (String) val;
                     break;
+                case IN_FILE_DIR_KEY:
+                    this.inputFileDirName = (String) val;
+                    break;
                  case SPLIT_PATTERN_KEY:
                     this.splitPattern = (String) val;
                     break;
@@ -165,37 +180,59 @@ public final class Configuration
     }
 
     /**
-     * Constructs a configuration file from a saved copy.
-     * @param jsonFile - the file holding the saved configuration file
-     */
-    // public Configuration(final File jsonFile)
-    // {
-
-    // }
-
-    /**
      * Constructs a configuration file from a past configuration file that was
      * saved to the disk.
      *
      * @param fileName - the path to the file on disk
      * @throws IOException - if there is any problem reading the file
      */
-    // public Configuration(final String fileName) throws IOException
-    // {
-        // final JsonFactory jf = new JsonFactory();
-        // final JsonParser jp = jf.createJsonParser(new File(fileName));
+    public Configuration(final String fileName) throws IOException
+    {
+        final JsonFactory jf = new JsonFactory();
+        final JsonParser jp = jf.createParser(new File(fileName));
 
-        // while (jp.nextToken() != JsonToken.END_OBJECT)
-        // {
-            // final String fieldname = jp.getCurrentName();
-            // if ("name".equals(fieldname)) 
-            // {
-                // jp.nextToken();
-                // System.out.println(jp.getText()); 
-            // }
-        // }
-        // jp.close();
-    // }
+        while (jp.nextToken() != JsonToken.END_OBJECT)
+        {
+            final String fieldName = jp.getCurrentName();
+            jp.nextToken();
+            switch(fieldName)
+            {
+                case IN_FILE_KEY:
+                    this.inputFileName = jp.getText();
+                    break;
+                case IN_FILE_DIR_KEY:
+                    this.inputFileDirName = jp.getText();
+                    break;
+                case SPLIT_PATTERN_KEY:
+                    this.splitPattern = jp.getText();
+                    break;
+                case OUT_FILE_KEY:
+                    this.outDirName = jp.getText();
+                    break;
+                case EXEC_LOC_KEY:
+                    this.execPath = jp.getText();
+                    break;
+                case IN_FLAG_KEY: 
+                    this.inFlag = jp.getText();
+                    break;
+                case OUT_FLAG_KEY:
+                    this.outFlag = jp.getText();
+                    break;
+                case NUM_PROCESSES_KEY:
+                    this.numberOfThreads = jp.getIntValue();
+                    break;
+                case STATS_KEY:
+                    this.makeStats = jp.getBooleanValue();
+                    break;
+                case NUM_HEADER_KEY:
+                    this.numberOfHeaderLines = jp.getIntValue();
+                    break;
+                default:
+                    assert(false);
+            }
+        }
+        jp.close();
+    }
 
     /**
      * @return the number of threads the program will use
@@ -208,9 +245,17 @@ public final class Configuration
     /**
      * @return the path to the input file
      */
-    public String getInputFileName()
+    public String getInputFile()
     {
         return this.inputFileName;
+    }
+
+    /**
+     * @return the path to the input directory of files
+     */
+    public String getInputDirectory()
+    {
+        return this.inputFileDirName;
     }
 
     /**
@@ -293,5 +338,42 @@ public final class Configuration
     public boolean makeStats()
     {
         return this.makeStats;
+    }
+
+    /**
+     * Saves the configuration in a file so it can be loaded if the user wants
+     * to use the configuration again.
+     */
+    public void saveConfig()
+    {
+        final JsonFactory jsonFactory = new JsonFactory(); 
+        try
+        {
+            final File file = new File(this.outDirName + "/config.txt");
+            final JsonGenerator jg = jsonFactory.createGenerator(file, 
+                    JsonEncoding.UTF8);
+            if (this.inputFileName != null)
+            {
+                jg.writeStringField(IN_FILE_KEY, this.inputFileName);
+                jg.writeStringField(SPLIT_PATTERN_KEY, this.splitPattern);
+            }
+            else
+            {
+                jg.writeStringField(IN_FILE_DIR_KEY, this.inputFileDirName);
+            }
+
+            jg.writeStringField(OUT_FILE_KEY, this.outDirName);
+            jg.writeStringField(EXEC_LOC_KEY, this.execPath);
+            jg.writeStringField(IN_FLAG_KEY, this.inFlag);
+            jg.writeStringField(OUT_FLAG_KEY, this.outFlag);
+            jg.writeNumberField(NUM_PROCESSES_KEY, this.numberOfThreads);
+            jg.writeBooleanField(STATS_KEY, this.makeStats);
+            jg.writeNumberField(NUM_HEADER_KEY, this.numberOfHeaderLines);
+            jg.close();
+        }
+        catch (IOException e)
+        {
+            LOG.error("saveConfig: " + e.getMessage());
+        }
     }
 }

@@ -104,10 +104,6 @@ public final class Manipulator
                 final File dir = new File("/tmp/" + content.hashCode());
                 dir.mkdir();
 
-                // Make the new file
-                // final File in = new File(dir.getName() + "/in");
-                // in.createNewFile();
-
                 // Write the content to a file
                 final PrintWriter inWriter = new PrintWriter(dir.getAbsolutePath() + "/in");
                 inWriter.println(content);
@@ -123,6 +119,24 @@ public final class Manipulator
             }
 
             line = reader.readLine();
+        }
+    }
+
+    /**
+     * Make chunks for the pre-split input files.
+     * @param dir - the directory of pre-split files
+     * @throws IOException if there is any problem with the files in the
+     * directory
+     */
+    public void splitFiles(final String dir) throws IOException
+    {
+        this.chunks = new ArrayList<Chunk>();
+
+        final File directory = new File(dir);
+        for (File i : directory.listFiles())
+        {
+            final File d = new File("tmp/" + i.getName().hashCode());
+            this.chunks.add(new Chunk(i , d));
         }
     }
     

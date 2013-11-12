@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -19,7 +20,7 @@ public final class Chunk implements Comparable<Chunk>
     private static int headerLines;
 
     /**
-     * the log.
+     * The log.
      */
     private static final Log LOG = LogFactory.getLog(Chunk.class);
 
@@ -47,6 +48,35 @@ public final class Chunk implements Comparable<Chunk>
     {
         this.content = content;
         this.directory = directory;
+    }
+
+    /**
+     * Constructs a chunk based off a file and the directory for the chunk.
+     * @param inFile - the file that contains the chunk's content
+     * @param directory - the directory for the chunk's IO
+     * @throws IOException is there is problem copying the file to the directory
+     * or reading the content
+     */
+    public Chunk(final File inFile, final File directory) throws IOException
+    {
+        this.directory = directory;
+
+        final StringBuilder sb = new StringBuilder();
+        final BufferedReader br = new BufferedReader(new FileReader(inFile));
+        String line = br.readLine();
+        while (line != null) 
+        {
+            sb.append(line);
+            sb.append('\n');
+            line = br.readLine();
+        }
+        br.close();
+
+        this.content = sb.toString();
+
+        // Write the content to a file in the directory
+        Files.copy(inFile.toPath(), 
+            new File("tmp" + inFile.getName()).toPath());
     }
 
     /**

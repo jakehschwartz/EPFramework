@@ -20,16 +20,12 @@ import org.apache.commons.logging.LogFactory;
  */
 final class EPFramework
 {
-<<<<<<< HEAD:src/main/java/edu/unh/schwartz/parawrap/ParallelWrapper.java
     /**
      * The Log.
      */
-    private static Log LOG = LogFactory.getLog(ParallelWrapper.class);
+    private static Log LOG = LogFactory.getLog(EPFramework.class);
 
-    private ParallelWrapper() 
-=======
     private EPFramework() 
->>>>>>> d0b9a24644e979bcd84a296ab9f48a3ad1dfed4b:src/main/java/edu/unh/schwartz/epframework/EPFramework.java
     {
         // No-op
     }
@@ -43,13 +39,23 @@ final class EPFramework
     {
         Chunk.setHeaderLines(config.getNumHeaderLines());
 
-        // Read in the input file and get the chunks
-        final Manipulator manip = new Manipulator(config.getSplitPattern(), 
-            config.getNumHeaderLines());
-
+        Manipulator manip = null;
         try
         {
-            manip.split(config.getInputFileName());
+            if (config.getInputFile() == null)
+            {
+                // Make a chunk for each presplit file
+                manip = new Manipulator(config.getNumHeaderLines());
+                manip.splitFiles(config.getInputDirectory());
+            }
+            else
+            {
+                // Read in the input file and get the chunks
+                manip = new Manipulator(config.getSplitPattern(), 
+                        config.getNumHeaderLines());
+
+                manip.split(config.getInputFile());
+            }
         }
         catch (IOException e)
         {
@@ -57,6 +63,7 @@ final class EPFramework
             return;
         }
 
+        // Get the chunks made my the manipulator
         final PriorityBlockingQueue<Chunk> chunks = manip.getChunks();
         if (chunks.size() == 0)
         {
@@ -64,9 +71,14 @@ final class EPFramework
             return;
         }
 
+        // Start the workers
         final WorkerPool wp = new WorkerPool(config, chunks);
         wp.start();
+
+        // Merge the results back together
         manip.merge(config.getOutputDirectory() + "/done.txt");
+
+        // Make stats if instructed to 
         if (config.makeStats())
         {
             manip.printStats(wp.getStats(), config.getOutputDirectory());
