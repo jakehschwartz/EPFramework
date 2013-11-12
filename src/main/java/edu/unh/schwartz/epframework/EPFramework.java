@@ -106,24 +106,25 @@ final class EPFramework
             }
         }
         // First command line arg is a configuration file
-        // else if (args.length == 1)
-        // {
-            // try
-            // {
-                // final Configuration config = new Configuration(args[0]);
-                // start(config);
-            // }
-            // catch (IOException e)
-            // {
-                // System.err.println("Problem reading configuation file: " + 
-                        // e.getMessage());
-            // }
-        // }
-        // else
-        // {
-            // System.err.print("Usage:\n\tTakes only one option args:\n\t\t");
-            // System.err.print("- The configuration file's location\n\n");
-            // System.err.println("No arguments will bring up the wizard");
-        // }
+        else if (args.length == 1)
+        {
+            try
+            {
+                LOG.debug("Loading configuration file");
+                final Configuration config = new Configuration(args[0]);
+                start(config);
+            }
+            catch (IOException e)
+            {
+
+                LOG.fatal("Problem loading config file: " + e.getMessage());
+            }
+        }
+        else
+        {
+            System.err.print("Usage:\n\tTakes only one option args:\n\t\t");
+            System.err.print("- The configuration file's location\n\n");
+            System.err.println("No arguments will bring up the wizard");
+        }
     }
 }

@@ -33,6 +33,11 @@ public final class ConfigWizard
     private static final Log LOG = LogFactory.getLog(ConfigWizard.class);
 
     /**
+     * Seperator string.
+     */
+    private static final String SEP = "---------------------------------------"; 
+
+    /**
      * The last configuration created.
      */ 
     private Configuration config;
@@ -168,20 +173,6 @@ public final class ConfigWizard
         }
     }
 
-    /**
-     * Border for all components.
-     */
-    // private static final EmptyBorder BORDER = new EmptyBorder(0, 0, 40, 0);
-
-    // private class Seperator extends JLabel
-    // {
-        // private Seperator()
-        // {
-            // super(" ");
-            // setBorder(BORDER);
-        // }
-    // }
-
     private final class IOPage extends WizardPage
     {
         private IOPage()
@@ -201,6 +192,16 @@ public final class ConfigWizard
             add(new JLabel("Pattern used to split input: "));
             add(splitField);
             add(new JLabel("(Leave blank to use every new line)"));
+
+            add((new JLabel("--------------- OR ---------------")));
+
+            // Settings for the input directory
+            final JFileChooserButton inDirChooser = new JFileChooserButton(true);
+            inDirChooser.setName(Configuration.IN_FILE_DIR_KEY);
+            add((new JLabel("Select the input directory: ")));
+            add(inDirChooser);
+
+            add(new JLabel(SEP));
 
             // Settings for the output location
             final JFileChooserButton outChooser = new JFileChooserButton(true);
@@ -222,6 +223,7 @@ public final class ConfigWizard
             execChooser.setName(Configuration.EXEC_LOC_KEY);
             add((new JLabel("Select the executable: ")));
             add(execChooser);
+            add(new JLabel(SEP));
 
             // Name for input and output flags
             // Setting for the split pattern
@@ -231,6 +233,7 @@ public final class ConfigWizard
             add(new JLabel("Flag for executable to define input file"));
             add(inFlagField);
             add(new JLabel("(Leave blank to use stdin)"));
+            add(new JLabel(SEP));
 
             // Setting for the split pattern
             final JTextField outFlagField = new JTextField();
@@ -255,18 +258,20 @@ public final class ConfigWizard
             while (i <= max)
             {
                 options.add(Integer.toString(i));
-                i *= 2;
+                i++;
             }
 
             final WizardSpinner spinner = new WizardSpinner(options);
             spinner.setName(Configuration.NUM_PROCESSES_KEY);
             add(new JLabel("Select the number of processes: "));
             add(spinner);
+            add(new JLabel(SEP));
 
             final JCheckBox box = new JCheckBox();
             box.setName(Configuration.STATS_KEY);
             add(new JLabel("Create stats file?"));
             add(box);
+            add(new JLabel(SEP));
 
             final JTextField headerField = new JTextField();
             headerField.setName(Configuration.NUM_HEADER_KEY);
@@ -282,6 +287,12 @@ public final class ConfigWizard
         private ReviewPage(final WizardSettings settings)
         {
             super("Confirmation", "Confirmation Page");
+
+            final JCheckBox box = new JCheckBox();
+            box.setName(Configuration.SAVE_KEY);
+            add(new JLabel("Save Configuration File?"));
+            add(box);
+            add(new JLabel(SEP));
 
             add(new JLabel("This will eventually work"));
         }

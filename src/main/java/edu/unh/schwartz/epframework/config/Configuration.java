@@ -71,6 +71,11 @@ public final class Configuration
     public static final String NUM_HEADER_KEY = "numHeaderLines";
 
     /**
+     * Key for setting whether or not to save the file.
+     */
+    public static final String SAVE_KEY = "save";
+
+    /**
      * The Log.
      */
     private static final Log LOG = LogFactory.getLog(Configuration.class);
@@ -142,19 +147,19 @@ public final class Configuration
              switch(key)
              {
                  case IN_FILE_KEY:
-                    this.inputFileName = (String) val;
-                    break;
-                case IN_FILE_DIR_KEY:
-                    this.inputFileDirName = (String) val;
-                    break;
+                     this.inputFileName = (String) val;
+                     break;
+                 case IN_FILE_DIR_KEY:
+                     this.inputFileDirName = (String) val;
+                     break;
                  case SPLIT_PATTERN_KEY:
-                    this.splitPattern = (String) val;
-                    break;
+                     this.splitPattern = (String) val;
+                     break;
                  case OUT_FILE_KEY:
-                    this.outDirName = (String) val;
-                    break;
+                     this.outDirName = (String) val;
+                     break;
                  case EXEC_LOC_KEY:
-                    this.execPath = (String) val;
+                     this.execPath = (String) val;
                      break;
                  case IN_FLAG_KEY: 
                      this.inFlag = (String) val;
@@ -170,6 +175,12 @@ public final class Configuration
                      break;
                  case NUM_HEADER_KEY:
                      this.numberOfHeaderLines = Integer.valueOf((String) val);
+                     break;
+                 case SAVE_KEY:
+                     if ((boolean) val)
+                     {
+                         saveConfig();
+                     }
                      break;
                  default:
                      assert(false);
