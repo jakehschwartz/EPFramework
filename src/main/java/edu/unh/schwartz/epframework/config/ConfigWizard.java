@@ -3,7 +3,6 @@ package edu.unh.schwartz.epframework.config;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-// import javax.swing.border.EmptyBorder;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -292,9 +291,18 @@ public final class ConfigWizard
             box.setName(Configuration.SAVE_KEY);
             add(new JLabel("Save Configuration File?"));
             add(box);
-            add(new JLabel(SEP));
+            // add(new JLabel(SEP));
 
-            add(new JLabel("This will eventually work"));
+            //TODO: Review entered values
+            // add(new JLabel("Confirm String:"));
+            // for(String key : settings.keySet())
+            // {
+                // Object val = settings.get(key);
+                // if (val != null && !val.equals(""))
+                // {
+                    // add(new JLabel(key + " : " + val + "\n"));
+                // }
+            // }
         }
 
         /**
