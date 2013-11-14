@@ -76,7 +76,8 @@ final class EPFramework
         wp.start();
 
         // Merge the results back together
-        manip.merge(config.getOutputDirectory() + "/done.txt");
+        manip.merge(config.getOutputDirectory() + "/done.txt", 
+            config.getMergeMethod());
 
         // Make stats if instructed to 
         if (config.makeStats())

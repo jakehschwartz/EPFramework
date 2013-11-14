@@ -76,6 +76,11 @@ public final class Configuration
     public static final String SAVE_KEY = "save";
 
     /**
+     * Key for setting the merge method.
+     */
+    public static final String MERGE_METHOD_KEY = "mergeMethod";
+
+    /**
      * The Log.
      */
     private static final Log LOG = LogFactory.getLog(Configuration.class);
@@ -131,6 +136,10 @@ public final class Configuration
      */
     private int numberOfHeaderLines;
 
+    /**
+     * The method used to merge the results.
+     */
+    private int mergeMethod;
     
     /**
      * Constructs a configuration file from a map.
@@ -182,12 +191,15 @@ public final class Configuration
                          saveConfig();
                      }
                      break;
+                 case MERGE_METHOD_KEY:
+                     this.mergeMethod = Integer.valueOf((String) val);
+                     break;
                  default:
                      assert(false);
              }
          }
 
-         // Assertions here
+         // TODO: Assertions here
     }
 
     /**
@@ -238,7 +250,10 @@ public final class Configuration
                 case NUM_HEADER_KEY:
                     this.numberOfHeaderLines = jp.getIntValue();
                     break;
-                default:
+                case MERGE_METHOD_KEY:
+                    this.mergeMethod = jp.getIntValue();
+                    break;
+                 default:
                     assert(false);
             }
         }
@@ -349,6 +364,14 @@ public final class Configuration
     public boolean makeStats()
     {
         return this.makeStats;
+    }
+
+    /**
+     * @return the method used to merge the results
+     */
+    public int getMergeMethod()
+    {
+        return this.mergeMethod;
     }
 
     /**

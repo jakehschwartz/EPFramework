@@ -20,6 +20,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class Manipulator
 {
+    private enum MergeMethod
+    {
+        DEFAULT,
+        JAVA,
+        EXTERNAL
+    }
+
     /**
      * The Log.
      */
@@ -152,8 +159,28 @@ public final class Manipulator
      * Merges the chunks back together. Prints the results of the work in the
      * order of the original chunks.
      * @param fileName - the name of the output file
+     * @param mergeMethod - the type of merge the user specified
      */
-    public void merge(final String fileName)
+    public void merge(final String fileName, final int mergeMethod)
+    {
+        switch (MergeMethod.values()[mergeMethod])
+        {
+            case DEFAULT:
+                defaultMerge(fileName);
+                break;
+            case JAVA:
+                customMerge(fileName);
+                break;
+            case EXTERNAL:
+                externalMerge(fileName);
+                break;
+            default:
+                LOG.fatal("Illegal mergeMethod");
+                assert(false);
+        }
+    }
+
+    private void defaultMerge(final String fileName)
     {
         try(final PrintWriter writer = new PrintWriter(fileName))
         {
@@ -168,6 +195,17 @@ public final class Manipulator
         {
             LOG.fatal("merge: " + e.getMessage());
         }
+    }
+
+    private void customMerge(final String fileName)
+    {
+        CustomMerge.merge(fileName, this.chunks);
+    }
+
+    private void externalMerge(final String fileName)
+    {
+        // Use the code to open an executable with the command line arguments
+        // being
     }
 
     /**
