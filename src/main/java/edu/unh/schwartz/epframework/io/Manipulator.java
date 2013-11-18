@@ -37,6 +37,12 @@ public final class Manipulator
      */
     private static final String DEFAULT_PATTERN = "^.*$";
 
+   /**
+     * The file name for the executable that will do an external merge if that
+     * configuration was chosen.
+     */
+    private static final String EXTERNAL_MERGE_EXEC_NAME = "./merger";
+
     /**
      * The pattern used to split the input file.
      */
@@ -202,12 +208,35 @@ public final class Manipulator
         CustomMerge.merge(fileName, this.chunks);
     }
 
-    private void externalMerge(final String fileName)
+    private void externalMerge(final String fileName) 
     {
-        // Use the code to open an executable with the command line arguments
-        // being
-    }
+        // Prepare the args
+        final List<String> commands = new ArrayList<String>();
+        commands.add(EXTERNAL_MERGE_EXEC_NAME);
+        for (final Chunk c : this.chunks)
+        {
+            commands.add(c.getDirectory().getAbsolutePath());
+        }
 
+        try
+        {
+            // Create the process builder
+            final ProcessBuilder pb = new ProcessBuilder(commands);
+            pb.redirectErrorStream(true);
+            pb.redirectOutput(new File(fileName));
+
+            // Start the work and capture the time it takes to run
+            LOG.info("Starting external merge");
+            final Process proc = pb.start();
+            proc.waitFor();
+            LOG.info("Finished external merge");
+        }
+        catch (IOException|InterruptedException e)
+        {
+            LOG.fatal("externalMerge: " + e.getMessage());
+        }
+    }
+    
     /**
      * Cleans up the chunks and temp out files and directories.
      */
