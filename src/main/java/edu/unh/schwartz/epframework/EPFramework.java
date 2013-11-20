@@ -2,7 +2,6 @@ package edu.unh.schwartz.epframework;
 
 import edu.unh.schwartz.epframework.config.Configuration;
 import edu.unh.schwartz.epframework.config.ConfigWizard;
-import edu.unh.schwartz.epframework.io.Manipulator;
 import edu.unh.schwartz.epframework.worker.WorkerPool;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -39,22 +38,22 @@ final class EPFramework
     {
         Chunk.setHeaderLines(config.getNumHeaderLines());
 
-        Manipulator manip = null;
+        ChunkManager cm = null;
         try
         {
             if (config.getInputFile() == null)
             {
                 // Make a chunk for each presplit file
-                manip = new Manipulator(config.getNumHeaderLines());
-                manip.splitFiles(config.getInputDirectory());
+                cm = new ChunkManager(config.getNumHeaderLines());
+                cm.splitFiles(config.getInputDirectory());
             }
             else
             {
                 // Read in the input file and get the chunks
-                manip = new Manipulator(config.getSplitPattern(), 
+                cm = new ChunkManager(config.getSplitPattern(), 
                         config.getNumHeaderLines());
 
-                manip.split(config.getInputFile());
+                cm.split(config.getInputFile());
             }
         }
         catch (IOException e)
@@ -63,8 +62,8 @@ final class EPFramework
             return;
         }
 
-        // Get the chunks made my the manipulator
-        final PriorityBlockingQueue<Chunk> chunks = manip.getChunks();
+        // Get the chunks made my the chunkmanager
+        final PriorityBlockingQueue<Chunk> chunks = cm.getChunks();
         if (chunks.size() == 0)
         {
             LOG.fatal("Incorrect chunk pattern or empty input file");
@@ -76,15 +75,15 @@ final class EPFramework
         wp.start();
 
         // Merge the results back together
-        manip.merge(config.getOutputDirectory() + "/done.txt", 
+        cm.merge(config.getOutputDirectory() + "/done.txt", 
             config.getMergeMethod());
 
         // Make stats if instructed to 
         if (config.makeStats())
         {
-            manip.printStats(wp.getStats(), config.getOutputDirectory());
+            cm.printStats(wp.getStats(), config.getOutputDirectory());
         }
-        manip.cleanUp();
+        cm.cleanUp();
     }
 
     /**

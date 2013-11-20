@@ -27,3 +27,7 @@ gradle build
 
 5. Run on your data.
 gradle run <Optional Config File>
+
+Usage
+--------
+

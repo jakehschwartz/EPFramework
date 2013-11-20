@@ -27,8 +27,10 @@ embarrsingly parallel but they are difficult to rewrite to use multithreading,
 because they are either poorly written or too complex. We have written a 
 framework, implemented in Java, that will execute the serial program in several 
 threads. These threads working together help cut down the total runtime
-exponentially. More statistics, savable configurations and more options will be 
-implemented next, in addition to better testing and refactored.
+exponentially. The next step is to seperate the framework into a front-end that
+will run locally and the back-end which recieves blocks of work and does the
+computations. This back-end should be running in the cloud, on a machine who is
+dedicated to running embarrassingly parallel tasks only.
 \end{abstract}
 
 \section{Introduction}
@@ -58,7 +60,7 @@ The framework provides a "wrapper" for the original program that mimics the
 behavior of the original program. It calls the serial programs on multiple Java 
 threads. Each thread acts like the serial application, reading a subset of the 
 input the same and creating the output in the same format. This paper describes
-a framework a framework that makes it easy to parallelize an embarrassingly
+a framework that makes it easy to parallelize an potentially embarrassingly
 parallel program that reads from a file, writes to a file and whose input can be
 broken up into work units by a regular expression. The framework gives an
 exponential decrease in runtime as more processor help in the computation. This
@@ -68,7 +70,7 @@ machine that take up memory.
 \section{Background}
 
 The motivation for this effort was with research into different forms of the 
-species \emph{Cicer arietinum}, the chikckpea. The two main forms, Kabuli and 
+species \emph{Cicer arietinum}, the chickpea. The two main forms, Kabuli and 
 Desi, are very different in size and color but we mostly wanted to see why the 
 Desi is more disease resistance and have more effective root nodule symbiosis 
 and why the Kabuli has a large but soft shell. These two types are both 
@@ -90,6 +92,7 @@ was calculated, the contents of the output files was concatenated together to
 produce a final output that mnatches the format and order that would have been
 produces by Ka/Ks Calculator.
 
+%TODO: get a better source? Talk about UCLUST and octupus
 The Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
 embarrassingly parallel programs in the biological sciences. To deal with large
@@ -101,16 +104,7 @@ an embarrassingly parallel approach.  With several applications that would
 benefit from parallelism in this field, it was obvious it would be desirable to 
 develop a framework for creating wrapper programs. \cite{cluster}
 
-% TALK ABOUT PAPER HERE. AND MAYBE THE POWERPOINT TOO.
-
-In this version of the framework, several components are being added. First, 
-there is a wizard style menu that will allow the end-user to select not only the 
-program that wish to use, but also to manage other settings for the run. A new 
-IO class splits the input and merges the output more efficiently. Lastly, in 
-order to look at how well the framework performs, the threads keep their own 
-statistics, which will be used to evaluate the effectiveness of the framework 
-and to find potential enhancements and help end-users determine whether their 
-use of the framework is efficient.
+%TODO: TALK ABOUT CLOUD PAPER HERE. AND MAYBE THE POWERPOINT TOO.
 
 \section{Proposed Solution}
 \begin{figure}
@@ -118,26 +112,29 @@ use of the framework is efficient.
 \caption{UML for the embarrassingly parallel framework}
 \label{fig:uml}
 \end{figure}
-The KaKs Calculator is not the only program to use the framework; there are
-various potential programs that the framework could support. The only 
-requirements for the this program are that it process the input in an 
-embarrassingly parallel manner and that the input comes from a file and the 
-processed results are also writen to a file. The framework needs to support 
-various kinds of input files and be able to chunk up the work accordingly. The 
-Ka/Ks Calculator's input consists of a header and then two protein sequence 
-lines followed by a blank line. The framework uses that blank line to know when 
-one chunk of work has ended and another has begun. The user can input a regular 
-expression to define what lines of input make up what chunks. This occurs in 
-the ChunkManager class. 
+The only requirements for a program to be wrapped by framework are that it 
+process the input in an embarrassingly parallel manner and that the input comes 
+from a file. The processed results are must also written to a file. The 
+framework supports two forms of input: a directory of files that contain that 
+each contain one unit of work, which is represented by the Chunk class, or a 
+single file that the framework can break up into Chunks. For example, the Ka/Ks 
+Calculator's input consists of a header and then two protein sequence lines 
+followed by a blank line. The framework uses that blank line to know when one 
+Chunk of work has ended and another has begun. The user can input a regular 
+expression to define when lines of input are seperated into Chunks. This occurs 
+in the ChunkManager class. 
 
-The other purpose of the ChunkManager class is to combine the resulting chunks 
+The other purpose of the ChunkManager class is to combine the resulting Chunks 
 back together when the worker threads have finished. Once the work has been
 done, all of the separate results are spread across several files. The
 ChunkManager's second job is to retrieve those results and construct a real
 output file. The real output file must look the same as the output file would
 look if the program were run serially; the output must come in the same order as
 the inputs in the input file and headers may need to be deleted from the
-separate files and added to the combined file.
+separate files and added to the combined file. There are two other options if
+the end-user does not want this behavior. They can choose to write their own
+merger in Java, using the CustomMerge class, or write their own script to do the
+merging. 
 
 As more features are added to the framework and as more programs start to use 
 the framework, there are more choices for the end-user to make with regards to 
@@ -154,13 +151,13 @@ for each piece of work is also recorded. This information will be used by us to
 evaluate the effectiveness of our approach, but can also provide useful
 information the can help a user tine a particular application on a particular
 type of input data. The statistics for each thread can be found in the Worker 
-subclass and the individual Chunk classes will store their own statstics about 
+subclass and the individual Chunk objects will store their own statstics about 
 runtime and size.
 
 \section{Results}
 
 To observe how the framework changes the runtime of sequential programs when
-using varying numbers of threads, I designed a simple experiment. The Ka/Ks 
+using varying numbers of threads, we designed a simple experiment. The Ka/Ks 
 Calculator was run through the framework with ten different samples, each 
 containing sixteen units of work. Each sample was run by the framework at five 
 different level of numbers of worker threads, starting at 1 and increasing by 
@@ -185,6 +182,7 @@ small time gain with the CPU at 50\% versus the CPU at 100\%, running the
 framework at 50\% CPU is more efficient when the number of threads is on the
 same order as the number of units of work.
 
+%TODO: Rewrite with new next steps
 There are several next steps in the pipeline. In addition to using the
 statistics to try to boost speed, adding savable configurations is at the top of
 the list. This will allow users to use the same configuration without having to
@@ -194,6 +192,7 @@ implemented in order to avoid potential start up costs in the executable.
 Finally, other pleasing parallel problems will be executed by the wrapper so 
 that more potential features will be discovered. 
 
+%TODO: Does this still make sense
 Using Java was a good choice for implementation ease and future implementation
 extension by others, but it may not produce the fastest results. Languages
 like Hadoop, Clojure or other multithread oriented language may have been better
@@ -211,7 +210,7 @@ Moler, Cleve. ``\emph{Matrix Computation on Distributed Memory Multiprocessors."
 Hypercube Multiprocessors, Knoxville, Tennessee, August 24-27, 1985. By Michael
 T. Heath. Philadelphia: SIAM, 1986. N. pag. Print.
 \bibitem{kaks}
-Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., \emph{KaKs Calculator: 
+Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., \emph{Ka/Ks Calculator: 
 calculating Ka and Ks through model selection and model averaging},
 Genomics Proteomics Bioinformatics, November 2006.
 \bibitem{cluster}

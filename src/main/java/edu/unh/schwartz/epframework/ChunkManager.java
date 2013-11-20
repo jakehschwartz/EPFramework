@@ -1,6 +1,5 @@
-package edu.unh.schwartz.epframework.io;
+package edu.unh.schwartz.epframework;
 
-import edu.unh.schwartz.epframework.Chunk;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  * Does all of the IO functions for the process. Can split an input file based
  * on a pattern and merge it back together in the same order.
  */
-public final class Manipulator
+public final class ChunkManager
 {
     private enum MergeMethod
     {
@@ -30,7 +29,7 @@ public final class Manipulator
     /**
      * The Log.
      */
-    private static final Log LOG = LogFactory.getLog(Manipulator.class);
+    private static final Log LOG = LogFactory.getLog(ChunkManager.class);
 
    /**
      * The default pattern for a manipulator.
@@ -61,7 +60,7 @@ public final class Manipulator
     /**
      * Constructs a manipulator with the default pattern and 0 header lines.
      */
-    public Manipulator()
+    public ChunkManager()
     {
         this(DEFAULT_PATTERN, 0);
     }
@@ -72,7 +71,7 @@ public final class Manipulator
      *
      * @param headerLines - the number of header lines to take from output files
      */
-    public Manipulator(final int headerLines)
+    public ChunkManager(final int headerLines)
     {
         this(DEFAULT_PATTERN, headerLines);
     }
@@ -84,7 +83,7 @@ public final class Manipulator
      * @param regex - Regular expression to split on
      * @param headerLines - the number of header lines to take from output files
      */
-    public Manipulator(final String regex, final int headerLines)
+    public ChunkManager(final String regex, final int headerLines)
     {
         this.pattern = Pattern.compile(regex);
         this.headerLines = headerLines;

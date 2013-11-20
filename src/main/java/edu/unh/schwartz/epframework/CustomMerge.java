@@ -1,6 +1,5 @@
-package edu.unh.schwartz.epframework.io;
+package edu.unh.schwartz.epframework;
 
-import edu.unh.schwartz.epframework.Chunk;
 import java.util.List;
 
 /**
