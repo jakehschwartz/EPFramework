@@ -21,38 +21,37 @@
 
 \begin{abstract}
 An embarrassingly parallel problem, also called pleasingly parallel, is one that 
-can easily be broken up into identital components that do not need to interact 
+can be easily broken up into identital components that do not need to interact 
 to find the solution. Several problems in the biological sciences are 
 embarrsingly parallel but they are difficult to rewrite to use multithreading, 
 because they are either poorly written or too complex. We have written a 
 framework, implemented in Java, that will execute the serial program in several 
-threads. These threads working together help cut down the total runtime
-exponentially. The next step is to seperate the framework into a front-end that
-will run locally and the back-end which recieves blocks of work and does the
-computations. This back-end should be running in the cloud, on a machine who is
-dedicated to running embarrassingly parallel tasks only.
+threads. These threads working together help cut down the total runtime of the
+program exponentially. The next step is to seperate the framework into a 
+front-end that will run locally and a back-end which recieves blocks of work and 
+does the computations. This back-end should run in the cloud, on a machine that 
+is dedicated to running embarrassingly parallel tasks only.
 \end{abstract}
 
 \section{Introduction}
 
-A computation graph consists of nodes that represent the functions or processes 
-and the data being passed from one process to another is displayed in the graph 
-as edges. If the graph is disconnected, none of the processes need to 
-communicate to complete the computations. Such a computation is called
-"embarrassingly parallel." In a practical situation, there will be some 
-internode communication to set up the problem and then again to accumulate the 
-results back together. Also known as pleasingly parallel problems, they can 
-easily be performed on a cluster of servers or in any kind of distributed 
-network, due to its lack of dependencies. The term embarrassingly parallel was 
-coined by Cleve Moler in his 1986 paper "Matrix Computation on Distributed
-Memory Multiprocessors." \cite{history}
+A computation graph consists of nodes that represent the functions or processes. 
+The edges of the graph show data being passed from one process to another. If 
+the graph is disconnected, none of the processes need to communicate to complete
+the computations. Such a computation is called "embarrassingly parallel." In a 
+practical situation, there will be some internode communication to set up the 
+problem, and then again to accumulate the results. Embarrassingly parallel 
+problems can be easily performed on a cluster of servers or in any kind of 
+distributed network, due to its lack of dependencies. The term embarrassingly 
+parallel was coined by Cleve Moler in his 1986 paper "Matrix Computation on 
+Distributed Memory Multiprocessors." \cite{history}
 
 Programs in the field of Biology and Genetics often analyze long strings of
-characters, whether they are DNA, RNA or protein sequences. In addition to the
-large file sizes, there is a lot of processing that goes into comparing and
-manipulating strings. This time adds up when there are thousands of strings to 
-process. However, these sequences often do not relate to each other and can be 
-processed independently. Using an embarrassingly parallel approach, the 
+characters, whether they are DNA, RNA or protein sequences. In addition to
+handling large file sizes, there is a lot of processing that goes into comparing
+and manipulating strings. This time adds up when there are thousands of strings 
+to process. However, these sequences often do not relate to each other and can 
+be processed independently. Using an embarrassingly parallel approach, the 
 processing time for all of the sequences can often be cut down exponentially 
 with very minimal effort by the programmer.
 
@@ -69,28 +68,28 @@ machine that take up memory.
 
 \section{Background}
 
-The motivation for this effort was with research into different forms of the 
+The motivation for this effort was research into different forms of the 
 species \emph{Cicer arietinum}, the chickpea. The two main forms, Kabuli and 
-Desi, are very different in size and color but we mostly wanted to see why the 
-Desi is more disease resistance and have more effective root nodule symbiosis 
-and why the Kabuli has a large but soft shell. These two types are both 
-cultivated and have been under human selection for several thousand years. We 
-wanted to use a Ka/Ks equation to quantify the evolution and selection of these 
-chickpeas. We found a Ka/Ks program writen by Zhang et al. \cite{kaks} but had 
-three variants that we wanted to be analyzed, each with thousands of sequences. 
-The Ka/Ks Calculator program takes somewhere from five to thirty seconds to 
-process one pair of sequences. 
+Desi, are very different in size and color. The Desi is also more resistant to 
+diseases and are more effective at root nodule symbiosis. The Kabuli has a large 
+but soft shell, which make it at better food source for humans. These two types 
+are both cultivated and have been under human selection for several thousand 
+years. We wanted to use a Ka/Ks equation to quantify the evolution and selection 
+of these chickpeas. We found a Ka/Ks program written by Zhang et al. \cite{kaks}
+but had three variants that we wanted to analyze, each with thousands of 
+sequences. The Ka/Ks Calculator program takes somewhere from five to thirty 
+seconds to process one pair of sequences. 
 
 Instead of attempting to rewrite the preexisting program, we decided it would be
 better to look at other options to process the sequences faster. Trying to 
 parallelize the serial Ka/Ks program could present several problems: introducing
 bugs, breaking the algorithm, dealing with the learning curve of C++ threading. 
-We decided a  different approach was neccessary, mostly due to the short time we
-had to produce results. A simple Java program was written to break up the input 
-and spawn  threads that would run the Ka/Ks Calculator process. When the input 
-was calculated, the contents of the output files was concatenated together to 
-produce a final output that mnatches the format and order that would have been
-produces by Ka/Ks Calculator.
+We decided that a  different approach was neccessary, mostly due to the short 
+time given to produce results. A simple Java program was written to break up the
+input and spawn threads that would run the Ka/Ks Calculator process. When the 
+input was calculated, the contents of the output files were concatenated 
+together to produce a final output that matches the format and order that would 
+have been produced by the Ka/Ks Calculator program.
 
 %TODO: get a better source? Talk about UCLUST and octupus
 The Ka/Ks Calculator is not the only embarrassingly parallel program that has the
@@ -114,27 +113,26 @@ develop a framework for creating wrapper programs. \cite{cluster}
 \end{figure}
 The only requirements for a program to be wrapped by framework are that it 
 process the input in an embarrassingly parallel manner and that the input comes 
-from a file. The processed results are must also written to a file. The 
-framework supports two forms of input: a directory of files that contain that 
-each contain one unit of work, which is represented by the Chunk class, or a 
-single file that the framework can break up into Chunks. For example, the Ka/Ks 
-Calculator's input consists of a header and then two protein sequence lines 
-followed by a blank line. The framework uses that blank line to know when one 
-Chunk of work has ended and another has begun. The user can input a regular 
-expression to define when lines of input are seperated into Chunks. This occurs 
-in the ChunkManager class. 
+from a file. The processed results must also written to a file. The framework 
+supports two forms of input: a directory of files that contain that each contain
+one unit of work, which is represented by the Chunk class, or a single file that
+the framework can break up into Chunks. For example, the Ka/Ks Calculator's 
+input consists of a header and then two protein sequence lines followed by a 
+blank line. The framework uses that blank line to know when one Chunk of work 
+has ended and another has begun. The user can input a regular expression to 
+define when lines of input are seperated into Chunks. This occurs in the 
+ChunkManager class. 
 
 The other purpose of the ChunkManager class is to combine the resulting Chunks 
 back together when the worker threads have finished. Once the work has been
-done, all of the separate results are spread across several files. The
-ChunkManager's second job is to retrieve those results and construct a real
-output file. The real output file must look the same as the output file would
-look if the program were run serially; the output must come in the same order as
-the inputs in the input file and headers may need to be deleted from the
-separate files and added to the combined file. There are two other options if
-the end-user does not want this behavior. They can choose to write their own
-merger in Java, using the CustomMerge class, or write their own script to do the
-merging. 
+done, all of the separate results are spread across several files. Those results 
+must be retrieved and combined to construct the final output file. This output 
+file must look the same as the output file would look if the program were run 
+serially; the output must come in the same order as the inputs in the input file
+and headers may need to be deleted from the separate files and added to the 
+combined file. There are two other options if the end-user does not want this 
+behavior. They can choose to write their own merger in Java, using the 
+CustomMerge class, or write their own script to do the merging. 
 
 As more features are added to the framework and as more programs start to use 
 the framework, there are more choices for the end-user to make with regards to 
@@ -156,9 +154,9 @@ runtime and size.
 
 \section{Results}
 
-To observe how the framework changes the runtime of sequential programs when
-using varying numbers of threads, we designed a simple experiment. The Ka/Ks 
-Calculator was run through the framework with ten different samples, each 
+In order to observe how the framework changes the runtime of sequential programs 
+when using varying numbers of threads, we designed a simple experiment. The 
+Ka/Ks Calculator was run through the framework with ten different samples, each 
 containing sixteen units of work. Each sample was run by the framework at five 
 different level of numbers of worker threads, starting at 1 and increasing by 
 powers of two until the 100\% CPU usage (16 processors). These tests were run
@@ -172,36 +170,28 @@ with minimal other activity on the server.
 
 \section{Conclusion}
 
-As the numbers of threads increased, the time it took descreased exponentially. 
-In a few cases, there was an increase in time when attempting to max out the CPU 
-usage. This occured because the framework had to wait until for the CPU to be 
-finished with its previous work before it was allowed to start work on what the 
-framework wanted it to do. In the cases when the framework executed faster while
-the CPU was maxed out, it was only faster a minute at the most. With such a
-small time gain with the CPU at 50\% versus the CPU at 100\%, running the
-framework at 50\% CPU is more efficient when the number of threads is on the
-same order as the number of units of work.
+As the numbers of threads increased, the runtime of the program descreased 
+exponentially. In a few cases, there was an increase in time when attempting to 
+max out the CPU usage. This occured because the framework had to wait for the 
+CPU to be finished with its previous work before it was allowed to start any 
+further jobs. In the cases when the framework executed faster while the CPU was 
+maxed out, it was only faster a minute at the most. However, running the 
+framework at 50\% of the CPU is more efficient than running using 100\% of the 
+CPU. The runtime drop achieved when using 100\% of the CPU versus 50\% is not 
+large enough to warrant using all of the machine's power.
 
-%TODO: Rewrite with new next steps
-There are several next steps in the pipeline. In addition to using the
-statistics to try to boost speed, adding savable configurations is at the top of
-the list. This will allow users to use the same configuration without having to
-go through the wizard if they need to redo a run. More extensive unit testing
-will be implemented. The ability to chunk multiple pieces of work may be
-implemented in order to avoid potential start up costs in the executable. 
-Finally, other pleasing parallel problems will be executed by the wrapper so 
-that more potential features will be discovered. 
-
-%TODO: Does this still make sense
 Using Java was a good choice for implementation ease and future implementation
 extension by others, but it may not produce the fastest results. Languages
-like Hadoop, Clojure or other multithread oriented language may have been better
-due to their parallel nature. In addition to a single machine working to process
-the data quickly, we can also look to the cloud for help by using a networked 
-solution like MPI or a cloud solution like Amazon instances. This would
-potentially allow for an even greater time decrease because the number of
-machines that could help is most likely larger than the number of processors on
-one machine.
+like Hadoop, Clojure or other multithread oriented language may have been a
+better choice due to their parallel nature. In addition to a single machine 
+working to process the data quickly, we can also look to the cloud for help by 
+using a networked solution like MPI or a cloud solution like Amazon instances. 
+In the future, we would like to see this work be split into a local front-end
+and a cloud back-end. This would potentially allow for an even greater time 
+decrease because the number of machines that could help is much larger than the 
+number of processors on one machine. Spliting the framework would also allow for
+better testing of cloud environments, where the cloud environment itself could
+be a configurable option for end users.
 
 \begin{thebibliography}{1}
 \bibitem{history}
