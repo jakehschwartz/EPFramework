@@ -21,14 +21,14 @@
 
 \begin{abstract}
 An embarrassingly parallel problem, also called pleasingly parallel, is one that 
-can be easily broken up into identital components that do not need to interact 
+can be easily broken up into identical components that do not need to interact 
 to find the solution. Several problems in the biological sciences are 
-embarrsingly parallel but they are difficult to rewrite to use multithreading, 
+embarrassingly parallel but they are difficult to rewrite to use multithreading, 
 because they are either poorly written or too complex. We have written a 
 framework, implemented in Java, that will execute the serial program in several 
 threads. These threads working together help cut down the total runtime of the
-program exponentially. The next step is to seperate the framework into a 
-front-end that will run locally and a back-end which recieves blocks of work and 
+program exponentially. The next step is to separate the framework into a 
+front-end that will run locally and a back-end which receives blocks of work and 
 does the computations. This back-end should run in the cloud, on a machine that 
 is dedicated to running embarrassingly parallel tasks only.
 \end{abstract}
@@ -39,7 +39,7 @@ A computation graph consists of nodes that represent the functions or processes.
 The edges of the graph show data being passed from one process to another. If 
 the graph is disconnected, none of the processes need to communicate to complete
 the computations. Such a computation is called "embarrassingly parallel." In a 
-practical situation, there will be some internode communication to set up the 
+practical situation, there will be some inter-node communication to set up the 
 problem, and then again to accumulate the results. Embarrassingly parallel 
 problems can be easily performed on a cluster of servers or in any kind of 
 distributed network, due to its lack of dependencies. The term embarrassingly 
@@ -84,7 +84,7 @@ Instead of attempting to rewrite the preexisting program, we decided it would be
 better to look at other options to process the sequences faster. Trying to 
 parallelize the serial Ka/Ks program could present several problems: introducing
 bugs, breaking the algorithm, dealing with the learning curve of C++ threading. 
-We decided that a  different approach was neccessary, mostly due to the short 
+We decided that a  different approach was necessary, mostly due to the short 
 time given to produce results. A simple Java program was written to break up the
 input and spawn threads that would run the Ka/Ks Calculator process. When the 
 input was calculated, the contents of the output files were concatenated 
@@ -96,14 +96,24 @@ The Ka/Ks Calculator is not the only embarrassingly parallel program that has th
 potential to take several days to run on a data set. In fact, there are several
 embarrassingly parallel programs in the biological sciences. To deal with large
 amounts of data, the best method is often to group them into clusters. 
-Hierarchical clustering algorthms take the data and then organize into
-hierarchical structure, usually a dendrogram, based on a priority matric. There 
+Hierarchical clustering algorithms take the data and then organize into
+hierarchical structure, usually a dendrogram, based on a priority matrix. There 
 are hierarchical clustering algorithms that can be implemented in parallel using
 an embarrassingly parallel approach.  With several applications that would 
 benefit from parallelism in this field, it was obvious it would be desirable to 
 develop a framework for creating wrapper programs. \cite{cluster}
 
-%TODO: TALK ABOUT CLOUD PAPER HERE. AND MAYBE THE POWERPOINT TOO.
+%TODO: TALK ABOUT CLOUD PAPER HERE.
+Segue. Gunarathne et al.\cite{cloud} have investigated running much larger
+embarrassingly parallel biological problems using various cloud services. These
+services offer on-demand computational power with MORE.
+These services also have built in hooks to various distributed services, such as
+storage and databases. One of these technologies is the MapReduce framework,
+which allows user to perform distributed computation similar to this framework.
+As seen in figure X, Apache Hadoop, an open-source implementation of MapReduce,
+breaks down the input data into parts, runs them in parallel with the 'Map'
+function and then combines the results with the 'Reduce' function. TWO MORE
+SENTENCES.
 
 \section{Proposed Solution}
 \begin{figure}
@@ -120,7 +130,7 @@ the framework can break up into Chunks. For example, the Ka/Ks Calculator's
 input consists of a header and then two protein sequence lines followed by a 
 blank line. The framework uses that blank line to know when one Chunk of work 
 has ended and another has begun. The user can input a regular expression to 
-define when lines of input are seperated into Chunks. This occurs in the 
+define when lines of input are separated into Chunks. This occurs in the 
 ChunkManager class. 
 
 The other purpose of the ChunkManager class is to combine the resulting Chunks 
@@ -137,7 +147,7 @@ CustomMerge class, or write their own script to do the merging.
 As more features are added to the framework and as more programs start to use 
 the framework, there are more choices for the end-user to make with regards to 
 how they want their program to execute. The number of threads to use, various 
-flags for the executable and the statstics output are just a few choice the 
+flags for the executable and the statistics output are just a few choice the 
 user can make. A start-up wizard is displayed at runtime to systematically allow
 the end-user to choose the settings for the run. The ConfigWizard class brings 
 the user through this process and creates an instance of Configuration when it 
@@ -149,7 +159,7 @@ for each piece of work is also recorded. This information will be used by us to
 evaluate the effectiveness of our approach, but can also provide useful
 information the can help a user tine a particular application on a particular
 type of input data. The statistics for each thread can be found in the Worker 
-subclass and the individual Chunk objects will store their own statstics about 
+subclass and the individual Chunk objects will store their own statistics about 
 runtime and size.
 
 \section{Results}
@@ -170,9 +180,9 @@ with minimal other activity on the server.
 
 \section{Conclusion}
 
-As the numbers of threads increased, the runtime of the program descreased 
+As the numbers of threads increased, the runtime of the program decreased 
 exponentially. In a few cases, there was an increase in time when attempting to 
-max out the CPU usage. This occured because the framework had to wait for the 
+max out the CPU usage. This occurred because the framework had to wait for the 
 CPU to be finished with its previous work before it was allowed to start any 
 further jobs. In the cases when the framework executed faster while the CPU was 
 maxed out, it was only faster a minute at the most. However, running the 
@@ -186,12 +196,14 @@ like Hadoop, Clojure or other multithread oriented language may have been a
 better choice due to their parallel nature. In addition to a single machine 
 working to process the data quickly, we can also look to the cloud for help by 
 using a networked solution like MPI or a cloud solution like Amazon instances. 
-In the future, we would like to see this work be split into a local front-end
-and a cloud back-end. This would potentially allow for an even greater time 
-decrease because the number of machines that could help is much larger than the 
-number of processors on one machine. Spliting the framework would also allow for
-better testing of cloud environments, where the cloud environment itself could
-be a configurable option for end users.
+The MapReduce framework works similarly to our framework, there is a step that
+splits the data, the Map function is the user's executable and the merge step is
+the Reduce function in the framework. In the future, we would like to see this 
+work be split into a local front-end and a cloud back-end. This allows for an 
+even greater runtime decrease because the number of compute nodes available is 
+larger than the number of processors on most machines. Splitting the framework 
+also allows for better testing of cloud environments, where the cloud 
+environment itself could be a configurable option for end users.
 
 \begin{thebibliography}{1}
 \bibitem{history}
@@ -206,6 +218,8 @@ Genomics Proteomics Bioinformatics, November 2006.
 \bibitem{cluster}
 Rua, Xu, Wunsch, Donald II, \emph{Survey of Clustering Algorithms},
 IEEE Transactions on Neural Networks VOL. 16, NO. 3, MAY 2005
+\bibitem{cloud}
+Crap, crap and Crap
 \end{thebibliography}
 
 \end{document}

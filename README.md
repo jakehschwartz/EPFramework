@@ -23,11 +23,14 @@ Linux: Use your preferred package manager
 cd EPFramework
 gradle build
 
-4. If you want to try the examples, see the README in the examples folder.
-
-5. Run on your data.
-gradle run <Optional Config File>
-
 Usage
 --------
+To run:
+gradle run <Optional Config File>
 
+When using the configuration file, the framework will immediatly begin dividing
+up the work and processesing it.
+
+Otherwise, the user will have to walk through the Configuration Wizard, where
+they will set up the run. These settings can be saved so they do not have to be
+input again.
