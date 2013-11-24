@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,7 +35,7 @@ public final class ConfigWizard
     /**
      * Seperator string.
      */
-    private static final String SEP = "---------------------------------------"; 
+    private static final String SEP = "======================================="; 
 
     /**
      * The last configuration created.
@@ -191,8 +192,7 @@ public final class ConfigWizard
             add(new JLabel("Pattern used to split input: "));
             add(splitField);
             add(new JLabel("(Leave blank to use every new line)"));
-
-            add((new JLabel("               ------ OR ------               ")));
+            add((new JLabel("               ====== OR ======               ")));
 
             // Settings for the input directory
             final JFileChooserButton inDirChooser = new JFileChooserButton(true);
@@ -293,18 +293,21 @@ public final class ConfigWizard
         {
             super("Confirmation", "Confirmation Page");
 
-            add(new JLabel("TODO"));
-
-            //TODO: Review entered values
-            // add(new JLabel("Confirm String:"));
-            // for(String key : settings.keySet())
-            // {
-                // Object val = settings.get(key);
-                // if (val != null && !val.equals(""))
-                // {
-                    // add(new JLabel(key + " : " + val + "\n"));
-                // }
-            // }
+            add(new JLabel("Configuration Settings:"));
+            
+            // Get the settings
+            final JTextArea label = new JTextArea(5, 20);
+            for(final String key : settings.keySet())
+            {
+                final Object val = settings.get(key);
+                if (val != null && !val.equals(""))
+                {
+                    label.append(key).append(": ").append(val).append("\n");
+                }
+            }
+            label.setEditable(false);
+            
+            add(new JScrollPane(label));
         }
 
         /**
