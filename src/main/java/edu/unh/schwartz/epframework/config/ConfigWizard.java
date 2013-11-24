@@ -61,7 +61,7 @@ public final class ConfigWizard
 
         window.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         window.getContentPane().add(wc);
-        window.setSize(375, 250);
+        window.setSize(380, 290);
         window.setLocationRelativeTo(null);
     }
 
@@ -192,7 +192,7 @@ public final class ConfigWizard
             add(splitField);
             add(new JLabel("(Leave blank to use every new line)"));
 
-            add((new JLabel("--------------- OR ---------------")));
+            add((new JLabel("               ------ OR ------               ")));
 
             // Settings for the input directory
             final JFileChooserButton inDirChooser = new JFileChooserButton(true);
@@ -278,6 +278,12 @@ public final class ConfigWizard
             headerField.setPreferredSize(new Dimension(50, 20));
             add(new JLabel("Number of header lines in output files: "));
             add(headerField);
+            add(new JLabel(SEP));
+ 
+            final JCheckBox savebox = new JCheckBox();
+            savebox.setName(Configuration.SAVE_KEY);
+            add(new JLabel("Save Configuration File?"));
+            add(savebox);
         }
     }
 
@@ -287,11 +293,7 @@ public final class ConfigWizard
         {
             super("Confirmation", "Confirmation Page");
 
-            final JCheckBox box = new JCheckBox();
-            box.setName(Configuration.SAVE_KEY);
-            add(new JLabel("Save Configuration File?"));
-            add(box);
-            // add(new JLabel(SEP));
+            add(new JLabel("TODO"));
 
             //TODO: Review entered values
             // add(new JLabel("Confirm String:"));

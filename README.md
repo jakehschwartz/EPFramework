@@ -26,7 +26,7 @@ gradle build
 Usage
 --------
 To run:
-gradle run <Optional Config File>
+java -jar EPFramework-1.0.jar <Optional Config File>
 
 When using the configuration file, the framework will immediatly begin dividing
 up the work and processesing it.

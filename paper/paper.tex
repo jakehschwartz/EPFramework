@@ -151,7 +151,8 @@ flags for the executable and the statistics output are just a few choice the
 user can make. A start-up wizard is displayed at runtime to systematically allow
 the end-user to choose the settings for the run. The ConfigWizard class brings 
 the user through this process and creates an instance of Configuration when it 
-is completed to save the user's settings.
+is completed to save the user's settings, allowing the user to rerun with the
+same settings without having to go through the ConfigWizard.
 
 Lastly, the worker threads will keep records during execution. The threads 
 records their uptime and the number of pieces of work they execute. The runtime 

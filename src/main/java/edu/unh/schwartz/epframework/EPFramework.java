@@ -75,14 +75,16 @@ final class EPFramework
         wp.start();
 
         // Merge the results back together
-        cm.merge(config.getOutputDirectory() + "/done.txt", 
+        cm.merge(config.getOutputDirectory() + "/finalOutput", 
             config.getMergeMethod());
 
         // Make stats if instructed to 
         if (config.makeStats())
         {
+            LOG.info("Printing stats");
             cm.printStats(wp.getStats(), config.getOutputDirectory());
         }
+        LOG.info("Cleaning up");
         cm.cleanUp();
     }
 

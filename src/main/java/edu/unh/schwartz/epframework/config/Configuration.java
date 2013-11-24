@@ -140,6 +140,11 @@ public final class Configuration
      * The method used to merge the results.
      */
     private int mergeMethod;
+
+    /**
+     * Whether or not to save the config file.
+     */
+    private boolean save;
     
     /**
      * Constructs a configuration file from a map.
@@ -186,10 +191,7 @@ public final class Configuration
                      this.numberOfHeaderLines = Integer.valueOf((String) val);
                      break;
                  case SAVE_KEY:
-                     if ((boolean) val)
-                     {
-                         saveConfig();
-                     }
+                     this.save = (boolean) val;
                      break;
                  case MERGE_METHOD_KEY:
                      this.mergeMethod = Integer.valueOf((String) val);
@@ -199,7 +201,32 @@ public final class Configuration
              }
          }
 
-         // TODO: Assertions here
+         // Check to make sure necessary fields were filled
+         boolean crash = false;
+         if (this.inputFileDirName == null && this.inputFileName == null)
+         {
+             LOG.fatal("An input file or directory must be selected");
+             crash = true;
+         }
+         else if (this.outDirName == null)
+         {
+             LOG.fatal("An output directory must be selected");
+             crash = true;
+         }
+         else if (this.execPath == null)
+         {
+             crash = true;
+             LOG.fatal("An executable must be selected");
+         }
+
+         if (crash)
+         {
+             System.exit(1);
+         }
+         else if (this.save)
+         {
+             saveConfig();
+         }
     }
 
     /**
@@ -383,6 +410,7 @@ public final class Configuration
         final JsonFactory jsonFactory = new JsonFactory(); 
         try
         {
+            LOG.info("Saving configuration in " + this.outDirName);
             final File file = new File(this.outDirName + "/config.txt");
             final JsonGenerator jg = jsonFactory.createGenerator(file, 
                     JsonEncoding.UTF8);
@@ -396,6 +424,7 @@ public final class Configuration
                 jg.writeStringField(IN_FILE_DIR_KEY, this.inputFileDirName);
             }
 
+            LOG.info("Made it");
             jg.writeStringField(OUT_FILE_KEY, this.outDirName);
             jg.writeStringField(EXEC_LOC_KEY, this.execPath);
             jg.writeStringField(IN_FLAG_KEY, this.inFlag);
@@ -404,6 +433,7 @@ public final class Configuration
             jg.writeBooleanField(STATS_KEY, this.makeStats);
             jg.writeNumberField(NUM_HEADER_KEY, this.numberOfHeaderLines);
             jg.close();
+            LOG.info("Configuration saved");
         }
         catch (IOException e)
         {

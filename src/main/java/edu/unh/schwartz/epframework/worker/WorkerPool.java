@@ -65,6 +65,8 @@ public final class WorkerPool
             LOG.fatal("Worker interrupted: " + e.getMessage());
             System.exit(1);
         }
+
+        LOG.info("Workers finished");
     }
 
     /**

@@ -180,13 +180,14 @@ public final class ChunkManager
                 externalMerge(fileName);
                 break;
             default:
-                LOG.fatal("Illegal mergeMethod");
+                LOG.fatal("Illegal Merge Method");
                 assert(false);
         }
     }
 
     private void defaultMerge(final String fileName)
     {
+        LOG.info("Using Default Merge");
         try(final PrintWriter writer = new PrintWriter(fileName))
         {
             writer.print(this.chunks.get(0).getHeader());
@@ -204,11 +205,14 @@ public final class ChunkManager
 
     private void customMerge(final String fileName)
     {
+        LOG.info("Using Custom Merge");
         CustomMerge.merge(fileName, this.chunks);
     }
 
     private void externalMerge(final String fileName) 
     {
+        LOG.info("Using External Merge");
+
         // Prepare the args
         final List<String> commands = new ArrayList<String>();
         commands.add(EXTERNAL_MERGE_EXEC_NAME);
@@ -260,7 +264,7 @@ public final class ChunkManager
         {
             final String comma = ",";
             final String header = "Chunk #,Length,Runtime(ms)";
-            statsOut.println(workerStats);
+            statsOut.print(workerStats);
             LOG.debug(workerStats);
 
             statsOut.println(header);
@@ -270,7 +274,7 @@ public final class ChunkManager
                 final Chunk c = this.chunks.get(i);
                 final StringBuilder sb = new StringBuilder();
                 sb.append(c.hashCode()).append(comma).append(c.length());
-                sb.append(comma).append(c.getRuntime()).append('\n');
+                sb.append(comma).append(c.getRuntime());
                 statsOut.println(sb.toString());
                 LOG.debug(sb.toString());
             }
