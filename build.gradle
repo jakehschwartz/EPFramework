@@ -3,7 +3,7 @@ apply plugin: 'checkstyle'
 apply plugin:'application'
 
 sourceCompatibility = 1.7
-version = '0.1'
+version = '0.9'
 mainClassName = "edu.unh.schwartz.epframework.EPFramework"
 
 repositories {
@@ -14,9 +14,17 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.2.3'
     compile 'commons-logging:commons-logging:1.1.1'
     compile files('./src/main/resources/CJWizards-0.2.jar')
-    /* compile 'org.hamcrest:hamcrest-core:1.3' */
 }
 
 tasks.withType(Compile) { 
     options.compilerArgs << "-Xlint:deprecation" 
 } 
+
+jar {
+    destinationDir = file(".")
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest {
+        attributes 'Implementation-Title': 'EPFramework', 
+            'Implementation-Version': version, 'Main-Class': mainClassName
+    }
+}

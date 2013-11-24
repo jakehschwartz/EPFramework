@@ -117,7 +117,7 @@ final class EPFramework
             catch (IOException e)
             {
 
-                LOG.fatal("Problem loading config file: " + e.getMessage());
+                LOG.fatal("Invalid Configuration File");
             }
         }
         else

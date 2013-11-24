@@ -1,3 +1,4 @@
+EPFramework*.jar
 build/
 .gradle/
 *.aux
