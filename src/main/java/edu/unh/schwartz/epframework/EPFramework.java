@@ -75,7 +75,7 @@ final class EPFramework
         wp.start();
 
         // Merge the results back together
-        cm.merge(config.getOutputDirectory() + "/finalOutput", 
+        cm.merge(config.getOutputDirectory() + "/output", 
             config.getMergeMethod());
 
         // Make stats if instructed to 

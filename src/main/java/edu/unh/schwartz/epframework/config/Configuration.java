@@ -240,6 +240,7 @@ public final class Configuration
     {
         final JsonFactory jf = new JsonFactory();
         final JsonParser jp = jf.createParser(new File(fileName));
+        jp.nextToken();
 
         while (jp.nextToken() != JsonToken.END_OBJECT)
         {
@@ -414,6 +415,7 @@ public final class Configuration
             final File file = new File(this.outDirName + "/config.txt");
             final JsonGenerator jg = jsonFactory.createGenerator(file, 
                     JsonEncoding.UTF8);
+            jg.writeStartObject();
             if (this.inputFileName != null)
             {
                 jg.writeStringField(IN_FILE_KEY, this.inputFileName);
@@ -424,7 +426,6 @@ public final class Configuration
                 jg.writeStringField(IN_FILE_DIR_KEY, this.inputFileDirName);
             }
 
-            LOG.info("Made it");
             jg.writeStringField(OUT_FILE_KEY, this.outDirName);
             jg.writeStringField(EXEC_LOC_KEY, this.execPath);
             jg.writeStringField(IN_FLAG_KEY, this.inFlag);
@@ -432,6 +433,7 @@ public final class Configuration
             jg.writeNumberField(NUM_PROCESSES_KEY, this.numberOfThreads);
             jg.writeBooleanField(STATS_KEY, this.makeStats);
             jg.writeNumberField(NUM_HEADER_KEY, this.numberOfHeaderLines);
+            jg.writeEndObject();
             jg.close();
             LOG.info("Configuration saved");
         }
