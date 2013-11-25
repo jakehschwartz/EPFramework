@@ -7,6 +7,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -293,19 +294,23 @@ public final class ConfigWizard
         {
             super("Confirmation", "Confirmation Page");
 
-            add(new JLabel("Configuration Settings:"));
+            add(new JLabel("Configuration Settings:\n "));
             
             // Get the settings
-            final JTextArea label = new JTextArea(5, 20);
+            final JTextArea label = new JTextArea(10, 25);
             for(final String key : settings.keySet())
             {
                 final Object val = settings.get(key);
                 if (val != null && !val.equals(""))
                 {
-                    label.append(key).append(": ").append(val).append("\n");
+                    label.append(key);
+                    label.append(": ");
+                    label.append(val.toString());
+                    label.append("\n");
                 }
             }
             label.setEditable(false);
+            label.setCaretPosition(0);
             
             add(new JScrollPane(label));
         }

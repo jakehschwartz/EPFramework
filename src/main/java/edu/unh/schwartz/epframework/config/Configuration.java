@@ -203,9 +203,10 @@ public final class Configuration
 
          // Check to make sure necessary fields were filled
          boolean crash = false;
-         if (this.inputFileDirName == null && this.inputFileName == null)
+         if ((this.inputFileDirName == null && this.inputFileName == null) || 
+                 (this.inputFileName != null && this.inputFileName != null))
          {
-             LOG.fatal("An input file or directory must be selected");
+             LOG.fatal("An input file OR directory must be selected");
              crash = true;
          }
          else if (this.outDirName == null)
