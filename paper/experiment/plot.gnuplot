@@ -1,5 +1,5 @@
 set term png
-set ylabel "Time (s)"
+set ylabel "Time (ms)"
 set xlabel "# of threads"
 set xtics font ", 18"
 set ytics font ", 18"
