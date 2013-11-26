@@ -2,6 +2,7 @@
 \usepackage{graphics}
 \usepackage{setspace}
 \usepackage{cite}
+\usepackage{wrapfig}
 
 % the following is to get inch margins on a letter-size paper
 \setlength{\topmargin}{0pt}
@@ -65,12 +66,13 @@ subset of the input in the same manner and creating the output in the same
 format. The framework can result in a significant exponential decrease with very
 little programmer effort. 
 
-%TODO: Embarrassingly parallel diagram
-\begin{figure}
-{\resizebox{5.2in}{!}{\includegraphics{figures/uml.png}}}
-\caption{UML for the embarrassingly parallel framework}
-\label{fig:uml}
-\end{figure}
+\begin{wrapfigure}{R}{0.5\textwidth}
+    \begin{center}
+        \includegraphics{figures/ep.jpg}
+    \end{center}
+    \caption{Embarrassingly Parallel Model}
+    \label{fig:ep}
+\end{wrapfigure}
 
 \section{Background}
 
@@ -128,20 +130,21 @@ needed.
 
 Amazon also offers another service called Amazon Elastic MapReduce. This
 combines its virtual instance framework with Apache Hadoop. As seen
-in figure X, Hadoop breaks down the input data into parts, runs them in parallel
+in figure \ref{fig:map}, Hadoop breaks down the input data into parts, runs them in parallel
 with the 'Map' function and then combines the results with the 'Reduce'
 function. Dryad is a framework developed released by Microsoft Research that
 allows the end-user to create directed acyclic computation graphs that run on
 Windows High Performance Computer(HPC) clusters. Gunarathne et al. compared
 the services using several applications to analyze performance, cost and
-usability..
+usability.
 
-%TODO: Hadoop figure
-\begin{figure}
-{\resizebox{5.2in}{!}{\includegraphics{figures/uml.png}}}
-\caption{UML for the embarrassingly parallel framework}
-\label{fig:uml}
-\end{figure}
+\begin{wrapfigure}{L}{0.5\textwidth}
+    \begin{center}
+        \includegraphics{figures/MapReduce.jpg}
+    \end{center}
+    \caption{MapReduce Model}
+    \label{fig:map}
+\end{wrapfigure}
 
 \section{Proposed Solution}
 \begin{figure}
@@ -203,10 +206,10 @@ with minimal other activity on the server.
 \begin{figure}
 {\resizebox{5.2in}{!}{\includegraphics{experiment/out.png}}}
 \caption{Runtimes for the Ka/Ks Calculator though the framework}
-\label{fig:graph}
+\label{fig:kaksgraph}
 \end{figure}
 
-Figure 2 summarized the results; each line shows the time taken for each chunk
+Figure \ref{fig:kaksgraph} summarized the results; each line shows the time taken for each chunk
 of the data. As the numbers of threads increases, the runtime of the program
 decreases exponentially. In a few cases, there was an increase in time when
 attempting to max out the CPU usage. This occurs because the framework has to
