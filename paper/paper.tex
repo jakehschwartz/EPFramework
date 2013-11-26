@@ -22,29 +22,29 @@
 \begin{abstract}
 An embarrassingly parallel problem, also called pleasingly parallel, is one that
 can be easily broken up into identical components that do not need to interact
-to find the solution. Several problems in the biological sciences are
-embarrassingly parallel but they are difficult to rewrite to use multithreading,
-because they are either poorly written or too complex. We have written a
-framework, implemented in Java, that will execute the serial program in several
-threads. These threads working together help cut down the total runtime of the
-program exponentially. The next step is to separate the framework into a
-front-end that will run locally and a back-end which receives blocks of work and
-does the computations. This back-end should run in the cloud, on a machine that
-is dedicated to running embarrassingly parallel tasks only.
+to find the solution. Many problems in the biological sciences are 
+embarrassingly parallel but ofter their authors do not have the expertise to
+implement a parallel solution. We have written a framework, implemented in Java,
+that will execute the serial program in several threads. These threads working
+together help cut down the total runtime of the program significantly. The next
+step is to separate the framework into a front-end that will run locally and a
+back-end which receives blocks of work and does the computations. This back-end
+should run in the cloud, on a machine that is dedicated to running
+embarrassingly parallel tasks only.
 \end{abstract}
 
 \section{Introduction}
 
 A computation graph consists of nodes that represent the functions or processes.
-The edges of the graph show data being passed from one process to another. If
-the graph is fully disconnected, none of the processes need to communicate to
-complete the computations. Such a computation is called embarrassingly
-parallel.\footnote{The term embarrassingly parallel was coined by Cleve Moler in
-his 1986 paper ``Matrix Computation on Distributed Memory Multiprocessors.''} In
-a practical situation, there will be some inter-node communication to set up the
-problem, and then again to accumulate the results.  Embarrassingly parallel
-problems can be easily performed on a cluster of servers or in any kind of
-distributed network, due to its lack of dependencies. 
+and edges that represent data being passed. If the graph is fully disconnected,
+none of the processes need to communicate to complete the computations. Such a
+computation is called embarrassingly parallel\footnote{The term embarrassingly
+parallel was coined by Cleve Moler in his 1986 paper ``Matrix Computation on
+Distributed Memory Multiprocessors.''}. In a practical situation, there will be
+some inter-node communication to set up the problem, and then again to
+accumulate the results.  Embarrassingly parallel problems can be easily
+performed on a cluster of servers or in any kind of distributed network, due to
+the lack of dependencies. 
 
 Programs in the field of Biology and Genetics often analyze long strings of
 characters, whether they are DNA, RNA or protein sequences. In addition to
@@ -65,9 +65,16 @@ subset of the input in the same manner and creating the output in the same
 format. The framework can result in a significant exponential decrease with very
 little programmer effort. 
 
+%TODO: Embarrassingly parallel diagram
+\begin{figure}
+{\resizebox{5.2in}{!}{\includegraphics{figures/uml.png}}}
+\caption{UML for the embarrassingly parallel framework}
+\label{fig:uml}
+\end{figure}
+
 \section{Background}
 
-TODO: Arrows?
+% TODO: Arrows?
 The motivation for this effort was based on research into different forms of the
 species \emph{Cicer arietinum}, the chickpea. The two main forms, Kabuli and
 Desi, are very different in size and color. The Desi is also more resistant to
@@ -77,22 +84,25 @@ cultivated and have been under human selection for several thousand years. We
 wanted to use an existing Ka/Ks program (Zhang et al. \cite{kaks}) to quantify
 the evolution and selection of these chickpeas. We needed to analyze three
 variants, each with thousands of sequences. The Ka/Ks Calculator program took
-between five to thirty seconds to process one pair of sequences on a commodity
-desktop.
+between five to thirty seconds to process one pair of sequences on a ordinary
+machine.
 
-At this rate, we predicted it would take ten days of constant computation to
-complete the processing we needed. We neither had the time nor the expertise to
-develop a new parallel Ka/Ks program. We were also reluctant to revise the
-existing code to to implement the parallel computation because of the danger of
-introducing bugs into unfamiliar code and because of the learning curve required
-for C++ threading. Instead we wrote, a simple Java program to break up the input
-and spawn threads that would run the Ka/Ks Calculator process without having to
-make any changes to the code. When al of the threads ended, the contents of the
-output files were concatenated together to produce a final output that matches
-the format and order that would have been produced by a single invocation of the
-Ka/Ks Calculator program.
+At this rate, we predicted it would take upwards of ten days of constant
+computation to complete the processing we needed. We neither had the time nor
+the expertise to develop a new parallel Ka/Ks program. We were also reluctant to
+revise the existing code to to implement the parallel computation because of the
+danger of introducing bugs into unfamiliar code and because of the learning
+curve required for C++ threading. Instead we wrote, a simple Java program to
+break up the input and spawn threads that would run the Ka/Ks Calculator process
+without having to make any changes to the code. When al of the threads ended,
+the contents of the output files were concatenated together to produce a final
+output that matches the format and order that would have been produced by a
+single invocation of the Ka/Ks Calculator program.
 
 %TODO: get a better source? Talk about UCLUST and octupus
+% Talk about uclust and octupus and blast, even though there are parallelize
+% versions. Rewrite to not go into details about the programs but to talk about
+% that there are many programs.
 Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
 embarrassingly parallel programs in the biological sciences. To deal with large
@@ -102,19 +112,36 @@ hierarchical structure, usually a dendrogram, based on a priority matrix. There
 are hierarchical clustering algorithms that can be implemented in parallel using
 an embarrassingly parallel approach.  With several applications that would
 benefit from parallelism in this field, it was obvious it would be desirable to
-develop a framework for the  parallelization task. \cite{cluster}
+develop a framework for the parallelization task. \cite{cluster}
 
-%TODO: TALK ABOUT CLOUD PAPER HERE.
-Segue. Gunarathne et al.\cite{cloud} have investigated running much larger
-embarrassingly parallel biological problems using various cloud services. These
-services offer on-demand computational power with MORE.
-These services also have built in hooks to various distributed services, such as
-storage and databases. One of these technologies is the MapReduce framework,
-which allows user to perform distributed computation similar to this framework.
-As seen in figure X, Apache Hadoop, an open-source implementation of MapReduce,
-breaks down the input data into parts, runs them in parallel with the 'Map'
-function and then combines the results with the 'Reduce' function. TWO MORE
-SENTENCES.
+%TODO: Footnotes for days
+This framework is designed to run locally but there are other options when more
+power is needed. Gunarathne et al.\cite{cloud} have investigated running much
+larger embarrassingly parallel biological application using various cloud
+services. These services offer on-demand computational power with flexibility.
+These services have built in hooks to various distributed services, such as
+storage and databases. Amazon has a set of cloud computing services called
+Amazon Web Services(AWS) and Microsoft has a similar service named Microsoft
+Azure. AWS and Azure are esentially virtual instances run on machines in the
+cloud that can be spun up for extra computing power and shut down when not
+needed. 
+
+Amazon also offers another service called Amazon Elastic MapReduce. This
+combines its virtual instance framework with Apache Hadoop. As seen
+in figure X, Hadoop breaks down the input data into parts, runs them in parallel
+with the 'Map' function and then combines the results with the 'Reduce'
+function. Dryad is a framework developed released by Microsoft Research that
+allows the end-user to create directed acyclic computation graphs that run on
+Windows High Performance Computer(HPC) clusters. Gunarathne et al. compared
+the services using several applications to analyze performance, cost and
+usability..
+
+%TODO: Hadoop figure
+\begin{figure}
+{\resizebox{5.2in}{!}{\includegraphics{figures/uml.png}}}
+\caption{UML for the embarrassingly parallel framework}
+\label{fig:uml}
+\end{figure}
 
 \section{Proposed Solution}
 \begin{figure}
@@ -180,11 +207,10 @@ with minimal other activity on the server.
 \end{figure}
 
 Figure 2 summarized the results; each line shows the time taken for each chunk
-of the data.
-As the numbers of threads increases, the runtime of the program decreases 
-exponentially. In a few cases, there was an increase in time when attempting to 
-max out the CPU usage. This occurs because the framework has to wait for the 
-CPU to be finished with its previous work before it can start any 
+of the data. As the numbers of threads increases, the runtime of the program
+decreases exponentially. In a few cases, there was an increase in time when
+attempting to max out the CPU usage. This occurs because the framework has to
+wait for the CPU to be finished with its previous work before it can start any
 further jobs. 
 
 TODO(Keep?): In the cases when the framework executed faster while the CPU was 
