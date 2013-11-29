@@ -16,7 +16,7 @@
 
 \doublespacing
 \begin{document}
-\title{A Java Wrapper For Embarrassingly Parallel Problems}
+\title{A Java Framework For Embarrassingly Parallel Problems}
 \author{Jacob Schwartz}
 \maketitle
 
@@ -76,12 +76,11 @@ little programmer effort.
 
 \section{Background}
 
-% TODO: Arrows?
 The motivation for this effort was based on research into different forms of the
 species \emph{Cicer arietinum}, the chickpea. The two main forms, Kabuli and
 Desi, are very different in size and color. The Desi is also more resistant to
-diseases and are more effective at root nodule symbiosis. The Kabuli has a large
-but soft shell, which make it at better food source for humans. Both forms are
+diseases and is more effective at root nodule symbiosis. The Kabuli has a large
+but soft shell, which makes it a better food source for humans. Both forms are
 cultivated and have been under human selection for several thousand years. We
 wanted to use an existing Ka/Ks program (Zhang et al. \cite{kaks}) to quantify
 the evolution and selection of these chickpeas. We needed to analyze three
@@ -101,42 +100,45 @@ the contents of the output files were concatenated together to produce a final
 output that matches the format and order that would have been produced by a
 single invocation of the Ka/Ks Calculator program.
 
-%TODO: get a better source? Talk about UCLUST and octupus
-% Talk about uclust and octupus and blast, even though there are parallelize
-% versions. Rewrite to not go into details about the programs but to talk about
-% that there are many programs.
 Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
-embarrassingly parallel programs in the biological sciences. To deal with large
-amounts of data, the best method is often to group them into clusters.
-Hierarchical clustering algorithms take the data and then organize into
-hierarchical structure, usually a dendrogram, based on a priority matrix. There
-are hierarchical clustering algorithms that can be implemented in parallel using
-an embarrassingly parallel approach.  With several applications that would
-benefit from parallelism in this field, it was obvious it would be desirable to
-develop a framework for the parallelization task. \cite{cluster}
+embarrassingly parallel programs in the biological sciences. Basic Local
+Alignment Search Tool, or BLAST\fotenote{blast.ncbi.nlm.nih.gov}, is an
+algorithm that compares many aspects of DNA sequences, like the nucleotides or
+amino acid sequences. In addition, the user can also compare to the sequences to
+a database of sequences to identity known subsequences. There are many
+implementations of BLAST, some of them already have parallel implementations.
+Many applications however do not have parallel processing capabilities. A class
+of problems that organize large amounts of data into similar groups called
+clusters. Two applications, octupus\footnote{octupus.sourceforge.com} and
+USEARCH\footnote{https://www.drive5.com/usearch}, are examples of programs in
+this class that do not have parallel versions. With several applications that
+would benefit from parallelism in this field, it was obvious it would be
+desirable to develop a framework for the parallelization task.
 
-%TODO: Footnotes for days
 This framework is designed to run locally but there are other options when more
 power is needed. Gunarathne et al.\cite{cloud} have investigated running much
 larger embarrassingly parallel biological application using various cloud
 services. These services offer on-demand computational power with flexibility.
 These services have built in hooks to various distributed services, such as
 storage and databases. Amazon has a set of cloud computing services called
-Amazon Web Services(AWS) and Microsoft has a similar service named Microsoft
-Azure. AWS and Azure are esentially virtual instances run on machines in the
-cloud that can be spun up for extra computing power and shut down when not
-needed. 
+Amazon Web Services(AWS)\footnote{https://aws.amazon.com} and Microsoft has a
+similar service named Microsoft Azure\footnote{https://www.windowsazure.com}.
+AWS and Azure are esentially virtual instances run on machines in the cloud that
+can be spun up for extra computing power and shut down when not needed. 
 
-Amazon also offers another service called Amazon Elastic MapReduce. This
-combines its virtual instance framework with Apache Hadoop. As seen
-in figure \ref{fig:map}, Hadoop breaks down the input data into parts, runs them in parallel
-with the 'Map' function and then combines the results with the 'Reduce'
-function. Dryad is a framework developed released by Microsoft Research that
-allows the end-user to create directed acyclic computation graphs that run on
-Windows High Performance Computer(HPC) clusters. Gunarathne et al. compared
-the services using several applications to analyze performance, cost and
-usability.
+Amazon also offers another service called Amazon Elastic
+MapReduce\footnote{https://aws.amazon.com/elasticmapreduce}. This combines its
+virtual instance framework with Apache
+Hadoop\footnote{https://hadoop.apache.org}. As seen in figure \ref{fig:map},
+Hadoop breaks down the input data into parts, runs them in parallel with the
+'Map' function and then combines the results with the 'Reduce' function.
+DryadLINQ\footnote{https://research.microsoft.com/apps/mobile/showpage.aspx?page=/en-us/projects/draydlinq}
+is a framework developed released by Microsoft Research that allows the end-user
+to create directed acyclic computation graphs that run on Windows High
+Performance Computer(HPC)\footnote{https://www.microsoft.com/hpc} clusters.
+Gunarathne et al. compared the services using several applications to analyze
+performance, cost and usability.
 
 \begin{wrapfigure}{L}{0.5\textwidth}
     \begin{center}
@@ -193,15 +195,17 @@ objects will store their own statistics about runtime and size.
 
 We evaluated the convenience and performace of the framework on two different
 applications: the Ka/Ks Calculator and two different sequence clustering
-algorithms. In all cases, we compared the framework based application with the
-original using different data partitions and different thread counts.
+algorithms, USEARCH and ocutupus. In all cases, we compared the framework based
+application with the original using different data partitions and different
+thread counts.
 
 \subsection{Ka/Ks Calculator}
-Ka/Ks Calculator was run through the framework with ten different samples, each 
+TODO: Reword when redone
+Ka/Ks Calculator was run through the framework with ten different samples, each
 containing sixteen units of work. Each sample was run by the framework thread
-counts, starting at 1 and increasing by 
-powers of two until the 100\% processor usage (16 processors). These tests were run
-with minimal other activity on the server.
+counts, starting at 1 and increasing by powers of two until the 100\% processor
+usage (16 processors). These tests were run with minimal other activity on the
+server.
 
 \begin{figure}
 {\resizebox{5.2in}{!}{\includegraphics{experiment/out.png}}}
@@ -246,13 +250,15 @@ works similarly to our framework, there is a step that splits the data, the Map
 function is the user's executable and the merge step is the Reduce function in
 the framework. 
 
-In the future, we would like to see this work be split into a
-local front-end and a cloud back-end. This allows for an even greater runtime
-decrease because the number of compute nodes available is larger than the number
-of processors on most machines. Splitting the framework also allows for better
-testing of cloud environments, where the cloud environment itself could be a
-configurable option for end users.
-TODO: MORE
+In the future, we would like to see this work be split into a local front-end
+and a cloud back-end. The configuration set-up process will run locally. The
+split and merge steps depend on the cloud service chosen, but data processing
+will always occur in the cloud. Splitting the framework will give performance
+improvements, because the number of compute nodes can be much larger than the
+number of processors on an average machine. More customization options would be
+available to the end-user, such as choice of environment. This provides ultimate
+control for the group to pick the best enviroment to suit its computational and
+financial needs.
 
 \begin{thebibliography}{1}
 \bibitem{history}
