@@ -225,23 +225,15 @@ public final class ConfigWizard
             add(execChooser);
             add(new JLabel(SEP));
 
-            // Name for input and output flags
-            // Setting for the split pattern
-            final JTextField inFlagField = new JTextField();
-            inFlagField.setName(Configuration.IN_FLAG_KEY);
-            inFlagField.setPreferredSize(new Dimension(50, 20));
-            add(new JLabel("Flag for executable to define input file"));
-            add(inFlagField);
-            add(new JLabel("(Leave blank to use stdin)"));
+            // Arguments for executable
+            final JTextField argumentField = new JTextField();
+            argumentField.setName(Configuration.ARGUMENT_KEY);
+            argumentField.setPreferredSize(new Dimension(50, 200));
+            add(new JLabel("Enter in the arguments for the executable"));
+            add(argumentField);
+            add(new JLabel("   Use @ to replace the input file"));
+            add(new JLabel("   Use $ to replace the output file"));
             add(new JLabel(SEP));
-
-            // Setting for the split pattern
-            final JTextField outFlagField = new JTextField();
-            outFlagField.setName(Configuration.OUT_FLAG_KEY);
-            outFlagField.setPreferredSize(new Dimension(50, 20));
-            add(new JLabel("Flag for executable to define output dir"));
-            add(outFlagField);
-            add(new JLabel("(Leave blank to use stdout)"));
         }
     }
 

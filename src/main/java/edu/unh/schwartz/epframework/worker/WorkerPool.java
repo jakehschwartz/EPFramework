@@ -32,8 +32,7 @@ public final class WorkerPool
     {
         // Set the executable information in the worker
         Worker.setExecutable(config.getExecutable());
-        Worker.setInFlag(config.getInFlag());
-        Worker.setOutFlag(config.getOutFlag());
+        Worker.setArguments(config.getArguments());
 
         // Initialize the threads
         workers = new Worker[config.getNumberOfThreads()];

@@ -21,14 +21,9 @@ public final class Worker extends Thread
     private static String exec;
 
     /**
-     * The in flag for the executable.
+     * The arguments for the executable.
      */
-    private static String inFlag;
-
-    /**
-     * The out flag for the executable.
-     */
-    private static String outFlag;
+    private static String[] arguments;
 
     /**
      * The Log.
@@ -81,23 +76,14 @@ public final class Worker extends Thread
     }
     
     /**
-     * Set the flag to signify where the input goes for the executable.
+     * Set the arguments for executable.
      *
-     * @param in - the in flag used to signify the input file 
+     * @param argument - the command line argument string
      */
-    public static void setInFlag(final String in)
+    public static void setArguments(final String argument)
     {
-        inFlag = in;
-    }
-
-    /**
-     * Set the flag to signify where the output goes for the executable.
-     *
-     * @param out - the flag used to signify the output file 
-     */
-    public static void setOutFlag(final String out)
-    {
-        outFlag = out;
+        LOG.debug("setArgument: " + argument);
+        arguments = argument.split("\\w");
     }
 
     /**
@@ -153,26 +139,23 @@ public final class Worker extends Thread
         // Create the executable
         final List<String> commands = new ArrayList<String>();
         commands.add(exec);
-
-        if (inFlag != null)
+        
+        // Add the arguments in
+        for (String a : arguments)
         {
-            commands.add(inFlag);
+            if (a.equals("@"))
+            {
+                commands.add(in);
+            }
+            else if (a.equals("$"))
+            {
+                commands.add(out);
+            }
+            else
+            {
+                commands.add(a);
+            }
         }
-        else
-        {
-            commands.add("<");
-        }
-        commands.add(in);
-
-        if (outFlag != null)
-        {
-            commands.add(outFlag);
-        }
-        else
-        {
-            commands.add(">");
-        }
-        commands.add(out);
 
         return new ProcessBuilder(commands);
     }

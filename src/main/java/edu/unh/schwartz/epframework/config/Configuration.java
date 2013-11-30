@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 import org.apache.commons.logging.Log;
@@ -46,16 +45,6 @@ public final class Configuration
     public static final String EXEC_LOC_KEY = "execLoc";
 
     /**
-     * Key for in flag setting.
-     */
-    public static final String IN_FLAG_KEY = "inFlag";
-
-    /**
-     * Key for out flag setting.
-     */
-    public static final String OUT_FLAG_KEY = "outFlag";
-    
-    /**
      * Key for threading setting.
      */
     public static final String NUM_PROCESSES_KEY = "numProcesses";
@@ -79,6 +68,11 @@ public final class Configuration
      * Key for setting the merge method.
      */
     public static final String MERGE_METHOD_KEY = "mergeMethod";
+
+    /**
+     * Key for setting the command line argument.
+     */
+    public static final String ARGUMENT_KEY = "argument";
 
     /**
      * The Log.
@@ -116,17 +110,6 @@ public final class Configuration
     private String execPath;
 
     /**
-     * The flags for the executable to show how to enter input and outfile.
-     */
-    private String inFlag;
-    private String outFlag;
-
-    /**
-     * The arguments for the execuatable.
-     */
-    private Map<String, String> execArgs;
-
-    /**
      * Whether or not to make a stats file.
      */
     private boolean makeStats;
@@ -145,6 +128,11 @@ public final class Configuration
      * Whether or not to save the config file.
      */
     private boolean save;
+
+    /**
+     * The arguments for the command line.
+     */
+    private String argument;
     
     /**
      * Constructs a configuration file from a map.
@@ -174,12 +162,6 @@ public final class Configuration
                      break;
                  case EXEC_LOC_KEY:
                      this.execPath = (String) val;
-                     break;
-                 case IN_FLAG_KEY: 
-                     this.inFlag = (String) val;
-                     break;
-                 case OUT_FLAG_KEY:
-                     this.outFlag = (String) val;
                      break;
                  case NUM_PROCESSES_KEY:
                      this.numberOfThreads = Integer.valueOf((String) val);
@@ -264,12 +246,6 @@ public final class Configuration
                 case EXEC_LOC_KEY:
                     this.execPath = jp.getText();
                     break;
-                case IN_FLAG_KEY: 
-                    this.inFlag = jp.getText();
-                    break;
-                case OUT_FLAG_KEY:
-                    this.outFlag = jp.getText();
-                    break;
                 case NUM_PROCESSES_KEY:
                     this.numberOfThreads = jp.getIntValue();
                     break;
@@ -338,47 +314,6 @@ public final class Configuration
     }
 
     /**
-     * @return the flag used to mark the input file for the executable
-     */
-    public String getInFlag()
-    {
-        return this.inFlag;
-    }
-
-    /**
-     * @return the flag used to mark the output file for the executable
-     */
-    public String getOutFlag()
-    {
-        return this.outFlag;
-    }
-
-    /**
-     * @return the arguments of the executable
-     */
-    public Map<String, String> getExecutableArgs()
-    {
-        return this.execArgs;
-    }
-
-    /**
-     * Adds an argument for the executable. If the value is null, when no value
-     * is used, just the flag name.
-     *
-     * @param flag - the flag name, with the - or --
-     * @param value - the value of the flag
-     */
-    public void addExecutableArg(final String flag, final String value)
-    {
-        if (execArgs == null)
-        {
-            execArgs = new HashMap<String, String>();
-        }
-
-        execArgs.put(flag, value);
-    }
-
-    /**
      * @return the number of header lines to copy to the final output
      */
     public int getNumHeaderLines()
@@ -401,6 +336,14 @@ public final class Configuration
     public int getMergeMethod()
     {
         return this.mergeMethod;
+    }
+
+    /**
+     * @return the args for the command line 
+     */
+    public String getArguments()
+    {
+        return this.argument;
     }
 
     /**
@@ -429,8 +372,6 @@ public final class Configuration
 
             jg.writeStringField(OUT_FILE_KEY, this.outDirName);
             jg.writeStringField(EXEC_LOC_KEY, this.execPath);
-            jg.writeStringField(IN_FLAG_KEY, this.inFlag);
-            jg.writeStringField(OUT_FLAG_KEY, this.outFlag);
             jg.writeNumberField(NUM_PROCESSES_KEY, this.numberOfThreads);
             jg.writeBooleanField(STATS_KEY, this.makeStats);
             jg.writeNumberField(NUM_HEADER_KEY, this.numberOfHeaderLines);
