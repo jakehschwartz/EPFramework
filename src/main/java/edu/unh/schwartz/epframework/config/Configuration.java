@@ -67,7 +67,17 @@ public final class Configuration
     /**
      * Key for setting the merge method.
      */
-    public static final String MERGE_METHOD_KEY = "mergeMethod";
+    public static final String EXTERNAL_MERGE_KEY = "externalMerge";
+
+    /**
+     * Key for setting the merge method.
+     */
+    public static final String CUSTOM_MERGE_KEY = "customMerge";
+
+    /**
+     * Key for setting the merge method.
+     */
+    public static final String DEFAULT_MERGE_KEY = "defaultMerge";
 
     /**
      * Key for setting the command line argument.
@@ -122,7 +132,7 @@ public final class Configuration
     /**
      * The method used to merge the results.
      */
-    private int mergeMethod;
+    private int mergeMethod = -1;
 
     /**
      * Whether or not to save the config file.
@@ -140,76 +150,40 @@ public final class Configuration
      */
     public Configuration(final Map<String, Object> map)
     {
-         final Iterator<String> it = map.keySet().iterator();
-         while (it.hasNext()) 
-         {
-             final String key = it.next();
-             final Object val = map.get(key);
-             LOG.debug(key  + " => " + val);
-             switch(key)
-             {
-                 case IN_FILE_KEY:
-                     this.inputFileName = (String) val;
-                     break;
-                 case IN_FILE_DIR_KEY:
-                     this.inputFileDirName = (String) val;
-                     break;
-                 case SPLIT_PATTERN_KEY:
-                     this.splitPattern = (String) val;
-                     break;
-                 case OUT_FILE_KEY:
-                     this.outDirName = (String) val;
-                     break;
-                 case EXEC_LOC_KEY:
-                     this.execPath = (String) val;
-                     break;
-                 case NUM_PROCESSES_KEY:
-                     this.numberOfThreads = Integer.valueOf((String) val);
-                     break;
-                 case STATS_KEY:
-                     this.makeStats = (boolean) val;
-                     break;
-                 case NUM_HEADER_KEY:
-                     this.numberOfHeaderLines = Integer.valueOf((String) val);
-                     break;
-                 case SAVE_KEY:
-                     this.save = (boolean) val;
-                     break;
-                 case MERGE_METHOD_KEY:
-                     this.mergeMethod = Integer.valueOf((String) val);
-                     break;
-                 default:
-                     assert(false);
-             }
-         }
+        loadConfig(map);
 
-         // Check to make sure necessary fields were filled
-         boolean crash = false;
-         if ((this.inputFileDirName == null && this.inputFileName == null) || 
-                 (this.inputFileName != null && this.inputFileName != null))
-         {
-             LOG.fatal("An input file OR directory must be selected");
-             crash = true;
-         }
-         else if (this.outDirName == null)
-         {
-             LOG.fatal("An output directory must be selected");
-             crash = true;
-         }
-         else if (this.execPath == null)
-         {
-             crash = true;
-             LOG.fatal("An executable must be selected");
-         }
+        // Check to make sure necessary fields were filled
+        boolean crash = false;
+        if ((this.inputFileDirName == null && this.inputFileName == null) || 
+                (this.inputFileName != null && this.inputFileName != null))
+        {
+            LOG.fatal("An input file OR directory must be selected");
+            crash = true;
+        }
+        else if (this.outDirName == null)
+        {
+            LOG.fatal("An output directory must be selected");
+            crash = true;
+        }
+        else if (this.execPath == null)
+        {
+            crash = true;
+            LOG.fatal("An executable must be selected");
+        }
+        else if (this.mergeMethod == -1)
+        {
+            crash = true;
+            LOG.fatal("A merge method must be selected");
+        }
 
-         if (crash)
-         {
-             System.exit(1);
-         }
-         else if (this.save)
-         {
-             saveConfig();
-         }
+        if (crash)
+        {
+            System.exit(1);
+        }
+        else if (this.save)
+        {
+            saveConfig();
+        }
     }
 
     /**
@@ -255,8 +229,23 @@ public final class Configuration
                 case NUM_HEADER_KEY:
                     this.numberOfHeaderLines = jp.getIntValue();
                     break;
-                case MERGE_METHOD_KEY:
-                    this.mergeMethod = jp.getIntValue();
+                case DEFAULT_MERGE_KEY:
+                    if (jp.getBooleanValue())
+                    {
+                        this.mergeMethod = 0;
+                    }
+                    break;
+                case CUSTOM_MERGE_KEY:
+                    if (jp.getBooleanValue())
+                    {
+                        this.mergeMethod = 1;
+                    }
+                    break;
+                case EXTERNAL_MERGE_KEY:
+                    if (jp.getBooleanValue())
+                    {
+                        this.mergeMethod = 2;
+                    }
                     break;
                  default:
                     assert(false);
@@ -264,6 +253,70 @@ public final class Configuration
         }
         jp.close();
     }
+
+    private void loadConfig(final Map<String, Object> map)
+    {
+         final Iterator<String> it = map.keySet().iterator();
+         while (it.hasNext()) 
+         {
+             final String key = it.next();
+             final Object val = map.get(key);
+             LOG.debug(key + " -> " + val);
+             switch(key)
+             {
+                 case IN_FILE_KEY:
+                     this.inputFileName = (String) val;
+                     break;
+                 case IN_FILE_DIR_KEY:
+                     this.inputFileDirName = (String) val;
+                     break;
+                 case SPLIT_PATTERN_KEY:
+                     this.splitPattern = (String) val;
+                     break;
+                 case OUT_FILE_KEY:
+                     this.outDirName = (String) val;
+                     break;
+                 case EXEC_LOC_KEY:
+                     this.execPath = (String) val;
+                     break;
+                 case NUM_PROCESSES_KEY:
+                     this.numberOfThreads = Integer.valueOf((String) val);
+                     break;
+                 case STATS_KEY:
+                     this.makeStats = (boolean) val;
+                     break;
+                 case NUM_HEADER_KEY:
+                     this.numberOfHeaderLines = Integer.valueOf((String) val);
+                     break;
+                 case SAVE_KEY:
+                     this.save = (boolean) val;
+                     break;
+                 case DEFAULT_MERGE_KEY:
+                     if ((boolean) val)
+                     {
+                         this.mergeMethod = 0;
+                     }
+                     break;
+                 case CUSTOM_MERGE_KEY:
+                     if ((boolean) val)
+                     {
+                         this.mergeMethod = 1;
+                     }
+                     break;
+                 case EXTERNAL_MERGE_KEY:
+                     if ((boolean) val)
+                     {
+                         this.mergeMethod = 2;
+                     }
+                     break;
+                 default:
+                     assert(false);
+             }
+         }
+
+
+    }
+
 
     /**
      * @return the number of threads the program will use

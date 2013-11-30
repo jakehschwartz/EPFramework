@@ -3,9 +3,11 @@ package edu.unh.schwartz.epframework.config;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -200,7 +202,6 @@ public final class ConfigWizard
             inDirChooser.setName(Configuration.IN_FILE_DIR_KEY);
             add((new JLabel("Select the input directory: ")));
             add(inDirChooser);
-
             add(new JLabel(SEP));
 
             // Settings for the output location
@@ -234,6 +235,24 @@ public final class ConfigWizard
             add(new JLabel("   Use @ to replace the input file"));
             add(new JLabel("   Use $ to replace the output file"));
             add(new JLabel(SEP));
+
+            final JRadioButton jRadioDefault = new JRadioButton("Default");
+            final JRadioButton jRadioCustom = new JRadioButton("Custom");
+            final JRadioButton jRadioExternal = new JRadioButton("External");
+
+            jRadioDefault.setName(Configuration.DEFAULT_MERGE_KEY);
+            jRadioDefault.setName(Configuration.CUSTOM_MERGE_KEY);
+            jRadioDefault.setName(Configuration.EXTERNAL_MERGE_KEY);
+
+            final ButtonGroup group = new ButtonGroup();
+            group.add(jRadioDefault);
+            group.add(jRadioCustom);
+            group.add(jRadioExternal);
+
+            add(new JLabel("Select the merge method"));
+            add(jRadioDefault);
+            add(jRadioCustom);
+            add(jRadioExternal);
         }
     }
 
