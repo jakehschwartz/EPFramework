@@ -9,7 +9,8 @@ merging itself. MORE HERE.
 
 Ka/Ks Calculator
 ----------------
-Download URL: https://code.google.com/p/kaks-calculator/
+Download URL:
+https://kaks-calculator.googlecode.com/files/KaKs_Calculator1.2.tar.gz
 
 UCLUST
 ------
