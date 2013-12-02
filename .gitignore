@@ -1,4 +1,6 @@
 EPFramework*.jar
+KaKs_Calc*
+KaKs_Calc*/*
 build/
 .gradle/
 *.aux
