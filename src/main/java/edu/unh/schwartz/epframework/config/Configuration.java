@@ -7,6 +7,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Iterator;
 import org.apache.commons.logging.Log;
@@ -409,7 +412,13 @@ public final class Configuration
         try
         {
             LOG.info("Saving configuration in " + this.outDirName);
-            final File file = new File(this.outDirName + "/config.txt");
+
+            final DateFormat dateFmt = new SimpleDateFormat("yyyyMMdd-HHmmss");
+            final Date date = new Date();
+            final String d = dateFmt.format(date);
+
+            final File file = new File(this.outDirName + "/config" + d + 
+                    ".json");
             final JsonGenerator jg = jsonFactory.createGenerator(file, 
                     JsonEncoding.UTF8);
             jg.writeStartObject();

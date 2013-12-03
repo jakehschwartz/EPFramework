@@ -229,11 +229,10 @@ public final class ConfigWizard
             // Arguments for executable
             final JTextField argumentField = new JTextField();
             argumentField.setName(Configuration.ARGUMENT_KEY);
-            argumentField.setPreferredSize(new Dimension(50, 200));
-            add(new JLabel("Enter in the arguments for the executable"));
+            argumentField.setPreferredSize(new Dimension(300, 20));
+            add(new JLabel("Enter in the arguments for the executable:"));
             add(argumentField);
-            add(new JLabel("   Use @ to replace the input file"));
-            add(new JLabel("   Use $ to replace the output file"));
+            add(new JLabel("Use @ for input file / Use $ for output file"));
             add(new JLabel(SEP));
 
             final JRadioButton jRadioDefault = new JRadioButton("Default");
@@ -241,8 +240,8 @@ public final class ConfigWizard
             final JRadioButton jRadioExternal = new JRadioButton("External");
 
             jRadioDefault.setName(Configuration.DEFAULT_MERGE_KEY);
-            jRadioDefault.setName(Configuration.CUSTOM_MERGE_KEY);
-            jRadioDefault.setName(Configuration.EXTERNAL_MERGE_KEY);
+            jRadioCustom.setName(Configuration.CUSTOM_MERGE_KEY);
+            jRadioExternal.setName(Configuration.EXTERNAL_MERGE_KEY);
 
             final ButtonGroup group = new ButtonGroup();
             group.add(jRadioDefault);
