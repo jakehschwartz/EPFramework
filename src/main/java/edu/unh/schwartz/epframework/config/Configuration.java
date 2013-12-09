@@ -158,7 +158,7 @@ public final class Configuration
         // Check to make sure necessary fields were filled
         boolean crash = false;
         if ((this.inputFileDirName == null && this.inputFileName == null) || 
-                (this.inputFileName != null && this.inputFileName != null))
+                (this.inputFileDirName != null && this.inputFileName != null))
         {
             LOG.fatal("An input file OR directory must be selected");
             crash = true;
@@ -231,6 +231,9 @@ public final class Configuration
                     break;
                 case NUM_HEADER_KEY:
                     this.numberOfHeaderLines = jp.getIntValue();
+                    break;
+                case ARGUMENT_KEY:
+                    this.argument = jp.getText();
                     break;
                 case DEFAULT_MERGE_KEY:
                     if (jp.getBooleanValue())
@@ -311,6 +314,9 @@ public final class Configuration
                      {
                          this.mergeMethod = 2;
                      }
+                     break;
+                 case ARGUMENT_KEY:
+                     this.argument = (String) val;
                      break;
                  default:
                      assert(false);
@@ -436,7 +442,11 @@ public final class Configuration
             jg.writeStringField(EXEC_LOC_KEY, this.execPath);
             jg.writeNumberField(NUM_PROCESSES_KEY, this.numberOfThreads);
             jg.writeBooleanField(STATS_KEY, this.makeStats);
+            jg.writeStringField(ARGUMENT_KEY, this.argument);
             jg.writeNumberField(NUM_HEADER_KEY, this.numberOfHeaderLines);
+            jg.writeBooleanField(EXTERNAL_MERGE_KEY, this.mergeMethod == 2);
+            jg.writeBooleanField(CUSTOM_MERGE_KEY, this.mergeMethod == 1);
+            jg.writeBooleanField(DEFAULT_MERGE_KEY, this.mergeMethod == 0);
             jg.writeEndObject();
             jg.close();
             LOG.info("Configuration saved");

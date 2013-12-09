@@ -42,6 +42,8 @@ public final class ChunkManager
      */
     private static final String EXTERNAL_MERGE_EXEC_NAME = "./merger";
 
+    private final String rootDir = "/tmp/";
+
     /**
      * The pattern used to split the input file.
      */
@@ -113,11 +115,12 @@ public final class ChunkManager
                 final String content = sb.toString();
 
                 // Make a directory for that file
-                final File dir = new File("/tmp/" + content.hashCode());
+                final File dir = new File(rootDir + content.hashCode());
                 dir.mkdir();
 
                 // Write the content to a file
-                final PrintWriter inWriter = new PrintWriter(dir.getAbsolutePath() + "/in");
+                final PrintWriter inWriter = 
+                    new PrintWriter(dir.getAbsolutePath() + "/in");
                 inWriter.println(content);
                 inWriter.close();
 
@@ -147,7 +150,8 @@ public final class ChunkManager
         final File directory = new File(dir);
         for (File i : directory.listFiles())
         {
-            final File d = new File("tmp/" + i.getName().hashCode());
+            final File d = new File(rootDir + i.getName().hashCode());
+            d.mkdir();
             this.chunks.add(new Chunk(i , d));
         }
     }

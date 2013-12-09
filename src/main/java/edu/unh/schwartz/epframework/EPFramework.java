@@ -34,7 +34,7 @@ final class EPFramework
      *
      * @param config - the instructions for the wrapper
      */
-    private static void start(final Configuration config)
+    private static void run(final Configuration config)
     {
         Chunk.setHeaderLines(config.getNumHeaderLines());
 
@@ -44,12 +44,14 @@ final class EPFramework
             if (config.getInputFile() == null)
             {
                 // Make a chunk for each presplit file
+                LOG.info("Loading chunks from directory");
                 cm = new ChunkManager(config.getNumHeaderLines());
                 cm.splitFiles(config.getInputDirectory());
             }
             else
             {
                 // Read in the input file and get the chunks
+                LOG.info("Reading chunks from input file");
                 cm = new ChunkManager(config.getSplitPattern(), 
                         config.getNumHeaderLines());
 
@@ -104,7 +106,7 @@ final class EPFramework
                 ConfigWizard.getInstance().createConfiguration();
             if (config != null)
             {
-                start(config);
+                run(config);
             }
         }
         // First command line arg is a configuration file
@@ -114,7 +116,7 @@ final class EPFramework
             {
                 LOG.debug("Loading configuration file");
                 final Configuration config = new Configuration(args[0]);
-                start(config);
+                run(config);
             }
             catch (IOException e)
             {

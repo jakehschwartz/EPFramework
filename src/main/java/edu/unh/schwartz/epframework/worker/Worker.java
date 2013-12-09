@@ -83,7 +83,7 @@ public final class Worker extends Thread
     public static void setArguments(final String argument)
     {
         LOG.debug("setArgument: " + argument);
-        arguments = argument.split("\\w");
+        arguments = argument.split("\\s");
     }
 
     /**
@@ -156,6 +156,14 @@ public final class Worker extends Thread
                 commands.add(a);
             }
         }
+
+        // System.out.println("\n\n\n");
+        // for(String co : commands)
+        // {
+            // System.out.print(co);
+            // System.out.print(" ");
+        // }
+        // System.out.println();
 
         return new ProcessBuilder(commands);
     }

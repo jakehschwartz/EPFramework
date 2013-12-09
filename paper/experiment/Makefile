@@ -1,4 +1,4 @@
-plot.pdf: plot.gnuplot final.csv
+plot.pdf: plot.gnuplot 
 	gnuplot plot.gnuplot
 
 clean:

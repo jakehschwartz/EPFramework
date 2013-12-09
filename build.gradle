@@ -3,7 +3,7 @@ apply plugin: 'checkstyle'
 apply plugin:'application'
 
 sourceCompatibility = 1.7
-version = '0.9'
+version = '1.0'
 mainClassName = "edu.unh.schwartz.epframework.EPFramework"
 
 repositories {

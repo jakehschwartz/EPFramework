@@ -9,3 +9,5 @@ build/
 .DS_Store
 *.dvi
 *.csv
+*.json
+*.kaks

@@ -75,8 +75,10 @@ public final class Chunk implements Comparable<Chunk>
         this.content = sb.toString();
 
         // Write the content to a file in the directory
-        Files.copy(inFile.toPath(), 
-            new File("tmp" + inFile.getName()).toPath());
+        final File d = 
+            new File(directory.getAbsolutePath() + "/" + inFile.getName());
+        Files.copy(inFile.toPath(), d.toPath()); 
+
     }
 
     /**
