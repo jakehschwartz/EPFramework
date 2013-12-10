@@ -121,7 +121,7 @@ public final class Worker extends Thread
                 pb.redirectErrorStream(true);
 
                 // Start the work and capture the time it takes to run
-                LOG.info("Starting chunk on Worker " + this.idNum);
+                LOG.info("Starting chunk " + c.hashCode() + " on Worker " + this.idNum);
                 final long start = System.currentTimeMillis();
                 final Process proc = pb.start();
                 proc.waitFor();

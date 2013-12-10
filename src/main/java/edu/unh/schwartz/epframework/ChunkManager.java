@@ -152,7 +152,7 @@ public final class ChunkManager
         {
             final File d = new File(rootDir + i.getName().hashCode());
             d.mkdir();
-            this.chunks.add(new Chunk(i , d));
+            this.chunks.add(new Chunk(i, d));
         }
     }
     
