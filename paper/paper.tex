@@ -103,7 +103,7 @@ single invocation of the Ka/Ks Calculator program.
 Ka/Ks Calculator is not the only embarrassingly parallel program that has the
 potential to take several days to run on a data set. In fact, there are several
 embarrassingly parallel programs in the biological sciences. Basic Local
-Alignment Search Tool, or BLAST\fotenote{blast.ncbi.nlm.nih.gov}, is an
+Alignment Search Tool, or BLAST\footnote{blast.ncbi.nlm.nih.gov}, is an
 algorithm that compares many aspects of DNA sequences, like the nucleotides or
 amino acid sequences. In addition, the user can also compare to the sequences to
 a database of sequences to identity known subservience's. There are many
@@ -227,17 +227,41 @@ large enough to warrant using all of the machine's power.
 \subsection{Octupus}
 
 A version of octupus was also run through the framework and was tested against
-two different sized data sets. Both sets were first clustered at 90\% similarity
-and the resulting clusters were used as the input for the framework's run, which
-is for 97\% similarity. The framework in this case was just run at four and
-eight threads and Figure \ref{fig:octugraph} shows that the running the
-framework once again provides a benefit for the user.
+two different sized data sets. Both sets were first clustered at 90\%, 95\% and
+97\% minimum similarity. The runtime for those tests can be seen in table
+\ref{tab:oct1}. The resulting clusters from the 90\% similarity run were used as
+the input for the framework's runs, which were all set for 97\% similarity. 
+The framework in this case was just run at six, eight and ten workers. Table 
+\ref{tab:octu2} shows that it is slightly faster to cluster first at 90\% and 
+then run the resulting clusters through the framework at a higher similarity. 
 
-\begin{figure}
-{\resizebox{5.2in}{!}{\includegraphics{experiment/outoctu.png}}}
-\caption{Runtimes for the Ka/Ks Calculator though the framework}
-\label{fig:octugraph}
-\end{figure}
+\begin{table}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        Number of Sequences & Minimum Similarity & Time(s) \\ \hline
+        1500                & 90\%               & 99      \\
+        ~                   & 95\%               & 115     \\
+        ~                   & 97\%               & 131     \\ \hline
+        6500                & 90\%               & 425     \\
+        ~                   & 95\%               & 496     \\
+        ~                   & 97\%               & 603     \\ \hline
+    \end{tabular}
+    \label{tab:octu1}
+\end{table}
+
+\begin{table}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        Number of Sequences & Number of Workers & Time(s) \\ \hline
+        1500                & 6                 & 34      \\
+        ~                   & 8                 & 27      \\
+        ~                   & 10                & 27      \\ \hline
+        6500                & 6                 & 127     \\
+        ~                   & 8                 & 127     \\
+        ~                   & 10                & 123     \\ \hline
+    \end{tabular}
+    \label{tab:octu2}
+\end{table}
 
 \section{Conclusion}
 
