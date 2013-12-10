@@ -150,7 +150,7 @@ public final class ChunkManager
         final File directory = new File(dir);
         for (File i : directory.listFiles())
         {
-            final File d = new File(rootDir + i.getName().hashCode());
+            final File d = new File(rootDir + i.hashCode());
             d.mkdir();
             this.chunks.add(new Chunk(i, d));
         }
