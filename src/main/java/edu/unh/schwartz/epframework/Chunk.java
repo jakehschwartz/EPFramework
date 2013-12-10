@@ -96,14 +96,26 @@ public final class Chunk implements Comparable<Chunk>
      */
     public void clean()
     {
-        // Delete the files in the directories
-        for (final File f : this.directory.listFiles())
-        {
-            f.delete();
-        }
-        this.directory.delete();
-
+        delete(this.directory);
         this.runtime = 0;
+    }
+
+    /**
+     * Recursively deletes file system rooted at file.
+     *
+     * @param file - the file to delete
+     */
+    private void delete(final File file)
+    {
+        if (file.isDirectory())
+        {
+            for (final File f : file.listFiles())
+            {
+                delete(f);
+            }
+        }
+
+        file.delete();
     }
 
     /**

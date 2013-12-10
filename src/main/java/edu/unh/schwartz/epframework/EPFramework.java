@@ -86,8 +86,8 @@ final class EPFramework
             LOG.info("Printing stats");
             cm.printStats(wp.getStats(), config.getOutputDirectory());
         }
-        // LOG.info("Cleaning up");
-        // cm.cleanUp();
+        LOG.info("Cleaning up");
+        cm.cleanUp();
     }
 
     /**

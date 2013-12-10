@@ -155,7 +155,7 @@ public final class ChunkManager
         {
             final File d = new File(ROOTDIR + i.getName());
             d.mkdir();
-            this.chunks.add(new Chunk(i , d));
+            this.chunks.add(new Chunk(i, d));
         }
     }
     
