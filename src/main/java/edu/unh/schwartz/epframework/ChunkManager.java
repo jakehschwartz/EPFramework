@@ -42,7 +42,10 @@ public final class ChunkManager
      */
     private static final String EXTERNAL_MERGE_EXEC_NAME = "./merger";
 
-    private final String rootDir = "/tmp/";
+    /**
+     * The root diractory for the chunks.
+     */
+    private static final String ROOTDIR = "/tmp/";
 
     /**
      * The pattern used to split the input file.
@@ -115,7 +118,7 @@ public final class ChunkManager
                 final String content = sb.toString();
 
                 // Make a directory for that file
-                final File dir = new File(rootDir + content.hashCode());
+                final File dir = new File(ROOTDIR + content.hashCode());
                 dir.mkdir();
 
                 // Write the content to a file
@@ -150,7 +153,7 @@ public final class ChunkManager
         final File directory = new File(dir);
         for (File i : directory.listFiles())
         {
-            final File d = new File(rootDir + i.getName().hashCode());
+            final File d = new File(ROOTDIR + i.getName());
             d.mkdir();
             this.chunks.add(new Chunk(i , d));
         }
@@ -267,7 +270,7 @@ public final class ChunkManager
         try(final PrintWriter statsOut = new PrintWriter(outDir + "/stats.csv"))
         {
             final String comma = ",";
-            final String header = "Chunk #,Length,Runtime(ms)";
+            final String header = "Chunk #,Runtime(ms)";
             statsOut.print(workerStats);
             LOG.debug(workerStats);
 
@@ -277,8 +280,7 @@ public final class ChunkManager
             {
                 final Chunk c = this.chunks.get(i);
                 final StringBuilder sb = new StringBuilder();
-                sb.append(c.hashCode()).append(comma).append(c.length());
-                sb.append(comma).append(c.getRuntime());
+                sb.append(c.hashCode()).append(comma).append(c.getRuntime());
                 statsOut.println(sb.toString());
                 LOG.debug(sb.toString());
             }

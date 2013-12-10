@@ -1,9 +1,9 @@
 package edu.unh.schwartz.epframework;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Files;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,9 +30,9 @@ public final class Chunk implements Comparable<Chunk>
     private long runtime;
     
     /**
-     * The content of the chunk.
+     * The name of the chunk.
      */
-    private String content;
+    private String name;
 
     /**
      * The directory where the in and out files are saved.
@@ -40,13 +40,13 @@ public final class Chunk implements Comparable<Chunk>
     private File directory;
 
     /**
-     * Constructs a chunk based off some content.
-     * @param content - what the chunk represents
+     * Constructs a chunk.
+     * @param name - the name of the chunk
      * @param directory - the directory for the chunk's IO
      */
-    public Chunk(final String content, final File directory)
+    public Chunk(final String name, final File directory)
     {
-        this.content = content;
+        this.name = name;
         this.directory = directory;
     }
 
@@ -54,37 +54,16 @@ public final class Chunk implements Comparable<Chunk>
      * Constructs a chunk based off a file and the directory for the chunk.
      * @param inFile - the file that contains the chunk's content
      * @param directory - the directory for the chunk's IO
-     * @throws IOException is there is problem copying the file to the directory
-     * or reading the content
+     * @throws IOException if ther is a problem copying the file
      */
     public Chunk(final File inFile, final File directory) throws IOException
     {
         this.directory = directory;
-
-        final StringBuilder sb = new StringBuilder();
-        final BufferedReader br = new BufferedReader(new FileReader(inFile));
-        String line = br.readLine();
-        while (line != null) 
-        {
-            sb.append(line);
-            sb.append('\n');
-            line = br.readLine();
-        }
-        br.close();
-
-        this.content = sb.toString();
+        this.name = inFile.getName();
 
         // Write the content to a file in the directory
         Files.copy(inFile.toPath(), new File(getInFileName()).toPath()); 
 
-    }
-
-    /**
-     * @return the length of the chunk's content
-     */
-    public int length()
-    {
-        return this.content.length();
     }
 
     /**
@@ -212,6 +191,14 @@ public final class Chunk implements Comparable<Chunk>
     }
 
     /**
+     * @return the name of the chunk
+     */
+    public String getName()
+    {
+        return this.name;
+    }
+
+    /**
      * @return the input file for this chunk
      */
     public String getInFileName()
@@ -225,15 +212,6 @@ public final class Chunk implements Comparable<Chunk>
     public String getOutFileName()
     {
         return this.directory.getAbsolutePath() + "/out";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override 
-    public int hashCode() 
-    {
-        return this.content.hashCode();
     }
 
     /**

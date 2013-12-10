@@ -121,15 +121,16 @@ public final class Worker extends Thread
                 pb.redirectErrorStream(true);
 
                 // Start the work and capture the time it takes to run
-                LOG.info("Starting chunk on Worker " + this.idNum);
+                LOG.info("Starting chunk " + c.getName() + " on Worker " + 
+                        this.idNum);
                 final long start = System.currentTimeMillis();
                 final Process proc = pb.start();
                 proc.waitFor();
                 final long end = System.currentTimeMillis();
                 c.setRuntime(end - start);
                 runTime += (end - start);
-                LOG.info("Finished chunk on Worker " + this.idNum + " in " + 
-                        (end - start));
+                LOG.info("Finished chunk " + c.getName()+ "(Worker " + 
+                        this.idNum + ") in " + (end - start));
             }
             catch (InterruptedException|IOException e)
             {
@@ -171,14 +172,6 @@ public final class Worker extends Thread
                 commands.add(a);
             }
         }
-
-        // System.out.println("\n\n\n");
-        // for(String co : commands)
-        // {
-            // System.out.print(co);
-            // System.out.print(" ");
-        // }
-        // System.out.println();
 
         return new ProcessBuilder(commands);
     }
