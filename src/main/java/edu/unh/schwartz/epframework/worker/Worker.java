@@ -26,6 +26,11 @@ public final class Worker extends Thread
     private static String[] arguments;
 
     /**
+     * Whether the Chunks need output files or output directories.
+     */
+    private static boolean outputDirs;
+
+    /**
      * The Log.
      */
     private static final Log LOG = LogFactory.getLog(Worker.class);
@@ -87,6 +92,16 @@ public final class Worker extends Thread
     }
 
     /**
+     * Set the output file/directory setting.
+     *
+     * @param dirs - true iff output directories are supposed to be used
+     */
+    public static void setOutputDirs(final boolean dirs)
+    {
+        outputDirs = dirs;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -97,7 +112,7 @@ public final class Worker extends Thread
         {
             // Grab a chunk and get it ready for output
             final Chunk c = this.queue.poll();
-            c.createOutFile();
+            c.createOutFile(outputDirs);
 
             try
             {

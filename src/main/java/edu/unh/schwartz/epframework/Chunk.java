@@ -75,9 +75,7 @@ public final class Chunk implements Comparable<Chunk>
         this.content = sb.toString();
 
         // Write the content to a file in the directory
-        final File d = 
-            new File(directory.getAbsolutePath() + "/" + inFile.getName());
-        Files.copy(inFile.toPath(), d.toPath()); 
+        Files.copy(inFile.toPath(), new File(getInFileName()).toPath()); 
 
     }
 
@@ -189,14 +187,23 @@ public final class Chunk implements Comparable<Chunk>
 
     /**
      * Creates the output file for use my the worker.
+     *
+     * @param dir - true iff the output file should be a directory
      */
-    public void createOutFile()
+    public void createOutFile(final boolean dir)
     {
         final String outName = getOutFileName();
         final File out = new File(outName);
         try
         {
-            out.createNewFile();
+            if (dir)
+            {
+                out.mkdir(); 
+            }
+            else
+            {
+                out.createNewFile();
+            }
         }
         catch (IOException e)
         {

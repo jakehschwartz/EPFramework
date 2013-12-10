@@ -277,20 +277,24 @@ public final class ConfigWizard
             add(spinner);
             add(new JLabel(SEP));
 
+            final JCheckBox fmtbox = new JCheckBox();
+            fmtbox.setName(Configuration.OUTPUT_FMT_KEY);
+            add(new JLabel("Does the exec output directories?"));
+            add(fmtbox);
+            add(new JLabel(SEP));
+           
             final JCheckBox box = new JCheckBox();
             box.setName(Configuration.STATS_KEY);
             add(new JLabel("Create stats file?"));
             add(box);
             add(new JLabel(SEP));
 
-            final JTextField headerField = new JTextField();
-            headerField.setName(Configuration.NUM_HEADER_KEY);
-            headerField.setText("0");
-            headerField.setPreferredSize(new Dimension(50, 20));
+            final WizardSpinner spinner2 = new WizardSpinner(options);
+            spinner2.setName(Configuration.NUM_HEADER_KEY);
             add(new JLabel("Number of header lines in output files: "));
-            add(headerField);
+            add(spinner2);
             add(new JLabel(SEP));
- 
+
             final JCheckBox savebox = new JCheckBox();
             savebox.setName(Configuration.SAVE_KEY);
             add(new JLabel("Save Configuration File?"));

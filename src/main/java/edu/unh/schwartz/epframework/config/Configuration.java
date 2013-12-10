@@ -88,6 +88,11 @@ public final class Configuration
     public static final String ARGUMENT_KEY = "argument";
 
     /**
+     * Key for output format argument.
+     */
+    public static final String OUTPUT_FMT_KEY = "outputFmt";
+
+    /**
      * The Log.
      */
     private static final Log LOG = LogFactory.getLog(Configuration.class);
@@ -146,6 +151,11 @@ public final class Configuration
      * The arguments for the command line.
      */
     private String argument;
+
+    /**
+     * The output format: true for directories or false for files.
+     */
+    private boolean outputFmt;
     
     /**
      * Constructs a configuration file from a map.
@@ -232,9 +242,6 @@ public final class Configuration
                 case NUM_HEADER_KEY:
                     this.numberOfHeaderLines = jp.getIntValue();
                     break;
-                case ARGUMENT_KEY:
-                    this.argument = jp.getText();
-                    break;
                 case DEFAULT_MERGE_KEY:
                     if (jp.getBooleanValue())
                     {
@@ -252,6 +259,12 @@ public final class Configuration
                     {
                         this.mergeMethod = 2;
                     }
+                    break;
+                case ARGUMENT_KEY:
+                    this.argument = jp.getText();
+                    break;
+                case OUTPUT_FMT_KEY:
+                    this.outputFmt = jp.getBooleanValue();
                     break;
                  default:
                     assert(false);
@@ -317,6 +330,9 @@ public final class Configuration
                      break;
                  case ARGUMENT_KEY:
                      this.argument = (String) val;
+                     break;
+                 case OUTPUT_FMT_KEY:
+                     this.outputFmt = (boolean) val;
                      break;
                  default:
                      assert(false);
@@ -409,6 +425,14 @@ public final class Configuration
     }
 
     /**
+     * @return true iff the output should be in directories
+     */
+    public boolean getOutputSetting()
+    {
+        return this.outputFmt;
+    }
+
+    /**
      * Saves the configuration in a file so it can be loaded if the user wants
      * to use the configuration again.
      */
@@ -447,6 +471,7 @@ public final class Configuration
             jg.writeBooleanField(EXTERNAL_MERGE_KEY, this.mergeMethod == 2);
             jg.writeBooleanField(CUSTOM_MERGE_KEY, this.mergeMethod == 1);
             jg.writeBooleanField(DEFAULT_MERGE_KEY, this.mergeMethod == 0);
+            jg.writeBooleanField(OUTPUT_FMT_KEY, this.outputFmt);
             jg.writeEndObject();
             jg.close();
             LOG.info("Configuration saved");
