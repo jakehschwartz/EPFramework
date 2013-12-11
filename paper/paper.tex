@@ -14,7 +14,7 @@
 \setlength{\evensidemargin}{0pt}
 \setlength{\textwidth}{6.5in}
 
-\doublespacing
+% \doublespacing
 \begin{document}
 \title{A Java Framework For Embarrassingly Parallel Problems}
 \author{Jacob Schwartz}
@@ -23,7 +23,7 @@
 \begin{abstract}
 An embarrassingly parallel problem, also called pleasingly parallel, is one that
 can be easily broken up into identical components that do not need to interact
-to find the solution. Many problems in the biological sciences are 
+to find the solution. Many problems in the biological sciences are
 embarrassingly parallel but often their authors do not have the expertise to
 implement a parallel solution. We have written a framework, implemented in Java,
 that will execute the serial program in several threads. These threads working
@@ -125,8 +125,8 @@ These services have built in hooks to various distributed services, such as
 storage and databases. Amazon has a set of cloud computing services called
 Amazon Web Services(AWS)\footnote{https://aws.amazon.com} and Microsoft has a
 similar service named Microsoft Azure\footnote{https://www.windowsazure.com}.
-AWS and Azure are essentially virtual instances run on machines in the cloud that
-can be spun up for extra computing power and shut down when not needed. 
+AWS and Azure are essentially virtual instances run on machines in the cloud
+that can be spun up for extra computing power and shut down when not needed. 
 
 \begin{figure}
     \begin{center}
@@ -146,7 +146,7 @@ Hadoop breaks down the input data into parts, runs them in parallel with the
 DryadLINQ\footnote{https://research.microsoft.com/apps/mobile/showpage.aspx?page=/en-us/projects/draydlinq}
 is a framework developed released by Microsoft Research that allows the end-user
 to create directed acyclic computation graphs that run on Windows High
-Performance Computer(HPC)\footnote{https://www.microsoft.com/hpc} clusters. 
+Performance Computer(HPC)\footnote{https://www.microsoft.com/hpc} clusters.
 Gunarathne et al. compared the services using several applications to analyze
 performance, cost and usability.
 
@@ -159,16 +159,16 @@ performance, cost and usability.
     \label{fig:uml}
 \end{figure}
 
-The only requirements for a program to be wrapped by framework are that it 
-process the input in an embarrassingly parallel manner and that the input comes 
-from a file. The processed results must also written to a file. The framework 
+The only requirements for a program to be wrapped by framework are that it
+process the input in an embarrassingly parallel manner and that the input comes
+from a file. The processed results must also written to a file. The framework
 supports two forms of input: a directory of files that contain that each contain
 one unit of work, which is represented by the Chunk class, or a single file that
-the framework can break up into Chunks. For example, the Ka/Ks Calculator's 
-input consists of a header and then two protein sequence lines followed by a 
-blank line. The framework uses that blank line to know when one Chunk of work 
-has ended and another has begun. The user can input a regular expression to 
-define when lines of input are separated into Chunks. This occurs in the 
+the framework can break up into Chunks. For example, the Ka/Ks Calculator's
+input consists of a header and then two protein sequence lines followed by a
+blank line. The framework uses that blank line to know when one Chunk of work
+has ended and another has begun. The user can input a regular expression to
+define when lines of input are separated into Chunks. This occurs in the
 ChunkManager class. 
 
 The other purpose of the ChunkManager class is to combine the resulting Chunks
@@ -212,25 +212,36 @@ processors). These tests were run with minimal other activity on the server.
 
 \begin{figure}
     \begin{center}
-        \resizebox{5.2in}{!}{\includegraphics{experiment/time.png}}
+        \resizebox{4.7in}{!}{\includegraphics{experiment/time.png}}
     \end{center}
     \caption{Runtimes for the Ka/Ks Calculator though the framework}
-    \label{fig:kaksgraph}
+    \label{fig:time}
 \end{figure}
 
-Figure \ref{fig:kaksgraph} summarized the results; each line shows the time
-taken for each chunk of the data. As the numbers of threads increases, the
-runtime of the program decreases exponentially. In a few cases, there was an
-increase in time when attempting to max out the CPU usage. This occurs because
-the framework has to wait for the CPU to be finished with its previous work
-before it can start any further jobs. 
+\begin{figure}
+    \begin{center}
+        \resizebox{4.7in}{!}{\includegraphics{experiment/speedup.png}}
+    \end{center}
+    \caption{Speedup of Ka/Ks Calculator program}
+    \label{fig:speedup}
+\end{figure}
 
-TODO(Keep?): In the cases when the framework executed faster while the CPU was 
-maxed out, it was only faster a minute at the most. However, running the 
-framework at 50\% of the CPU is more efficient than running using 100\% of the 
-CPU. The runtime drop achieved when using 100\% of the CPU versus 50\% is not 
-large enough to warrant using all of the machine's power.
+Figure \ref{fig:time} summarized the results; each line shows the time taken for
+each chunk of the data. As the numbers of threads increases, the runtime of the
+program decreases exponentially. In a few cases, there was an increase in time
+when attempting to max out the CPU usage. This occurs because the framework has
+to wait for the CPU to be finished with its previous work before it can start
+any further jobs. 
 
+Figure \ref{fig:speedup} shows the speedup of the Ka/Ks Calculator program. 
+In most of the samples, the speedup seems to level off between 6 to 10 workers,
+and even goes down when increased to 16 workers. Running the framework at 50\% 
+of the CPU is more efficient than running using 100\% of the CPU in this 
+situation. The decrease in speedup from 8 workers to 16 workers shows that TODO.
+This is not true of all case, as seen in sample E. This sample has a higher
+speedup at 16 workers because the piece of work that comes Xth in the sample
+takes the longest. With 16 workers, this chunk is started immediately instead of
+most of the way through the total runtime of the framework.
 \subsection{Octupus}
 
 A version of octupus was also run through the framework and was tested against
@@ -254,7 +265,7 @@ then run the resulting clusters through the framework at a higher similarity.
         ~                   & 95\%               & 496     \\
         ~                   & 97\%               & 603     \\ \hline
     \end{tabular}
-    \caption{Times from serial octupus at various similarity levels.}
+    \caption{Times from serial octupus at various similarity levels}
     \end{center}
     \label{tab:octu1}
 \end{table}
@@ -271,7 +282,7 @@ then run the resulting clusters through the framework at a higher similarity.
         ~                   & 8                 & 127     \\
         ~                   & 10                & 123     \\ \hline
     \end{tabular}
-    \caption{Times from octupus through the framework at 97\% similarirty.}
+    \caption{Times from octupus through the framework at 97\% similarirty}
     \end{center}
     \label{tab:octu2}
 \end{table}
@@ -280,7 +291,7 @@ then run the resulting clusters through the framework at a higher similarity.
 
 It is clear that the framework provides an effective yet simple to use module to
 add parallelism to a specific class of file-oriented embarrassingly parallel
-problems. Two sentences with specifics from the graphs. More self-praise 
+problems. Two sentences with specifics from the graphs. More self-praise TODO
 
 Using Java was a good choice for implementation ease and future implementation
 extension by others, but it may not produce the fastest results. Languages like
@@ -308,7 +319,9 @@ Zhang Z, Li J, Zhao XQ, Wang J, Wong GK, Yu J., \emph{Ka/Ks Calculator:
 calculating Ka and Ks through model selection and model averaging},
 Genomics Proteomics Bioinformatics, November 2006.
 \bibitem{cloud}
-Crap, crap and Crap
+Gunarathne, T., Wu, T.-L., Choi, J. Y., Bae, S.-H. and Qiu, J., \emph{Cloud
+computing paradigms for pleasingly parallel biomedical applications},
+Concurrency and Computation: Practice and Experience, December 2011.
 \end{thebibliography}
 
 \end{document}
