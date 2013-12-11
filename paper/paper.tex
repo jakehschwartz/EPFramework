@@ -2,7 +2,7 @@
 \usepackage{graphics}
 \usepackage{setspace}
 \usepackage{cite}
-\usepackage{wrapfig}
+\usepackage{floatrow}
 
 % the following is to get inch margins on a letter-size paper
 \setlength{\topmargin}{0pt}
@@ -66,13 +66,14 @@ subset of the input in the same manner and creating the output in the same
 format. The framework can result in a significant exponential decrease with very
 little programmer effort. 
 
-\begin{wrapfigure}{R}{0.5\textwidth}
+\begin{figure}
     \begin{center}
         \includegraphics{figures/ep.jpg}
     \end{center}
     \caption{Embarrassingly Parallel Model}
+    \floatfoot{http://www.coopsoft.com/ar/i/fjGraph.jpg}
     \label{fig:ep}
-\end{wrapfigure}
+\end{figure}
 
 \section{Background}
 
@@ -127,6 +128,15 @@ similar service named Microsoft Azure\footnote{https://www.windowsazure.com}.
 AWS and Azure are essentially virtual instances run on machines in the cloud that
 can be spun up for extra computing power and shut down when not needed. 
 
+\begin{figure}
+    \begin{center}
+        \resizebox{4.7in}{!}{\includegraphics{figures/MapReduce.jpg}}
+    \end{center}
+    \caption{MapReduce Model}
+    \label{fig:map}
+    \floatfoot{http://dme.rwth-aachen.de/en/system/files/file\_upload/project/MapReduce.jpg}
+\end{figure}
+
 Amazon also offers another service called Amazon Elastic
 MapReduce\footnote{https://aws.amazon.com/elasticmapreduce}. This combines its
 virtual instance framework with Apache
@@ -136,24 +146,19 @@ Hadoop breaks down the input data into parts, runs them in parallel with the
 DryadLINQ\footnote{https://research.microsoft.com/apps/mobile/showpage.aspx?page=/en-us/projects/draydlinq}
 is a framework developed released by Microsoft Research that allows the end-user
 to create directed acyclic computation graphs that run on Windows High
-Performance Computer(HPC)\footnote{https://www.microsoft.com/hpc} clusters.
+Performance Computer(HPC)\footnote{https://www.microsoft.com/hpc} clusters. 
 Gunarathne et al. compared the services using several applications to analyze
 performance, cost and usability.
 
-\begin{wrapfigure}{L}{0.5\textwidth}
-    \begin{center}
-        \includegraphics{figures/MapReduce.jpg}
-    \end{center}
-    \caption{MapReduce Model}
-    \label{fig:map}
-\end{wrapfigure}
-
 \section{Proposed Solution}
 \begin{figure}
-{\resizebox{5.2in}{!}{\includegraphics{figures/uml.png}}}
-\caption{UML for the embarrassingly parallel framework}
-\label{fig:uml}
+    \begin{center}
+        \resizebox{4.7in}{!}{\includegraphics{figures/uml.png}}
+    \end{center}
+    \caption{UML for the embarrassingly parallel framework}
+    \label{fig:uml}
 \end{figure}
+
 The only requirements for a program to be wrapped by framework are that it 
 process the input in an embarrassingly parallel manner and that the input comes 
 from a file. The processed results must also written to a file. The framework 
@@ -206,9 +211,11 @@ leveled off. The samples were then all run again at 100\% processor usage (16
 processors). These tests were run with minimal other activity on the server.
 
 \begin{figure}
-{\resizebox{5.2in}{!}{\includegraphics{experiment/out.png}}}
-\caption{Runtimes for the Ka/Ks Calculator though the framework}
-\label{fig:kaksgraph}
+    \begin{center}
+        \resizebox{5.2in}{!}{\includegraphics{experiment/time.png}}
+    \end{center}
+    \caption{Runtimes for the Ka/Ks Calculator though the framework}
+    \label{fig:kaksgraph}
 \end{figure}
 
 Figure \ref{fig:kaksgraph} summarized the results; each line shows the time
@@ -229,15 +236,16 @@ large enough to warrant using all of the machine's power.
 A version of octupus was also run through the framework and was tested against
 two different sized data sets. Both sets were first clustered at 90\%, 95\% and
 97\% minimum similarity. The runtime for those tests can be seen in table
-\ref{tab:oct1}. The resulting clusters from the 90\% similarity run were used as
+\ref{tab:octu1}. The resulting clusters from the 90\% similarity run were used as
 the input for the framework's runs, which were all set for 97\% similarity. 
 The framework in this case was just run at six, eight and ten workers. Table 
 \ref{tab:octu2} shows that it is slightly faster to cluster first at 90\% and 
 then run the resulting clusters through the framework at a higher similarity. 
 
 \begin{table}
+    \begin{center}
     \begin{tabular}{|l|l|l|}
-        \hline
+    \hline
         Number of Sequences & Minimum Similarity & Time(s) \\ \hline
         1500                & 90\%               & 99      \\
         ~                   & 95\%               & 115     \\
@@ -246,10 +254,13 @@ then run the resulting clusters through the framework at a higher similarity.
         ~                   & 95\%               & 496     \\
         ~                   & 97\%               & 603     \\ \hline
     \end{tabular}
+    \caption{Times from serial octupus at various similarity levels.}
+    \end{center}
     \label{tab:octu1}
 \end{table}
 
 \begin{table}
+    \begin{center}
     \begin{tabular}{|l|l|l|}
         \hline
         Number of Sequences & Number of Workers & Time(s) \\ \hline
@@ -260,6 +271,8 @@ then run the resulting clusters through the framework at a higher similarity.
         ~                   & 8                 & 127     \\
         ~                   & 10                & 123     \\ \hline
     \end{tabular}
+    \caption{Times from octupus through the framework at 97\% similarirty.}
+    \end{center}
     \label{tab:octu2}
 \end{table}
 
