@@ -13,7 +13,7 @@ plot [1:16][0:2400] \
 set ylabel "Speedup"
 set xlabel "# Of Workers"
 set output "speedup.png"
-plot [1:16][0:5] \
+plot [1:16][0:6] \
 	"speedup.dat" using 1:2 with linespoints title "A", \
 	"speedup.dat" using 1:3 with linespoints title "B", \
 	"speedup.dat" using 1:4 with linespoints title "C", \
