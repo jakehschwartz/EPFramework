@@ -237,11 +237,12 @@ Figure \ref{fig:speedup} shows the speedup of the Ka/Ks Calculator program.
 In most of the samples, the speedup seems to level off between 6 to 10 workers,
 and even goes down when increased to 16 workers. Running the framework at 50\% 
 of the CPU is more efficient than running using 100\% of the CPU in this 
-situation. The decrease in speedup from 8 workers to 16 workers shows that TODO.
+situation. The decrease in speedup from 8 workers to 16 workers shows this.
 This is not true of all case, as seen in sample E. This sample has a higher
-speedup at 16 workers because the piece of work that comes Xth in the sample
-takes the longest. With 16 workers, this chunk is started immediately instead of
-most of the way through the total runtime of the framework.
+speedup at 16 workers because there are multiple piece of work toward the end
+that take a majority of the runtime. With 16 workers, these chunks were started
+immediately instead of late during the total runtime of the framework.
+
 \subsection{Octupus}
 
 A version of octupus was also run through the framework and was tested against
@@ -291,7 +292,12 @@ then run the resulting clusters through the framework at a higher similarity.
 
 It is clear that the framework provides an effective yet simple to use module to
 add parallelism to a specific class of file-oriented embarrassingly parallel
-problems. Two sentences with specifics from the graphs. More self-praise TODO
+problems. Speedup of 4x can be achieved on simple samples with the same number
+of chunks as workers, and possibly slightly higher with real data, as seen with
+the octupus data. While many consumer-level computers will not have many options
+when it comes to chosing the proccesing power, the framework will help
+universities and companies who have the raw computing power, and are just not
+using it to their full potential. 
 
 Using Java was a good choice for implementation ease and future implementation
 extension by others, but it may not produce the fastest results. Languages like
