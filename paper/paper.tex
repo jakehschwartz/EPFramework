@@ -70,7 +70,6 @@ is also in the same format as the result of the serial program. Using the
 framework can cause a significant exponential decrease with very little
 programmer effort. 
 
-%TODO
 \begin{figure}
     \begin{center}
         \includegraphics{figures/ep.jpg}
@@ -113,7 +112,7 @@ Alignment Search Tool, or BLAST\footnote{blast.ncbi.nlm.nih.gov}, is an
 algorithm that compares many aspects of DNA sequences, like nucleotides or amino
 acid sequences. In addition, the user can also compare the sequences to a
 database of sequences to identity known subservience's. There are many
-implementations of BLAST, some of them already have parallel versions.  Hovever,
+implementations of BLAST, some of them already have parallel versions.  However,
 many applications do not have parallel processing capabilities. There exists a
 class of problems that organize large amounts of data into similar groups called
 clusters. Two applications, octupus\footnote{octupus.sourceforge.com} and
@@ -145,7 +144,7 @@ that can be spun up for extra computing power and shut down when not needed.
 Amazon also offers another service called Amazon Elastic
 MapReduce\footnote{https://aws.amazon.com/elasticmapreduce}. This combines its
 virtual instance framework with Apache
-Hadoop\footnote{https://hadoop.apache.org}. As seen in figure \ref{fig:map},
+Hadoop\footnote{https://hadoop.apache.org}. As seen in Figure \ref{fig:map},
 Hadoop breaks down the input data into parts, runs them in parallel with the
 'Map' function and then combines the results with the 'Reduce' function.
 DryadLINQ\footnote{https://research.microsoft.com/apps/mobile/showpage.aspx?page=/en-us/projects/draydlinq}
@@ -165,36 +164,31 @@ cost and usability.
 \end{figure}
 
 The only requirements for a program to be wrapped by our framework are that it
-processes the input in an embarrassingly parallel manner and that the input comes
-from a file. The framework, shown in figure \ref{fig:uml}, supports two forms of input: a directory of files that each contain
-one unit of work, which is represented by the Chunk class, or a single file that
-the framework can break up into Chunks. For example, the Ka/Ks Calculator's
-input consists of a header and then two protein sequence lines followed by a
-blank line. The framework uses that blank line to know when one Chunk of work
-has ended and another has begun. The user can input a regular expression to
-define when lines of input are separated into Chunks. This occurs in the
-ChunkManager class. 
+processes the input in an embarrassingly parallel manner and that the input
+comes from a file. The framework, shown in Figure \ref{fig:uml}, supports two
+forms of input: a directory of files that each contain one unit of work, which
+is represented by the Chunk class, or a single file that the framework can break
+up into Chunks. For example, the Ka/Ks Calculator's input consists of a header
+and then two protein sequence lines followed by a blank line. The framework uses
+that blank line to know when one Chunk of work has ended and another has begun.
+The user can input a regular expression to define when lines of input are
+separated into Chunks. This occurs in the ChunkManager class. 
 
 The other purpose of the ChunkManager class is to combine the resulting Chunks
 back together when the worker threads have finished. Once the work has been
 done, all of the separate results are spread across several files. Those results
-must be retrieved and combined to construct the final output file. CONTINUED 
-
-This output
-file must look the same as the output file would look if the program were run
-serially; the output may need to come in the same order as the inputs in the
-input file and headers may need to be deleted from the separate files and added
-to the combined file. End-users can also choose to write their own merge code in
-Java, using the CustomMerge class, or write their own independent merge script. 
-
-REWRITE ABOVE
+must be retrieved and combined to construct the final output file. This combined
+output file looks as if the program were run serially: the output must come in
+the same order and the headers need to be added. End-users can also choose to
+write their own merge code in Java, using the CustomMerge class, or write their
+own independent merge script. 
 
 The end-user can control many aspects of the parallelization of the code,
-including the number of threads to use, various flags for the executable, and the
-statistics output.  A start-up wizard allows the end-user to choose the settings
-for the run and creates an instance of Configuration when it is completed to
-save the user's settings, allowing the user to rerun with the same settings
-without having to go through the wizard again.
+including the number of threads to use, various flags for the executable, and
+the statistics output.  A start-up wizard allows the end-user to choose the
+settings for the run and creates an instance of Configuration when it is
+completed to save the user's settings, allowing the user to rerun with the same
+settings without having to go through the wizard again.
 
 Lastly, the worker threads keep records during execution. The threads record
 their total uptime, the number of Chunks they execute, and the runtime for
@@ -208,15 +202,16 @@ objects will store their own statistics about runtime and size.
 
 We evaluated the convenience and performance of the framework on two different
 applications: the Ka/Ks Calculator and a sequence clustering algorithms,
-ocutupus. In all cases, we compared the framework based application with the
+octupus. In all cases, we compared the framework based application with the
 original using different data partitions and different thread counts.
 
 \subsection{Ka/Ks Calculator}
+
 Ka/Ks Calculator was run through the framework with five different samples, each
-containing sixteen units of work. Each sample was run by the framework thread
-counts, starting at 1 and increasing by multiples of two until the runtimes
-leveled off. The samples were then all run again at 100\% processor usage (16
-processors). These tests were run with minimal other activity on the server.
+containing sixteen units of work. Each sample was run with a range of thread
+counts, starting at 1 and increasing by a multiple of two until the runtimes
+leveled off and then once more with the maximum 16 processors. These tests were
+run with minimal other activity on the server.
 
 \begin{figure}
     \begin{center}
@@ -234,33 +229,44 @@ processors). These tests were run with minimal other activity on the server.
     \label{fig:speedup}
 \end{figure}
 
-Figure \ref{fig:time} summarized the results; each line shows the time taken for
+Figure \ref{fig:time} summarizes the results; each line shows the time taken for
 each chunk of the data. As the numbers of threads increases, the runtime of the
-program decreases exponentially. In a few cases, there was an increase in time
-when attempting to max out the CPU usage. This occurs because the framework has
-to wait for the CPU to be finished with its previous work before it can start
-any further jobs. 
+program decreases exponentially for a while and then begins to flatten between 6
+and 10 processors. In a few cases, there was an increase in time when attempting
+to max out the CPU usage. This occurs because the framework has to wait for the
+CPU to be finished with its previous work before it can start any further jobs.
+Figure \ref{fig:speedup} shows the speedup of the Ka/Ks Calculator program.  In
+most of the samples, the speedup seems to level off between 6 to 10 workers, and
+even goes down when increased to 16 workers. Running the framework at 50\% of
+the CPU is more efficient than running at 100\% of the CPU in this situation.
+The decrease in speedup from 8 workers to 16 workers shows this.
 
-Figure \ref{fig:speedup} shows the speedup of the Ka/Ks Calculator program. 
-In most of the samples, the speedup seems to level off between 6 to 10 workers,
-and even goes down when increased to 16 workers. Running the framework at 50\% 
-of the CPU is more efficient than running at 100\% of the CPU in this 
-situation. The decrease in speedup from 8 workers to 16 workers shows this.
 This is not true for all cases, as seen in sample E. This sample has a higher
 speedup at 16 workers because there are multiple pieces of work toward the end
 that take a majority of the runtime. With 16 workers, these chunks were started
-immediately instead of later during the total runtime of the framework.
+immediately instead of later during the total runtime of the framework. Another
+random sample was taken to show that sample E was an anomaly. This sample had
+similar runtimes at 8 and 16 workers, resulting in a negligible speedup increase
+when going up to 100\% of the CPU. This random sample behaving similarly to the
+majority of the sample shows that sample E behaved differently due to having a
+majority of its work later in the file. Some tests were run in the early stages
+of development to observe the behavior of sorting the data by length. In terms
+of Ka/Ks, there was no correlation between length of sequences and calculation
+time, so there was no way to sort the data to ensure the chunks of work that
+take the quickest segments happen last. This would prevent anomalies like sample
+E.
 
 \subsection{Octupus}
 
 A version of octupus was also run through the framework and was tested against
 two different sized data sets. Both sets were first clustered at 90\%, 95\% and
-97\% minimum similarity. The runtime for those tests can be seen in table
-\ref{tab:octu1}. The resulting clusters from the 90\% similarity run were used as
-the input for the framework's runs, which were all set for 97\% similarity. 
-The framework in this case was run at six, eight and ten workers. Table 
-\ref{tab:octu2} shows that it is slightly faster to cluster first at 90\% and 
-then run the resulting clusters through the framework at a higher similarity. 
+97\% minimum similarity with only one processor. The runtime for those tests can
+be seen in Table \ref{tab:octu1}. The resulting clusters from the 90\%
+similarity run were used as the input for the framework's runs, which were all
+set for 97\% similarity.  The framework in this case was run at six, eight and
+ten workers. Table \ref{tab:octu2} shows that it is slightly faster to cluster
+first at 90\% and then run the resulting clusters through the framework at a
+higher similarity. 
 
 \begin{table}
     \begin{center}
@@ -275,8 +281,8 @@ then run the resulting clusters through the framework at a higher similarity.
         ~                   & 97\%               & 603     \\ \hline
     \end{tabular}
     \caption{Times from serial octupus at various similarity levels}
-    \end{center}
     \label{tab:octu1}
+    \end{center}
 \end{table}
 
 \begin{table}
@@ -284,16 +290,16 @@ then run the resulting clusters through the framework at a higher similarity.
     \begin{tabular}{|l|l|l|}
         \hline
         Number of Sequences & Number of Workers & Time(s) \\ \hline
-        1500                & 6                 & 34      \\
-        ~                   & 8                 & 27      \\
-        ~                   & 10                & 27      \\ \hline
-        6500                & 6                 & 127     \\
-        ~                   & 8                 & 127     \\
-        ~                   & 10                & 123     \\ \hline
+        1500                & 6                 & 133      \\
+        ~                   & 8                 & 126      \\
+        ~                   & 10                & 126      \\ \hline
+        6500                & 6                 & 552     \\
+        ~                   & 8                 & 552     \\
+        ~                   & 10                & 548     \\ \hline
     \end{tabular}
-    \caption{Times from octupus through the framework at 97\% similarirty}
-    \end{center}
+    \caption{Times from octupus through the framework at 97\% similarity}
     \label{tab:octu2}
+    \end{center}
 \end{table}
 
 \section{Conclusion}
@@ -303,7 +309,7 @@ add parallelism to a specific class of file-oriented embarrassingly parallel
 problems. Speedup of 4x can be achieved on simple samples with the same number
 of chunks as workers, and possibly slightly higher with real data, as seen with
 the octupus data. While many consumer-level computers will not have many options
-when it comes to chosing the proccesing power, the framework will help
+when it comes to choosing the processing power, the framework will help
 universities and companies who have the raw computing power, and are just not
 using it to their full potential. 
 
