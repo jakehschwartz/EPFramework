@@ -116,9 +116,10 @@ public final class ChunkManager
             {
                 // Save the chunk
                 final String content = sb.toString();
+                final String name = Integer.toString(content.hashCode());
 
                 // Make a directory for that file
-                final File dir = new File(ROOTDIR + content.hashCode());
+                final File dir = new File(ROOTDIR + name);
                 dir.mkdir();
 
                 // Write the content to a file
@@ -127,7 +128,7 @@ public final class ChunkManager
                 inWriter.println(content);
                 inWriter.close();
 
-                this.chunks.add(new Chunk(content, dir));
+                this.chunks.add(new Chunk(name, dir));
 
                 sb = new StringBuilder();
             }
